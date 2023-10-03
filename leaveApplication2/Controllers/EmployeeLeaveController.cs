@@ -86,7 +86,7 @@ namespace leaveApplication2.Controllers
             }
 
         }
-
+        //getbyleavetypid
         [HttpGet("GetSingeEmployeeLeave/{id}")]
         public async Task<CommonResponse<EmployeeLeave>> GetSingeEmployeeLeave(long id)
         {
@@ -144,6 +144,38 @@ namespace leaveApplication2.Controllers
                 return this.CreateResponse<IReadOnlyCollection<EmployeeLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
 
+        }
+
+        [HttpPut("UpdateEmployeeLeaveAsync/{id}")]
+        public async Task<CommonResponse<ActionResult<EmployeeLeave>>> UpdateEmployeeLeaveAsync(long id, EmployeeLeave employeeLeave )
+        {
+            _logger.LogInformation($"Start UpdateEmployeeLeaveAsync");
+
+
+            //return Ok(result);
+            try
+            {
+                var updateEmployeeLeave = await _employeeLeaveService.UpdateEmployeeLeaveAsync(id, employeeLeave);
+                if (updateEmployeeLeave == null)
+                {
+                    _logger.LogInformation($"Start UpdateAppliedLeave null");
+                    //no salutions found
+
+                    return this.CreateResponse<ActionResult<EmployeeLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+
+                }
+                _logger.LogInformation($"Get the values of GetEmployeeByIdAsync");
+                _logger.LogInformation($"End GetEmployeeByIdAsync");
+                //Salutions found
+                return this.CreateResponse<ActionResult<EmployeeLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", updateEmployeeLeave);
+                // return this.CreateResponse<IEnumerable<Employee>>(StatusCode.Status200K, "Success", employee);
+            }
+            catch (Exception ex)
+            {
+                //error occured
+                _logger.LogError(ex, "An error occured while retrieving all salutions");
+                return this.CreateResponse<ActionResult<EmployeeLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
     }

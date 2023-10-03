@@ -1,5 +1,6 @@
 ﻿using leaveApplication2.Models;
 using leaveApplication2.Repostories;
+using Microsoft.EntityFrameworkCore;
 
 namespace leaveApplication2.Services
 {
@@ -7,10 +8,13 @@ namespace leaveApplication2.Services
     {
 
         private readonly IEmployeeLeaveRepository _employeeLeaveRepository;
+        private readonly ILeaveStatusRepository _leaveStatusRepository;
 
-        public EmployeeLeaveService(IEmployeeLeaveRepository employeeLeaveRepository)
+        public EmployeeLeaveService(IEmployeeLeaveRepository employeeLeaveRepository, ILeaveStatusRepository leaveStatusRepository)
         {
             _employeeLeaveRepository = employeeLeaveRepository;
+            _leaveStatusRepository = leaveStatusRepository;
+
         }
 
 
@@ -37,6 +41,36 @@ namespace leaveApplication2.Services
         {
             return await _employeeLeaveRepository.GetEmployeeLeaveByEmployeeId(employeeId);
         }
+
+        public async Task<EmployeeLeave> UpdateEmployeeLeaveAsync(long id, EmployeeLeave employeeLeave)
+        {
+
+            var updateEmployeeLeave = await _employeeLeaveRepository.UpdateEmployeeLeaveAsync(id, employeeLeave);
+            return updateEmployeeLeave;
+
+        }
+        //UPDATE EMPLOYEE LEAVE BASED ON STATUSCODE FOR APPROVE
+
+        public async Task<EmployeeLeave> UpdateEmployeeLeaveIfAPV(long id, string leaveStatusNameCode, EmployeeLeave employeeLeave)
+        {
+            var leaveStatusCode = await _leaveStatusRepository.GetLeaveStatusByCodeAsync(leaveStatusNameCode);
+            if (leaveStatusCode == null)
+            {
+                return null;
+            }
+
+            else if (leaveStatusCode.leaveStatusNameCode == "APV")
+            {
+                return await UpdateEmployeeLeaveAsync(id, employeeLeave);
+            }
+
+            return null;
+        }
+        
+
+
     }
+
+
 
 }

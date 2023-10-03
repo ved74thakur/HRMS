@@ -25,6 +25,8 @@ namespace leaveApplication2.Models
         public int consumedLeaves { get; set; } 
 
         [Required(ErrorMessage = "Balance leaves is required")]
+        
+       
         public int balanceLeaves { get; set; }
 
         public bool isActive { get; set; } = false;

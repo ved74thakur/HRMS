@@ -9,6 +9,8 @@ namespace leaveApplication2.Repostories
 
         Task<LeaveStatus> CreateLeaveStatusAsync(LeaveStatus leaveStatus);
 
+        Task<LeaveStatus> GetLeaveStatusByCodeAsync(string leaveStatusNameCode);
+
 
     }
 }

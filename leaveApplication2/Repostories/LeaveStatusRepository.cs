@@ -22,12 +22,24 @@ namespace leaveApplication2.Repostories
             return await _context.LeaveStatuses.FindAsync(leaveStatusId);
         }
 
+        //GettingLeaveStatusByCode
+        public async Task<LeaveStatus> GetLeaveStatusByCodeAsync(string leaveStatusNameCode)
+        {
+            return await _context.LeaveStatuses
+                .SingleOrDefaultAsync(ls => ls.leaveStatusNameCode == leaveStatusNameCode);
+        }
+
+
+
+
         public async Task<LeaveStatus> CreateLeaveStatusAsync(LeaveStatus leaveStatus)
         {
             _context.LeaveStatuses.Add(leaveStatus);
             await _context.SaveChangesAsync();
             return leaveStatus;
         }
+
+
 
 
         /*

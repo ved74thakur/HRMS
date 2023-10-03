@@ -18,7 +18,11 @@ namespace leaveApplication2.Services
             
         }
 
-       
+        public async Task<LeaveStatus> GetLeaveStatusByCodeAsync(string leaveStatusNameCode)
+        {
+            var leaveStatusByCode = await _leaveStatusRepository.GetLeaveStatusByCodeAsync(leaveStatusNameCode);
+            return leaveStatusByCode;
+        }
 
 
 

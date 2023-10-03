@@ -2,6 +2,7 @@
 using leaveApplication2.Repostories;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 using System.Reflection.Metadata.Ecma335;
 
 namespace leaveApplication2.Services
@@ -29,14 +30,21 @@ namespace leaveApplication2.Services
             return createdLeave;
         }
 
-        //updateLeaveStatus(appliedLeaveTypeId, statusIdKey){
-        //var singleLeave = await _leaveRepository.GetAppliedLeaveByIdAsync(id);
-        //changeupdated
-        //var result await _leaveRepository.UpdateAppliedLeaveAsync(id, leave);
-        //Return result
+        //END POINT
+        public async Task<AppliedLeave> UpdateLeaveStatusAsync(long appliedLeaveTypeId , int leaveStatusId)
+        {
+            var singleLeave = await _leaveRepository.GetAppliedLeaveByIdAsync(appliedLeaveTypeId);
+            if (singleLeave == null)
+            {
+                return null;
+            } 
+            singleLeave.leaveStatusId = leaveStatusId;
+            var updateLeave = await _leaveRepository.UpdateAppliedLeaveAsync(appliedLeaveTypeId, singleLeave);
+            return updateLeave;
+           
 
-
-        //}
+        }
+        
 
 
         public async Task<AppliedLeave> GetAppliedLeaveByIdAsync(long id)
@@ -44,7 +52,7 @@ namespace leaveApplication2.Services
             var singleLeave = await _leaveRepository.GetAppliedLeaveByIdAsync(id);
             //updateLeaveStatus
             return singleLeave;
-        }
+        }   
 
         public async Task<AppliedLeave> UpdateAppliedLeaveAsync(long id, AppliedLeave leave)
         {

@@ -119,7 +119,39 @@ namespace leaveApplication2.Controllers
                 return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        //updateleavestatusasync
+        
+        [HttpPut("UpdateLeaveStatusAsync/{id}")]
+        public async Task<CommonResponse<ActionResult<AppliedLeave>>> UpdateLeaveStatusAsync(long appliedLeaveTypeId, int leaveStatusId)
+        {
+            _logger.LogInformation($"Start UpdateAppliedLeave");
 
+
+            //return Ok(result);
+            try
+            {
+                var updatedLeaveStatus = await _leaveService.UpdateLeaveStatusAsync(appliedLeaveTypeId, leaveStatusId);
+                if (updatedLeaveStatus == null)
+                {
+                    _logger.LogInformation($"Start UpdateAppliedLeave null");
+                    //no salutions found
+
+                    return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+
+                }
+                _logger.LogInformation($"Get the values of GetEmployeeByIdAsync");
+                _logger.LogInformation($"End GetEmployeeByIdAsync");
+                //Salutions found
+                return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", updatedLeaveStatus);
+                // return this.CreateResponse<IEnumerable<Employee>>(StatusCode.Status200K, "Success", employee);
+            }
+            catch (Exception ex)
+            {
+                //error occured
+                _logger.LogError(ex, "An error occured while retrieving all salutions");
+                return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
         //getSingleLeave
 
         [HttpGet("GetAppliedLeaveByIdAsync/{id}")]

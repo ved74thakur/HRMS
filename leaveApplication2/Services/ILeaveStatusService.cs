@@ -7,5 +7,6 @@ namespace leaveApplication2.Services
         Task<IEnumerable<LeaveStatus>> GetLeaveStatusesAsync();
         Task<LeaveStatus> GetLeaveStatusByIdAsync(int leaveStatusId);
         Task<LeaveStatus> CreateLeaveStatusAsync(LeaveStatus leaveStatus);
+        Task<LeaveStatus> GetLeaveStatusByCodeAsync(string leaveStatusNameCode);
     }
 }

@@ -78,5 +78,34 @@ namespace leaveApplication2.Controllers
 
         }
 
+        [HttpGet("GetLeaveStatusByCode")]
+        public async Task<ActionResult<CommonResponse<LeaveStatus>>> GetLeaveStatusByCodeAsync([FromQuery] string leaveStatusNameCode)
+        {
+            _logger.LogInformation($"Start GetLeaveStatusByCode");
+            try
+            {
+                var singleLeaveStatus = await _leaveStatusService.GetLeaveStatusByCodeAsync(leaveStatusNameCode);
+                if (singleLeaveStatus == null)
+                {
+                    _logger.LogInformation($"Start GetEmployeeByIdAsync null");
+                    //no salutions found
+                    return this.CreateResponse<LeaveStatus>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+
+                }
+                _logger.LogInformation($"Get the values of GetEmployeeByIdAsync");
+                _logger.LogInformation($"End GetEmployeeByIdAsync");
+                //Salutions found
+                return this.CreateResponse<LeaveStatus>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", singleLeaveStatus);
+                // return this.CreateResponse<IEnumerable<Employee>>(StatusCode.Status200K, "Success", employee);
+            }
+            catch (Exception ex)
+            {
+                //error occured
+                _logger.LogError(ex, "An error occured while retrieving all salutions");
+                return this.CreateResponse<LeaveStatus>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+
     }
 }

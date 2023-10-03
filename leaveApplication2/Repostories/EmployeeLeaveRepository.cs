@@ -44,5 +44,24 @@ namespace leaveApplication2.Repostories
 
             return employeeLeaves.AsReadOnly();
         }
+
+        //update
+
+        public async Task<EmployeeLeave> UpdateEmployeeLeaveAsync(long id, EmployeeLeave employeeLeave)
+      
+        {
+            var singleEmployeeLeave = await _context.EmployeeLeaves.FindAsync(id);
+            if (singleEmployeeLeave == null)
+            {
+                return null;
+            }
+            singleEmployeeLeave.consumedLeaves = employeeLeave.consumedLeaves;
+            singleEmployeeLeave.balanceLeaves = employeeLeave.balanceLeaves;
+            
+
+            await _context.SaveChangesAsync();
+            return singleEmployeeLeave;
+
+        }
     }
 }
