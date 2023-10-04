@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using leaveApplication2.Data;
@@ -11,9 +12,11 @@ using leaveApplication2.Data;
 namespace leaveApplication2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231003104544_newAddition10")]
+    partial class newAddition10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,9 +49,6 @@ namespace leaveApplication2.Migrations
                     b.Property<int>("balanceLeave")
                         .HasColumnType("integer");
 
-                    b.Property<long>("employeeId")
-                        .HasColumnType("bigint");
-
                     b.Property<int>("leaveStatusId")
                         .HasColumnType("integer");
 
@@ -59,8 +59,6 @@ namespace leaveApplication2.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("appliedLeaveTypeId");
-
-                    b.HasIndex("employeeId");
 
                     b.HasIndex("leaveStatusId");
 
@@ -269,12 +267,6 @@ namespace leaveApplication2.Migrations
 
             modelBuilder.Entity("leaveApplication2.Models.AppliedLeave", b =>
                 {
-                    b.HasOne("leaveApplication2.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("employeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("leaveApplication2.Models.LeaveStatus", "LeaveStatus")
                         .WithMany()
                         .HasForeignKey("leaveStatusId")
@@ -286,8 +278,6 @@ namespace leaveApplication2.Migrations
                         .HasForeignKey("leaveTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Employee");
 
                     b.Navigation("LeaveStatus");
 

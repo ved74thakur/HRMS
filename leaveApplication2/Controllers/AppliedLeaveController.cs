@@ -120,8 +120,9 @@ namespace leaveApplication2.Controllers
             }
         }
         //updateleavestatusasync
-        
-        [HttpPut("UpdateLeaveStatusAsync/{id}")]
+
+        [HttpPut("UpdateLeaveStatusAsync/{appliedLeaveTypeId}/{leaveStatusId}")]
+
         public async Task<CommonResponse<ActionResult<AppliedLeave>>> UpdateLeaveStatusAsync(long appliedLeaveTypeId, int leaveStatusId)
         {
             _logger.LogInformation($"Start UpdateAppliedLeave");
@@ -137,7 +138,7 @@ namespace leaveApplication2.Controllers
                     //no salutions found
 
                     return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
-
+                    
                 }
                 _logger.LogInformation($"Get the values of GetEmployeeByIdAsync");
                 _logger.LogInformation($"End GetEmployeeByIdAsync");

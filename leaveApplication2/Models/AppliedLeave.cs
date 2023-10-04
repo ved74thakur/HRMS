@@ -9,7 +9,11 @@ namespace leaveApplication2.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long appliedLeaveTypeId { get; set; }
+        //employee id
 
+        [ForeignKey("Employee")]
+        public long employeeId { get; set; }
+        public virtual Employee? Employee { get; set; } 
 
         [ForeignKey("LeaveType")]
         public int leaveTypeId { get; set; }

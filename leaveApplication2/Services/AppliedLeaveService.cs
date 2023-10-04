@@ -10,10 +10,12 @@ namespace leaveApplication2.Services
     public class AppliedLeaveService : IAppliedLeaveService
     {
         private readonly IAppliedLeaveRepository _leaveRepository;
+        private readonly ILeaveStatusRepository _leaveStatusRepository;
 
-        public AppliedLeaveService(IAppliedLeaveRepository leaveRepository)
+        public AppliedLeaveService(IAppliedLeaveRepository leaveRepository, ILeaveStatusRepository leaveStatusRepository)
         {
             _leaveRepository = leaveRepository;
+            _leaveStatusRepository = leaveStatusRepository;
         }
 
         public async Task<IEnumerable<AppliedLeave>> GetAppliedLeavesAsync()
@@ -40,6 +42,18 @@ namespace leaveApplication2.Services
             } 
             singleLeave.leaveStatusId = leaveStatusId;
             var updateLeave = await _leaveRepository.UpdateAppliedLeaveAsync(appliedLeaveTypeId, singleLeave);
+            var leaveStatus = await _leaveStatusRepository.GetLeaveStatusByIdAsync(leaveStatusId);
+            if (leaveStatus == null)
+            {
+                return null;
+            }
+            if(leaveStatus.leaveStatusNameCode == "APV")
+            {
+
+            }
+
+
+
             return updateLeave;
            
 
