@@ -38,8 +38,8 @@ namespace leaveApplication2.Models
         public string? LeaveReason { get; set; }
 
         //number of days leave taken
-        [Range(0, int.MaxValue, ErrorMessage = "NumberOFDays  must be a non-negative number.")]
-        public int applyLeaveDay { get; set; } = 0;
+        [Range(0, double.MaxValue, ErrorMessage = "NumberOFDays  must be a non-negative number.")]
+        public double applyLeaveDay { get; set; } = 0;
 
         [ForeignKey("LeaveStatus")]
         public int leaveStatusId { get; set; } 
@@ -50,16 +50,30 @@ namespace leaveApplication2.Models
 
 
 
-        [Range(0, int.MaxValue, ErrorMessage = "Difference must be a non-negative number.")]
-        public int remaingLeave { get; set; }
+        [Range(0, double.MaxValue, ErrorMessage = "Difference must be a non-negative number.")]
+        public double remaingLeave { get; set; }
 
-        [Range(0, int.MaxValue, ErrorMessage = "Balance Leave must be a non-negative number.")]
-        public int balanceLeave { get; set; }
+        [Range(0, double.MaxValue, ErrorMessage = "Balance Leave must be a non-negative number.")]
+        public double balanceLeave { get; set; }
 
 
         //[ForeignKey("employeeLeaveId")]
         //public int employeeLeaveId { get; set; }
         //public virtual EmployeeLeave? balanceLeaves { get; set; }
+
+
+        public bool IsRejected { get; set; } = false;
+        public bool IsApproved { get; set; } = false;
+
+        public string? ApprovedNotes { get; set; } = string.Empty;
+
+        public string? RejectedNotes { get; set; } = string.Empty;
+
+        public DateTime ApprovedDate { get; set; }
+
+        public DateTime RejectedDate { get; set; }
+
+        public bool IsHalfDay { get; set; } = false;
 
     }
 }

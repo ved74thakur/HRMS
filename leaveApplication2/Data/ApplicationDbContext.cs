@@ -14,9 +14,10 @@ namespace leaveApplication2.Data
 
         public DbSet<EmailModel> EmailModels { get; set; }
         public DbSet<LeaveStatus> LeaveStatuses { get; set; }
+        public DbSet<ActivationStatus> ActivationStatuses { get; set; }
         public DbSet<Test> Tests { get; set; }
         
-
+     
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

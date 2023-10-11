@@ -9,5 +9,6 @@ namespace leaveApplication2.Repostories
         Task<EmployeeLeave> GetEmployeeLeaveByIdAsync(long id);
         Task<EmployeeLeave> UpdateEmployeeLeaveAsync(long id, EmployeeLeave employeeLeave);
         Task<IReadOnlyCollection<EmployeeLeave>> GetEmployeeLeaveByEmployeeId(long employeeId);
+        Task<EmployeeLeave> GetEmployeeLeaveByEmployee(long employeeId, int leaveTypeId);
     }
 }

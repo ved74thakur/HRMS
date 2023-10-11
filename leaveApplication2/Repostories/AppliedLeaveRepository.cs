@@ -1,6 +1,7 @@
 ﻿using leaveApplication2.Data;
 using leaveApplication2.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace leaveApplication2.Repostories
 {
@@ -23,10 +24,22 @@ namespace leaveApplication2.Repostories
 
         public async Task<AppliedLeave> CreateAppliedLeave(AppliedLeave leave)
         {
-            _context.AppliedLeaves.Add(leave);
-             await _context.SaveChangesAsync();
-            return leave;
-            
+            try
+            {
+                _context.AppliedLeaves.Add(leave);
+                await _context.SaveChangesAsync();
+                return leave;
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception here or log it for debugging
+                // You can also throw a custom exception if needed
+                // Example: throw new CustomException("Failed to create applied leave.", ex);
+
+                // You can also rethrow the exception if you want to propagate it up the call stack
+                throw;
+            }
+
         }
 
         public async Task<AppliedLeave> GetAppliedLeaveByIdAsync(long id)
@@ -40,10 +53,6 @@ namespace leaveApplication2.Repostories
 
         }
         
-        
-        
-
-
         public async Task<AppliedLeave> UpdateAppliedLeaveAsync(long id,  AppliedLeave leave)
         {
             var singleLeave = await _context.AppliedLeaves.FindAsync(id);
@@ -63,6 +72,25 @@ namespace leaveApplication2.Repostories
             return singleLeave;
 
         }
+        public async Task<AppliedLeave> UpdateAppliedLeaveAsync(AppliedLeave leave)
+        {
+            try
+            {
+                _context.AppliedLeaves.Update(leave);
+                await _context.SaveChangesAsync();
+                return leave;
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception here, you can log it or take appropriate action
+                // For example, you can rethrow the exception, return a default value, or handle it gracefully
+                // Logging the exception is a good practice to help with debugging
+                // Example: _logger.LogError(ex, "An error occurred while updating the applied leave.");
+
+                throw; // Rethrow the exception to propagate it up the call stack
+            }
+        }
+
 
         public async Task<AppliedLeave> DeleteAppliedLeaveByIdAsync(long id)
         {
@@ -79,5 +107,45 @@ namespace leaveApplication2.Repostories
             
         }
 
+        public async Task<IReadOnlyCollection<AppliedLeave>> GetFilteredLeavesAsync(
+     Expression<Func<AppliedLeave, bool>> filter = null,
+     Expression<Func<AppliedLeave, object>> orderBy = null)
+        {
+            IQueryable<AppliedLeave> query = _context.AppliedLeaves;
+
+            try
+            {
+                if (filter != null)
+                {
+                    query = query.Where(filter);
+                }
+
+                if (orderBy != null)
+                {
+                    query = query.OrderBy(orderBy);
+                }
+
+                // Capture the generated SQL query as a string
+               // string sqlQuery = query.ToQueryString();
+
+                return await query.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception or log it as needed
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw; // Re-throw the exception if necessary
+            }
+        }
+
+        public async Task<IReadOnlyCollection<AppliedLeave>> GetUnApprovedAppliedLeavesAsync(AppliedLeave appliedLeave)
+        {
+            // Replace the condition with your specific criteria
+            var unapprovedLeaves = await _context.AppliedLeaves
+                .Where(leave => leave.employeeId == appliedLeave.employeeId && leave.IsApproved == appliedLeave.IsApproved && leave.leaveTypeId == appliedLeave.leaveTypeId && leave.IsHalfDay == appliedLeave.IsHalfDay)
+                .ToListAsync();
+
+            return unapprovedLeaves;
+        }
     }
 }

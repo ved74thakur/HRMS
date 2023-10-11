@@ -19,15 +19,15 @@ namespace leaveApplication2.Models
         public virtual LeaveType? LeaveType { get; set; }
 
         [Required(ErrorMessage = "LeaveCount is required")]
-        public int leaveCount { get; set; }
+        public double leaveCount { get; set; }
 
         [Required(ErrorMessage = "Consumed leaves is required")]
-        public int consumedLeaves { get; set; } 
+        public double consumedLeaves { get; set; } 
 
         [Required(ErrorMessage = "Balance leaves is required")]
         
        
-        public int balanceLeaves { get; set; }
+        public double balanceLeaves { get; set; }
 
         public bool isActive { get; set; } = false;
 

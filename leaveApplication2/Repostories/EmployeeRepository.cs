@@ -1,17 +1,25 @@
 ﻿using leaveApplication2.Data;
 using leaveApplication2.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace leaveApplication2.Repostories
 {
     public class EmployeeRepository: IEmployeeRepository
     {
-        private readonly ApplicationDbContext _context;
         
+        private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public EmployeeRepository(ApplicationDbContext context)
+
+        public EmployeeRepository(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         public async Task<IReadOnlyCollection<Employee>> GetAllEmployeesAsync()
@@ -31,21 +39,38 @@ namespace leaveApplication2.Repostories
             return singleEmployee;
         }
 
+
         
 
         public async Task<Employee> CreateEmployeeAsync(Employee employee)
         {
+
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
             return employee;
+            
         }
 
-        
+      
 
-        public async Task UpdateEmployeeAsync(Employee employee)
+        
+        public async Task<Employee> UpdateEmployeeRegistrationById(long id, Employee request)
+
         {
-            _context.Entry(employee).State = EntityState.Modified;
+            var singleEmployeeRegistration = await _context.Employees.FindAsync(id);
+            if (singleEmployeeRegistration == null)
+            {
+                return null;
+            }
+            singleEmployeeRegistration.firstName = request.firstName;
+            singleEmployeeRegistration.lastName = request.lastName;
+            singleEmployeeRegistration.employeeEmail = request.employeeEmail;
+            
+
+
             await _context.SaveChangesAsync();
+            return singleEmployeeRegistration;
+
         }
 
         public async Task DeleteEmployeeAsync(long id)
@@ -57,5 +82,10 @@ namespace leaveApplication2.Repostories
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task<Employee> GetEmployeeByEmailAsync(string email)
+        {
+            return await _context.Employees.SingleOrDefaultAsync(e => e.employeeEmail == email);
+        }
+
     }
 }

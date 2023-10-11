@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Cryptography;
 
 namespace leaveApplication2.Models
 {
@@ -27,8 +28,23 @@ namespace leaveApplication2.Models
         public int designationId { get; set; }
         public virtual Designation? Designation { get; set; }
 
+        [Required]
+        [MaxLength(255)]
+        public string employeePassword { get; set; }
+
+        [Required]
+        [MaxLength(255)]
+        public string employeeEmail { get; set; } = string.Empty;
+
+        [ForeignKey("ActivationStatus")]
+        public int activationStatusId { get; set; } = 1;
+        public virtual ActivationStatus? ActivationStatus { get; set; }
+
+        
+
 
         public bool isActive { get; set; }
+
        
     }
 }

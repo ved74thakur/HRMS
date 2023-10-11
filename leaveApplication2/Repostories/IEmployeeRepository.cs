@@ -8,7 +8,9 @@ namespace leaveApplication2.Repostories
         
         Task<Employee> GetEmployeeByIdAsync(long id);
         Task<Employee> CreateEmployeeAsync(Employee employee);
-        Task UpdateEmployeeAsync(Employee employee);
+        Task<Employee> UpdateEmployeeRegistrationById(long id, Employee request);
+        Task<Employee> GetEmployeeByEmailAsync(string email);
+        
         Task DeleteEmployeeAsync(long id);
     }
 }

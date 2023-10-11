@@ -5,22 +5,26 @@ namespace leaveApplication2.Models
 {
     public class EmployeeDto
     {
-        public long EmployeeId { get; set; }
-        public string EmployeeCode { get; set; } = string.Empty;
+        public long employeeId { get; set; }
+        public string employeeCode { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(255)]
-        public string FirstName { get; set; } = string.Empty;
+        public string firstName { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(255)]
-        public string LastName { get; set; } = string.Empty;
-
+        public string lastName { get; set; } = string.Empty;
 
        
 
+        [Required]
+        [MaxLength(255)]
+        public string employeeEmail { get; set; } = string.Empty;
 
+        public string password { get; set;} = string.Empty;
 
+ 
 
         [Required]
         

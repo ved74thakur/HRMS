@@ -50,18 +50,32 @@ namespace leaveApplication2.Repostories
         public async Task<EmployeeLeave> UpdateEmployeeLeaveAsync(long id, EmployeeLeave employeeLeave)
       
         {
-            var singleEmployeeLeave = await _context.EmployeeLeaves.FindAsync(id);
-            if (singleEmployeeLeave == null)
-            {
-                return null;
-            }
-            singleEmployeeLeave.consumedLeaves = employeeLeave.consumedLeaves;
-            singleEmployeeLeave.balanceLeaves = employeeLeave.balanceLeaves;
-            
 
+
+            _context.EmployeeLeaves.Update(employeeLeave);
             await _context.SaveChangesAsync();
-            return singleEmployeeLeave;
+            return employeeLeave;
 
         }
+
+        public async Task<EmployeeLeave> GetEmployeeLeaveByEmployee(long employeeId, int leaveTypeId)
+        {
+            // Assuming you have a DbContext called 'dbContext' with a DbSet for 'EmployeeLeave'
+            // Replace 'EmployeeLeave' and 'dbContext' with your actual entity and context names.
+
+            var employeeLeave = await _context.EmployeeLeaves
+                .Where(el => el.employeeId == employeeId && el.leaveTypeId == leaveTypeId)
+                .FirstOrDefaultAsync();
+
+            if (employeeLeave == null)
+            {
+                // Handle the case where the employee leave is not found, e.g., return NotFound or null.
+                // You can throw an exception or return a specific result as needed.
+                return null; // You can modify this to return NotFound or throw an exception.
+            }
+
+            return employeeLeave;
+        }
+
     }
 }

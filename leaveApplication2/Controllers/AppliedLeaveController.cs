@@ -63,6 +63,16 @@ namespace leaveApplication2.Controllers
 
             try
             {
+
+                var previousAppliedLeaves =  await _leaveService.GetUnApprovedAppliedLeavesAsync(leave);
+
+                if (previousAppliedLeaves.Count > 0)
+                {
+                    return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Already applied for the leave and approval is pending");
+                }
+
+
+
                 var newAppliedLeaveCreated = await _leaveService.CreateAppliedLeave(leave);
                 //var newAppliedLeaveCreated = CreatedAtAction(nameof(GetEmployeeById), new { id = employee.employeeId }, employee);
                 if (newAppliedLeaveCreated == null)
@@ -83,7 +93,7 @@ namespace leaveApplication2.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occured while creating new leave request");
-                return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+                return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message  + ex.InnerException);
             }
 
         }
@@ -208,6 +218,77 @@ namespace leaveApplication2.Controllers
             catch (Exception ex)
             {
                 // Error occurred during deletion
+                _logger.LogError(ex, "An error occurred while deleting the applied leave");
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+
+        // Update IsRejected
+        [HttpPut("UpdateIsRejectedAsync/{appliedLeaveTypeId}/{isRejected}")]
+        public async Task<ActionResult<CommonResponse<AppliedLeave>>> UpdateIsRejectedAsync(long appliedLeaveTypeId, bool isRejected)
+        {
+            try
+            {
+                var updatedLeave = await _leaveService.UpdateIsRejectedAsync(appliedLeaveTypeId, isRejected);
+                if (updatedLeave == null)
+                {
+                    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+                }
+
+                _logger.LogInformation($"End DeleteAppliedLeave");
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status204NoContent, "Success");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the applied leave");
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        // Update IsApproved
+        [HttpPut("UpdateIsApprovedAsync/{appliedLeaveTypeId}/{isApproved}")]
+        public async Task<ActionResult<CommonResponse<AppliedLeave>>> UpdateIsApprovedAsync([FromRoute] long appliedLeaveTypeId, [FromRoute] bool isApproved)
+        {
+            try
+            {
+                var updatedLeave = await _leaveService.UpdateIsApprovedAsync(appliedLeaveTypeId, isApproved);
+                if (updatedLeave == null)
+                {
+                    // Leave not found
+                    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+                }
+
+                // Successful deletion
+                _logger.LogInformation($"End DeleteAppliedLeave");
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status204NoContent, "Success");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the applied leave");
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        // Update IsApproved
+        [HttpPut("UpdateIsApprovedCancelAsync/{appliedLeaveTypeId}/{isApproved}")]
+        public async Task<ActionResult<CommonResponse<AppliedLeave>>> UpdateIsApprovedCancelAsync([FromRoute] long appliedLeaveTypeId, [FromRoute] bool isApproved)
+        {
+            try
+            {
+                var updatedLeave = await _leaveService.UpdateIsApprovedCancelAsync(appliedLeaveTypeId, isApproved);
+                if (updatedLeave == null)
+                {
+                    // Leave not found
+                    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+                }
+
+                // Successful deletion
+                _logger.LogInformation($"End DeleteAppliedLeave");
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status204NoContent, "Success");
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError(ex, "An error occurred while deleting the applied leave");
                 return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
