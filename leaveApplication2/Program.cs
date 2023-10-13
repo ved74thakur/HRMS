@@ -32,6 +32,8 @@ internal class Program
         builder.Services.AddScoped<ILeaveStatusRepository, LeaveStatusRepository>();
         builder.Services.AddScoped<ILeaveStatusService, LeaveStatusService>();
         builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+        builder.Services.AddScoped<IEmailService, EmailService>();
+
         builder.Services.AddTransient<GenericEmail>();
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         //ILeaveTypeRepository

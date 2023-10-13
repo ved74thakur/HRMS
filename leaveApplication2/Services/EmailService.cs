@@ -1,22 +1,27 @@
 ﻿using leaveApplication2.Models;
 using leaveApplication2.Repostories;
+using Microsoft.EntityFrameworkCore;
 
 namespace leaveApplication2.Services
 {
     public class EmailService : IEmailService
     {
     
-        private readonly IEmailRepository _emailRepository;
+        
+        private readonly IEmployeeRepository _employeeRepository;
 
-        public EmailService(IEmailRepository emailRepository)
+        public EmailService(IEmployeeRepository employeeRepository)
         {
-            _emailRepository = emailRepository;
+            _employeeRepository = employeeRepository;
+
         }
 
-        public async Task SendEmailAsync(EmailModel email)
+        public async Task<string> VerifyEmployeeEmailAsync(string employeeEmail)
         {
-            await _emailRepository.SendEmailAsync(email);
-   
+            // Check if the email already exists in the database
+
+            var employeeEmailVerify = await _employeeRepository.VerifyEmployeeEmailAsync(employeeEmail);
+            return employeeEmailVerify;
         }
 
     }

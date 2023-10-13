@@ -18,22 +18,22 @@ namespace leaveApplication2.Controllers
             _logger = logger;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SendEmail([FromBody] EmailModel email)
+        [HttpGet("getExistingEmail")]
+        public async Task<IActionResult> GetExistingEmployeeEmail(string employeeEmail)
         {
-            try
+            if (string.IsNullOrWhiteSpace(employeeEmail))
             {
-              
-                // Validate the email model if needed
-
-                await _emailService.SendEmailAsync(email);
-
-                return Ok("Email sent successfully");
+                return BadRequest("Email is required.");
             }
-            catch (Exception ex)
+
+            string existingEmail = await _emailService.VerifyEmployeeEmailAsync(employeeEmail);
+
+            if (!string.IsNullOrWhiteSpace(existingEmail))
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return Ok(existingEmail); // Email exists
             }
+
+            return NotFound("Email not found"); // Email doesn't exist
         }
     }
 }

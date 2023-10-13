@@ -20,7 +20,14 @@ namespace leaveApplication2.Models
             [MaxLength(255)]
             public string lastName { get; set; } = string.Empty;
 
-            public string gender { get; set; } = string.Empty;
+            [Required(ErrorMessage = "mobileNo is required")]
+            [MaxLength(255)]
+            public string mobileNo { get; set; } = string.Empty;
+
+            [Required(ErrorMessage = "Gender is required")]
+            [ForeignKey("Gender")]
+            public int genderId { get; set; }
+            public virtual Gender? Gender { get; set; }
 
 
             [Required(ErrorMessage = "Designation is required")]
@@ -36,11 +43,8 @@ namespace leaveApplication2.Models
             [MaxLength(255)]
             public string employeeEmail { get; set; } = string.Empty;
 
-            [ForeignKey("ActivationStatus")]
-            public int activationStatusId { get; set; } = 1;
-            public virtual ActivationStatus? ActivationStatus { get; set; }
-
-        
+            public DateOnly dateOfJoining { get; set; }
+            public DateOnly dateOfBirth { get; set; }
 
 
             public bool isActive { get; set; }

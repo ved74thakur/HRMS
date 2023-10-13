@@ -60,26 +60,26 @@ namespace leaveApplication2.Repostories
         }
 
 
-
-
-        public async Task<Employee> UpdateEmployeeRegistrationById(long id, Employee request)
-
+        public async Task<Employee> UpdateEmployeeAsync(Employee employee)
         {
-            var singleEmployeeRegistration = await _context.Employees.FindAsync(id);
-            if (singleEmployeeRegistration == null)
+            try
             {
-                return null;
+                _context.Employees.Update(employee);
+                await _context.SaveChangesAsync();
+                return employee;
             }
-            singleEmployeeRegistration.firstName = request.firstName;
-            singleEmployeeRegistration.lastName = request.lastName;
-            singleEmployeeRegistration.employeeEmail = request.employeeEmail;
-            
+            catch (Exception ex)
+            {
+                // Handle the exception here, you can log it or take appropriate action
+                // For example, you can rethrow the exception, return a default value, or handle it gracefully
+                // Logging the exception is a good practice to help with debugging
+                // Example: _logger.LogError(ex, "An error occurred while updating the applied leave.");
 
-
-            await _context.SaveChangesAsync();
-            return singleEmployeeRegistration;
-
+                throw; // Rethrow the exception to propagate it up the call stack
+            }
         }
+
+
 
         public async Task DeleteEmployeeAsync(long id)
         {
@@ -98,7 +98,23 @@ namespace leaveApplication2.Repostories
         public async Task<Employee> EmployeeLoginAsync(Employee  employee)
         {
             return await _context.Employees.SingleOrDefaultAsync(e => e.employeeEmail == employee.employeeEmail && e.employeePassword == employee.employeePassword);
-        }   
+        }
+
+        public async Task<string> VerifyEmployeeEmailAsync(string employeeEmail)
+        {
+            // Check if the email already exists in the database
+
+            var existingEmployee = await _context.Employees
+                .Where(e => e.employeeEmail == employeeEmail)
+                .FirstOrDefaultAsync();
+
+            if (existingEmployee != null)
+            {
+                return existingEmployee.employeeEmail;
+            }
+
+            return null; // Email doesn't exist
+        }
 
 
 

@@ -165,8 +165,9 @@ namespace leaveApplication2.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occured while creating new leave request");
-                
-                return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+                string errorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+
+                return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, errorMessage);
             }
 
         }
@@ -205,16 +206,16 @@ namespace leaveApplication2.Controllers
         */
 
         [HttpPut("UpdateEmployeeByIdAsync/{id}")]
-        public async Task<CommonResponse<ActionResult<Employee>>> UpdateEmployeeRegistrationById(long id, Employee request)
+        public async Task<CommonResponse<ActionResult<Employee>>> UpdateEmployeeByIdAsync(long id)
         {
-            _logger.LogInformation($"Start UpdateEmployeeRegistrationById");
+            _logger.LogInformation($"Start UpdateEmployeeByIdAsync");
 
 
             //return Ok(result);
             try
             {
-                var updateEmployeeRegistration = await _employeeService.UpdateEmployeeRegistrationById(id, request);
-                if (updateEmployeeRegistration == null)
+                var getSingleEmployeeById = await _employeeService.GetEmployeeByIdAsync(id);
+                if (getSingleEmployeeById == null)
                 {
                     _logger.LogInformation($"Start UpdateAppliedLeave null");
                     //no salutions found
@@ -223,9 +224,11 @@ namespace leaveApplication2.Controllers
 
                 }
                 _logger.LogInformation($"Get the values of GetEmployeeByIdAsync");
+                var updatedEmployee = await _employeeService.UpdateEmployeeAsync(getSingleEmployeeById);
+
                 _logger.LogInformation($"End GetEmployeeByIdAsync");
                 //Salutions found
-                return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", updateEmployeeRegistration);
+                return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", updatedEmployee);
                 // return this.CreateResponse<IEnumerable<Employee>>(StatusCode.Status200K, "Success", employee);
             }
             catch (Exception ex)

@@ -71,13 +71,12 @@ namespace leaveApplication2.Services
             var registerEmployee = await _employeeRepository.RegisterEmployeeAsync(employee);
             return registerEmployee;
         }
-        public async Task<Employee> UpdateEmployeeRegistrationById(long id, Employee request)
+        public async Task<Employee> UpdateEmployeeAsync(Employee employee)
         {
-
-            var updateEmployeeRegistration = await _employeeRepository.UpdateEmployeeRegistrationById(id, request);
-            return updateEmployeeRegistration;
-
+            var updatedEmployee = await _employeeRepository.UpdateEmployeeAsync(employee);
+            return updatedEmployee;
         }
+       
 
         public async Task DeleteEmployeeAsync(long id)
         {
