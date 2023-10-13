@@ -5,5 +5,7 @@
         public string ActivationToken { get; set; }
 
         public long employeeId { get; set; }
+        
+        public string name { get; set; }    
     }
 }
