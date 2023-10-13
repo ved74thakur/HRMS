@@ -41,21 +41,14 @@ namespace leaveApplication2.Repostories
 
 
 
-
-        /*
-        public async Task<LeaveStatus> UpdateAppliedLeaveAsync(int id, LeaveStatus leave)
+        public async Task<LeaveStatus> UpdateLeaveStatusAsync(LeaveStatus leaveStatus)
         {
-            var singleLeave = await _context.AppliedLeaves.FindAsync(id);
-            if (singleLeave == null)
-            {
-                return null;
-            }
-            
+            _context.LeaveStatuses.Update(leaveStatus);
             await _context.SaveChangesAsync();
-            return singleLeave;
-
+            return leaveStatus;
         }
-        */
+
+
         /*
         public async Task DeleteLeaveStatusAsync(int leaveStatusId)
         {

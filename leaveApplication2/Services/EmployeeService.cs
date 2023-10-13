@@ -12,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Mvc;
+using leaveApplication2.Dtos;
 
 namespace leaveApplication2.Services
 {
@@ -64,7 +65,12 @@ namespace leaveApplication2.Services
             var createdEmployee = await _employeeRepository.CreateEmployeeAsync(employee);
             return createdEmployee;
         }
+        public async Task<Employee> RegisterEmployeeAsync(Employee employee)
+        {
 
+            var registerEmployee = await _employeeRepository.RegisterEmployeeAsync(employee);
+            return registerEmployee;
+        }
         public async Task<Employee> UpdateEmployeeRegistrationById(long id, Employee request)
         {
 
@@ -78,8 +84,16 @@ namespace leaveApplication2.Services
             await _employeeRepository.DeleteEmployeeAsync(id);
         }
 
-       
-        
+        public async Task<Employee> EmployeeLoginAsync(EmployeeLoginDto employee)
+        {
+            var loggedEmployee = await _employeeRepository.EmployeeLoginAsync(new Employee() {  employeeEmail = employee.email, employeePassword = employee.password });
+            
+            
+
+            return loggedEmployee;
+        }
+
+
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             using (var hmac = new HMACSHA512(passwordSalt))

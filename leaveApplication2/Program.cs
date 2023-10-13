@@ -1,4 +1,5 @@
 
+using Leave.EmailTemplate;
 using leaveApplication2.Data;
 using leaveApplication2.Models;
 using leaveApplication2.Repostories;
@@ -30,9 +31,9 @@ internal class Program
         builder.Services.AddScoped<IEmployeeLeaveService, EmployeeLeaveService>();
         builder.Services.AddScoped<ILeaveStatusRepository, LeaveStatusRepository>();
         builder.Services.AddScoped<ILeaveStatusService, LeaveStatusService>();
-        
         builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-
+        builder.Services.AddTransient<GenericEmail>();
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         //ILeaveTypeRepository
         builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
         builder.Services.AddScoped<ILeaveTypeService, LeaveTypeService>();

@@ -8,5 +8,6 @@ namespace leaveApplication2.Services
         Task<LeaveStatus> GetLeaveStatusByIdAsync(int leaveStatusId);
         Task<LeaveStatus> CreateLeaveStatusAsync(LeaveStatus leaveStatus);
         Task<LeaveStatus> GetLeaveStatusByCodeAsync(string leaveStatusNameCode);
+        Task<LeaveStatus> UpdateLeaveStatusAsync(LeaveStatus leaveStatus);
     }
 }

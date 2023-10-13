@@ -1,4 +1,5 @@
-﻿using leaveApplication2.Models;
+﻿using leaveApplication2.Dtos;
+using leaveApplication2.Models;
 
 namespace leaveApplication2.Services
 {
@@ -11,7 +12,8 @@ namespace leaveApplication2.Services
         Task<Employee> UpdateEmployeeRegistrationById(long id, Employee request);
         Task DeleteEmployeeAsync(long id);
 
-        
+        Task<Employee> RegisterEmployeeAsync(Employee employee);
+        Task<Employee> EmployeeLoginAsync(EmployeeLoginDto employee);
         //Task<bool> VerifyPasswordAsync(long id, string password);
 
         //Task<bool> ActivateEmployeeAsync(ActivationRequest activationRequest);

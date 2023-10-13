@@ -11,6 +11,6 @@ namespace leaveApplication2.Repostories
 
         Task<LeaveStatus> GetLeaveStatusByCodeAsync(string leaveStatusNameCode);
 
-
+        Task<LeaveStatus> UpdateLeaveStatusAsync(LeaveStatus leaveStatus);
     }
 }

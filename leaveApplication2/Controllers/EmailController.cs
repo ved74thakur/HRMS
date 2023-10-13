@@ -1,4 +1,5 @@
-﻿using leaveApplication2.Models;
+﻿using Leave.EmailTemplate;
+using leaveApplication2.Models;
 using leaveApplication2.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -22,6 +23,7 @@ namespace leaveApplication2.Controllers
         {
             try
             {
+              
                 // Validate the email model if needed
 
                 await _emailService.SendEmailAsync(email);

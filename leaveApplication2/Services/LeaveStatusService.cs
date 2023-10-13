@@ -1,5 +1,7 @@
-﻿using leaveApplication2.Models;
+﻿
+using leaveApplication2.Models;
 using leaveApplication2.Repostories;
+using Microsoft.EntityFrameworkCore;
 
 namespace leaveApplication2.Services
 {
@@ -12,13 +14,13 @@ namespace leaveApplication2.Services
             _leaveStatusRepository = leaveStatusRepository;
         }
 
-        public async Task<IEnumerable<LeaveStatus>> GetLeaveStatusesAsync()
+        public async Task<IEnumerable<Models.LeaveStatus>> GetLeaveStatusesAsync()
         {
             return await _leaveStatusRepository.GetLeaveStatusesAsync();
             
         }
 
-        public async Task<LeaveStatus> GetLeaveStatusByCodeAsync(string leaveStatusNameCode)
+        public async Task<Models.LeaveStatus> GetLeaveStatusByCodeAsync(string leaveStatusNameCode)
         {
             var leaveStatusByCode = await _leaveStatusRepository.GetLeaveStatusByCodeAsync(leaveStatusNameCode);
             return leaveStatusByCode;
@@ -36,5 +38,14 @@ namespace leaveApplication2.Services
             var createdLeaveStatus = await _leaveStatusRepository.CreateLeaveStatusAsync(leaveStatus);
             return createdLeaveStatus;
         }
+        public async Task<LeaveStatus> UpdateLeaveStatusAsync(LeaveStatus leaveStatus)
+        {
+            var leaveStatusUpdated = await _leaveStatusRepository.UpdateLeaveStatusAsync(leaveStatus);
+            return leaveStatusUpdated;
+        }
+
+
+
+
     }
 }

@@ -109,12 +109,20 @@ namespace leaveApplication2.Services
             var applyLeave =   await _leaveRepository.GetAppliedLeaveByIdAsync(id);
 
             var employeeLeave  = await _employeeLeaveRepository.GetEmployeeLeaveByEmployee(applyLeave.employeeId, applyLeave.leaveTypeId);
-            employeeLeave.balanceLeaves = employeeLeave.balanceLeaves - applyLeave.applyLeaveDay;
-            employeeLeave.consumedLeaves = employeeLeave.consumedLeaves + applyLeave.applyLeaveDay;
+            //adding here
+           
+            
+                employeeLeave.balanceLeaves = employeeLeave.balanceLeaves - applyLeave.applyLeaveDay; //ERROR CHE
+                employeeLeave.consumedLeaves = employeeLeave.consumedLeaves + applyLeave.applyLeaveDay;
+     
 
             var employeeLeaveUpdate = await _employeeLeaveRepository.UpdateEmployeeLeaveAsync(employeeLeave.employeeLeaveId, employeeLeave);
 
-            applyLeave.ApprovedDate = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now); 
+            //applyLeave.ApprovedDate = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now);
+           // applyLeave.ApprovedDate = DateTime.Now;
+
+            DateTime utcDateTime = DateTime.Now.ToUniversalTime();
+            applyLeave.ApprovedDate = utcDateTime;
             applyLeave.IsApproved = true;
             applyLeave.ApprovedNotes = "";
 

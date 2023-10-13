@@ -4,6 +4,6 @@ namespace leaveApplication2.Services
 {
     public interface IJwtTokenService
     {
-        string GenerateToken(Employee employee);
+        //string GenerateToken(Employee employee);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using leaveApplication2.Data;
+using leaveApplication2.Dtos;
 using leaveApplication2.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -51,9 +52,16 @@ namespace leaveApplication2.Repostories
             
         }
 
-      
+        public async Task<Employee> RegisterEmployeeAsync(Employee employee)
+        {
+            _context.Employees.Add(employee);
+            await _context.SaveChangesAsync();
+            return employee;
+        }
 
-        
+
+
+
         public async Task<Employee> UpdateEmployeeRegistrationById(long id, Employee request)
 
         {
@@ -86,6 +94,13 @@ namespace leaveApplication2.Repostories
         {
             return await _context.Employees.SingleOrDefaultAsync(e => e.employeeEmail == email);
         }
+
+        public async Task<Employee> EmployeeLoginAsync(Employee  employee)
+        {
+            return await _context.Employees.SingleOrDefaultAsync(e => e.employeeEmail == employee.employeeEmail && e.employeePassword == employee.employeePassword);
+        }   
+
+
 
     }
 }

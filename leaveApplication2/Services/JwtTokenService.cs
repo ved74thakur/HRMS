@@ -14,7 +14,7 @@ namespace leaveApplication2.Services
         {
             _configuration = configuration;
         }
-
+        /*
         public string GenerateToken(Employee employee)
         {
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Secret"]);
@@ -33,5 +33,6 @@ namespace leaveApplication2.Services
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
+        */
     }
 }

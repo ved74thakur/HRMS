@@ -19,7 +19,7 @@ namespace leaveApplication2.Controllers
 
         //Employees 
         //Getting all employees
-        [HttpGet("GetLeaveStatusesAsync")] 
+        [HttpGet("GetLeaveStatusesAsync")]
         public async Task<CommonResponse<IEnumerable<LeaveStatus>>> GetLeaveStatusesAsync()
         {
             _logger.LogInformation($"Start GetLeaveStatusesAsync");
@@ -105,7 +105,25 @@ namespace leaveApplication2.Controllers
                 return this.CreateResponse<LeaveStatus>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [HttpPost("UpdateLeaveStatusAsync")]
+        public async Task<ActionResult<LeaveStatus>> UpdateLeaveStatusAsync([FromBody] LeaveStatus leaveStatus)
+        {
+            if (leaveStatus == null)
+            {
+                return BadRequest("LeaveStatus object is null");
+            }
+
+            try
+            {
+                var leaveStatusUpdated = await _leaveStatusService.UpdateLeaveStatusAsync(leaveStatus);
+                return Ok(leaveStatusUpdated);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
 
 
+        }
     }
 }

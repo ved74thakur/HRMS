@@ -14,7 +14,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-
+using leaveApplication2.Dtos;
 
 namespace leaveApplication2.Controllers     
 {
@@ -100,16 +100,52 @@ namespace leaveApplication2.Controllers
             }
 
         }
+        //register Employee
+        [HttpPost("RegisterEmployeeAsync")]
+        public async Task<CommonResponse<ActionResult<Employee>>> RegisterEmployeeAsync(Employee employee)
+        {
+            _logger.LogInformation($"Start RegisterEmployeeAsync");
+
+            try
+            {
+                var newEmployeeRegistered = await _employeeService.RegisterEmployeeAsync(employee);
+                //var newAppliedLeaveCreated = CreatedAtAction(nameof(GetEmployeeById), new { id = employee.employeeId }, employee);
+                if (newEmployeeRegistered == null)
+                {
+                    _logger.LogInformation($"Start CreateEmployeeLeaveAsync null");
+                    //no salutions found
+                    return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+
+                }
+                _logger.LogInformation($"Get the values of CreateEmployeeLeaveAsync");
+                _logger.LogInformation($"End CreateEmployeeLeave");
+                //Salutions found
+
+                return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", newEmployeeRegistered);
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while registering");
+
+
+                string errorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+
+                return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, errorMessage);
+            }
+
+        }
 
         //create employee
         [HttpPost("CreateNewEmployee")]
-        public async Task<CommonResponse<ActionResult<Employee>>> CreateNewEmployee(Employee request)
+        public async Task<CommonResponse<ActionResult<Employee>>> CreateNewEmployee(Employee employee)
         {
             _logger.LogInformation($"Start CreateNewEmployee");
 
             try
             {
-                var newEmployeeCreated = await _employeeService.CreateEmployeeAsync(request);
+                var newEmployeeCreated = await _employeeService.CreateEmployeeAsync(employee);
                 //var newAppliedLeaveCreated = CreatedAtAction(nameof(GetEmployeeById), new { id = employee.employeeId }, employee);
                 if (newEmployeeCreated == null)
                 {
@@ -225,10 +261,37 @@ namespace leaveApplication2.Controllers
                 return this.CreateResponse<Employee>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        
-     
 
+        [HttpPost("EmployeeLoginAsync")]
+        public async Task<CommonResponse<Employee>> EmployeeLoginAsync([FromBody] EmployeeLoginDto employee)
+        {
+            var selectedEmployee = await _employeeService.EmployeeLoginAsync(employee);
+            if (selectedEmployee == null)
+            {
+                _logger.LogInformation($"Start EmployeeLoginAsync null");
+                //no salutions found
+                return this.CreateResponse<Employee>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+            }
+            _logger.LogInformation($"Start DeleteAppliedLeave");
+            try
+            {
         
+                // Successful deletion
+                _logger.LogInformation($"End DeleteAppliedLeave");
+                return this.CreateResponse<Employee>(Microsoft.AspNetCore.Http.StatusCodes.Status204NoContent, "Success", selectedEmployee);
+            }
+            catch (Exception ex)
+            {
+                // Error occurred during deletion
+                _logger.LogError(ex, "An error occurred while deleting the applied leave");
+                return this.CreateResponse<Employee>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+
+
+
+
 
         /*
         //controller for leaves
