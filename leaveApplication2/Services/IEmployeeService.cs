@@ -17,6 +17,7 @@ namespace leaveApplication2.Services
         Task<Employee> EmployeeLoginAsync(EmployeeLoginDto employee);
 
         Task<Employee> GetEmployeeByEmailAsync(string email);
+        Task<Employee> UpdateEmployeePasswordAsync(long employeeId, EmployeeLoginDto employee);
         //Task<bool> VerifyPasswordAsync(long id, string password);
 
         //Task<bool> ActivateEmployeeAsync(ActivationRequest activationRequest);

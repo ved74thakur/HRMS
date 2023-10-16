@@ -247,7 +247,31 @@ namespace leaveApplication2.Controllers
             }
         }
 
+        [HttpPost("UpdateEmployeePassword")]
+        public async Task<CommonResponse<ActionResult<Employee>>> UpdateEmployeePasswordAsync([FromBody] EmployeeLoginDto employee)
+        {
+            _logger.LogInformation($"Start UpdateEmployeeByIdAsync");
 
+
+            //return Ok(result);
+            try
+            {
+
+                var updatedEmployee = await _employeeService.UpdateEmployeePasswordAsync(employee.employeeId,employee);
+
+                _logger.LogInformation($"End UpdateEmployeePasswordAsync");
+                //Salutions found
+                return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", updatedEmployee);
+                // return this.CreateResponse<IEnumerable<Employee>>(StatusCode.Status200K, "Success", employee);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured while creating new leave request");
+                string errorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+
+                return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, errorMessage);
+            }
+        }
 
 
 
