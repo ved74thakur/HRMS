@@ -90,9 +90,19 @@ namespace leaveApplication2.Controllers
                
                 try
                 {
+                    DateTime currentDateTime = DateTime.Now;
+                    string formattedDateTime = currentDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+                    var body = "";
+                    body += $"<p>Email sent on: {formattedDateTime}</p>";
+
+                    body += "<p>Please click one of the following buttons:</p>";
+                    body += $"<a href='http://localhost:5024/api/appliedLeave/UpdateIsApprovedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: green; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Approve</a>";
+                    body += $"<a href='http://localhost:5024/api/appliedLeave/UpdateIsRejectedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: red; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reject</a>";
+
+
                     await _genericEmail.SendEmailAsync("ved.thakur@wonderbiz.in", // Primary recipient
                             "Vacation Leave",
-                            "I am a going on vacation today",  appliedLeaveTypeId);
+                           body);
                            
                 }
                 catch (Exception emailEx)

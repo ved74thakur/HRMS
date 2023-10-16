@@ -6,17 +6,10 @@ namespace Leave.EmailTemplate
     public class GenericEmail
     {
 
-        public async Task SendEmailAsync(string toEmail, string subject, string body, long appliedLeaveTypeId)
+        public async Task SendEmailAsync(string toEmail, string subject, string body)
         {
-            DateTime currentDateTime = DateTime.Now;
-            string formattedDateTime = currentDateTime.ToString("yyyy-MM-dd HH:mm:ss");
-            body += $"<p>Email sent on: {formattedDateTime}</p>";
-
-            body += "<p>Please click one of the following buttons:</p>";
-            body += $"<a href='http://localhost:5024/api/appliedLeave/UpdateIsApprovedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: green; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Approve</a>";
-            body += $"<a href='http://localhost:5024/api/appliedLeave/UpdateIsRejectedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: red; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reject</a>";
-
-
+           
+          
             
             var mailMessage = new MailMessage
             {
@@ -172,6 +165,46 @@ namespace Leave.EmailTemplate
                 // Add error handling and logging here.
                 throw ex;
             }
+        }
+
+        public void SendPasswordResetEmailGeneric(string recipientEmail, string resetToken, long employeeId)
+        {
+            try
+            {
+                SmtpClient client = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential("ved74thakur@gmail.com", "eyom ydgc hfae pqvi"),
+                    EnableSsl = true // Enable SSL/TLS encryption
+                };
+
+                MailMessage mail = new MailMessage
+                {
+                    From = new MailAddress("ved74thakur@gmail.com", "WonderBiz Technologies Pvt Ltd"),
+                    Subject = "Password Reset",
+                    Body = $"<p>Click the link below to reset your password:</p>" +
+                           $"<p><a href='{GeneratePasswordResetLink(resetToken, employeeId)}'>Reset Password</a></p>",
+                    IsBodyHtml = true,
+                };
+
+                mail.To.Add(new MailAddress(recipientEmail));
+
+                client.Send(mail);
+            }
+            catch (Exception ex)
+            {
+                // Handle email sending failure here
+                throw new Exception("Email sending failed: " + ex.Message);
+            }
+
+        }
+        private string GeneratePasswordResetLink(string resetToken, long employeeId)
+        {
+            //amit se link
+            // Generate the URL for password reset, including the resetToken
+            // Example: return $"https://yourwebsite.com/reset-password?token={resetToken}";
+            //return $"http://localhost:3000/updatepassword/2?token={resestToken}/{employeeId}"
+            return $"http://localhost:3000/updatepassword/{employeeId}?token={resetToken}/";
         }
     }
 }

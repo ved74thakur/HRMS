@@ -91,7 +91,11 @@ namespace leaveApplication2.Services
 
             return loggedEmployee;
         }
-
+        public async Task<Employee> GetEmployeeByEmailAsync(string email)
+        {
+            // You can add additional validation or logic here if needed
+            return await _employeeRepository.GetEmployeeByEmailAsync(email);
+        }
 
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {

@@ -11,6 +11,7 @@ namespace leaveApplication2.Services
         Task<Employee> CreateEmployeeAsync(Employee employee);
         
         Task<Employee> UpdateEmployeeAsync(Employee employee);
+        Task<Employee> GetEmployeeByEmailAsync(string email);
         Task DeleteEmployeeAsync(long id);
 
         Task<Employee> RegisterEmployeeAsync(Employee employee);

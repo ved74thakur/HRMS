@@ -17,6 +17,7 @@ namespace leaveApplication2.Data
         public DbSet<ActivationStatus> ActivationStatuses { get; set; }
         public DbSet<Test> Tests { get; set; }
         
+        public DbSet<Gender> Genders { get; set; }
      
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
