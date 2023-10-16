@@ -141,6 +141,17 @@ namespace leaveApplication2.Services
             return loggedEmployee;
         }
 
+        public async Task<Employee> UpdateEmployeePasswordAsync(long employeeId, EmployeeLoginDto employee)
+        {
+            var selectedEmployee = await _employeeRepository.GetEmployeeByIdAsync(employeeId);
+            if (selectedEmployee == null)
+            {
+                return null;
+            }
+            selectedEmployee.employeePassword = employee.password;
+            var updatedEmployeePassword = await _employeeRepository.UpdateEmployeeAsync(selectedEmployee);
+            return updatedEmployeePassword;
+        }
 
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
