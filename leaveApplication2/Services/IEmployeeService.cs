@@ -5,15 +5,18 @@ namespace leaveApplication2.Services
 {
     public interface IEmployeeService
     {
-        Task<IEnumerable<Employee>> GetAllEmployeesAsync();
+        Task<IEnumerable<Employee>> GetEmployeesAsync();
         
         Task<Employee> GetEmployeeByIdAsync(long id);
         Task<Employee> CreateEmployeeAsync(Employee employee);
-        Task<Employee> UpdateEmployeeRegistrationById(long id, Employee request);
+        
+        Task<Employee> UpdateEmployeeAsync(Employee employee);
         Task DeleteEmployeeAsync(long id);
 
         Task<Employee> RegisterEmployeeAsync(Employee employee);
         Task<Employee> EmployeeLoginAsync(EmployeeLoginDto employee);
+
+        Task<Employee> GetEmployeeByEmailAsync(string email);
         //Task<bool> VerifyPasswordAsync(long id, string password);
 
         //Task<bool> ActivateEmployeeAsync(ActivationRequest activationRequest);

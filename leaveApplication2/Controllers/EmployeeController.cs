@@ -12,8 +12,6 @@ using System.Net.Mail;
 using System.Net;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using leaveApplication2.Dtos;
 
 namespace leaveApplication2.Controllers     
@@ -40,13 +38,13 @@ namespace leaveApplication2.Controllers
         }
         //Employees 
         //Getting all employees
-        [HttpGet]
-        public async Task<CommonResponse<IEnumerable<Employee>>> GetAllEmployees()
+        [HttpGet("GetEmployeesAsync")]
+        public async Task<CommonResponse<IEnumerable<Employee>>> GetEmployeesAsync()
         {
             _logger.LogInformation($"Start GetAllEmployees");
             try
             {
-                var employees = await _employeeService.GetAllEmployeesAsync();
+                var employees = await _employeeService.GetEmployeesAsync();
                 if( employees == null)
                 {
                     _logger.LogInformation($"Start GetAllEmployees null");
@@ -72,13 +70,13 @@ namespace leaveApplication2.Controllers
 
         //getting employee by id
         
-        [HttpGet("GetSingeEmployee{id}")]
-        public async Task<CommonResponse<Employee>> GetSingeEmployee(long id)
+        [HttpGet("GetEmployeeByIdAsync/{employeeId}")]
+        public async Task<CommonResponse<Employee>> GetEmployeeByIdAsync(long employeeId)
         {
             _logger.LogInformation($"Start GetEmployeeByIdAsync");
             try
             {
-                var singleEmployee = await _employeeService.GetEmployeeByIdAsync(id);
+                var singleEmployee = await _employeeService.GetEmployeeByIdAsync(employeeId);
                 if (singleEmployee == null)
                 {
                     _logger.LogInformation($"Start GetEmployeeByIdAsync null");
@@ -100,51 +98,17 @@ namespace leaveApplication2.Controllers
             }
 
         }
-        //register Employee
-        [HttpPost("RegisterEmployeeAsync")]
-        public async Task<CommonResponse<ActionResult<Employee>>> RegisterEmployeeAsync(Employee employee)
-        {
-            _logger.LogInformation($"Start RegisterEmployeeAsync");
-
-            try
-            {
-                var newEmployeeRegistered = await _employeeService.RegisterEmployeeAsync(employee);
-                //var newAppliedLeaveCreated = CreatedAtAction(nameof(GetEmployeeById), new { id = employee.employeeId }, employee);
-                if (newEmployeeRegistered == null)
-                {
-                    _logger.LogInformation($"Start CreateEmployeeLeaveAsync null");
-                    //no salutions found
-                    return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
-
-                }
-                _logger.LogInformation($"Get the values of CreateEmployeeLeaveAsync");
-                _logger.LogInformation($"End CreateEmployeeLeave");
-                //Salutions found
-
-                return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", newEmployeeRegistered);
-
-
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while registering");
-
-
-                string errorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-
-                return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, errorMessage);
-            }
-
-        }
+       
 
         //create employee
-        [HttpPost("CreateNewEmployee")]
-        public async Task<CommonResponse<ActionResult<Employee>>> CreateNewEmployee(Employee employee)
+        [HttpPost("CreateEmployeeAsync")]
+        public async Task<CommonResponse<ActionResult<Employee>>> CreateEmployeeAsync([FromBody] Employee employee)
         {
             _logger.LogInformation($"Start CreateNewEmployee");
 
             try
             {
+
                 var newEmployeeCreated = await _employeeService.CreateEmployeeAsync(employee);
                 //var newAppliedLeaveCreated = CreatedAtAction(nameof(GetEmployeeById), new { id = employee.employeeId }, employee);
                 if (newEmployeeCreated == null)
@@ -165,8 +129,9 @@ namespace leaveApplication2.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occured while creating new leave request");
-                
-                return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+                string errorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+
+                return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, errorMessage);
             }
 
         }
@@ -204,35 +169,29 @@ namespace leaveApplication2.Controllers
         }
         */
 
-        [HttpPut("UpdateEmployeeByIdAsync/{id}")]
-        public async Task<CommonResponse<ActionResult<Employee>>> UpdateEmployeeRegistrationById(long id, Employee request)
+        [HttpPost("UpdateEmployeeAsync")]
+        public async Task<CommonResponse<ActionResult<Employee>>> UpdateEmployeeAsync([FromBody] Employee employee)
         {
-            _logger.LogInformation($"Start UpdateEmployeeRegistrationById");
+            _logger.LogInformation($"Start UpdateEmployeeByIdAsync");
 
 
             //return Ok(result);
             try
             {
-                var updateEmployeeRegistration = await _employeeService.UpdateEmployeeRegistrationById(id, request);
-                if (updateEmployeeRegistration == null)
-                {
-                    _logger.LogInformation($"Start UpdateAppliedLeave null");
-                    //no salutions found
+               
+                var updatedEmployee = await _employeeService.UpdateEmployeeAsync(employee);
 
-                    return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
-
-                }
-                _logger.LogInformation($"Get the values of GetEmployeeByIdAsync");
                 _logger.LogInformation($"End GetEmployeeByIdAsync");
                 //Salutions found
-                return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", updateEmployeeRegistration);
+                return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", updatedEmployee);
                 // return this.CreateResponse<IEnumerable<Employee>>(StatusCode.Status200K, "Success", employee);
             }
             catch (Exception ex)
             {
-                //error occured
-                _logger.LogError(ex, "An error occured while retrieving all salutions");
-                return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+                _logger.LogError(ex, "An error occured while creating new leave request");
+                string errorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+
+                return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, errorMessage);
             }
         }
         [HttpDelete("DeleteEmployeeAsync/{id}")]
