@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using leaveApplication2.Data;
@@ -11,9 +12,11 @@ using leaveApplication2.Data;
 namespace leaveApplication2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231016054449_employeeUpdated785")]
+    partial class employeeUpdated785
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,24 @@ namespace leaveApplication2.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("leaveApplication2.Models.ActivationStatus", b =>
+                {
+                    b.Property<int>("activationStatusId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("activationStatusId"));
+
+                    b.Property<string>("activationStatus")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("activationStatusId");
+
+                    b.ToTable("ActivationStatuses");
+                });
 
             modelBuilder.Entity("leaveApplication2.Models.AppliedLeave", b =>
                 {
@@ -160,18 +181,19 @@ namespace leaveApplication2.Migrations
                     b.Property<int>("designationId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("emailAddress")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
                     b.Property<string>("employeeCode")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("employeeEmail")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
                     b.Property<string>("employeePassword")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("firstName")
                         .IsRequired()
@@ -189,6 +211,9 @@ namespace leaveApplication2.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<int>("leaveAllocationId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("mobileNo")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -198,10 +223,9 @@ namespace leaveApplication2.Migrations
 
                     b.HasIndex("designationId");
 
-                    b.HasIndex("emailAddress")
-                        .IsUnique();
-
                     b.HasIndex("genderId");
+
+                    b.HasIndex("leaveAllocationId");
 
                     b.ToTable("Employees");
                 });
@@ -422,9 +446,17 @@ namespace leaveApplication2.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("leaveApplication2.Models.LeaveAllocation", "LeaveAllocation")
+                        .WithMany()
+                        .HasForeignKey("leaveAllocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Designation");
 
                     b.Navigation("Gender");
+
+                    b.Navigation("LeaveAllocation");
                 });
 
             modelBuilder.Entity("leaveApplication2.Models.EmployeeLeave", b =>

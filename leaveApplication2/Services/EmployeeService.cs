@@ -7,8 +7,6 @@ using System.Net.Mail;
 using System.Net;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +21,7 @@ namespace leaveApplication2.Services
         //private readonly SmtpClient _smtpClient;
         //private readonly SmtpSettings _smtpSettings;
 
-        public EmployeeService(IEmployeeRepository employeeRepository, IConfiguration configuration, IOptions<SmtpSettings> smtpSettings)
+        public EmployeeService(IEmployeeRepository employeeRepository, IConfiguration configuration)
         {
             /*
             _smtpSettings = smtpSettings.Value;
@@ -45,9 +43,9 @@ namespace leaveApplication2.Services
             _configuration = configuration;
         }
 
-        public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
+        public async Task<IEnumerable<Employee>> GetEmployeesAsync()
         {
-            return await _employeeRepository.GetAllEmployeesAsync();
+            return await _employeeRepository.GetEmployeesAsync();
         }
         
 
@@ -71,12 +69,63 @@ namespace leaveApplication2.Services
             var registerEmployee = await _employeeRepository.RegisterEmployeeAsync(employee);
             return registerEmployee;
         }
+        //public async Task<Employee> UpdateEmployeeAsync(Employee employee)
+        //{
+
+        //    var getSingleEmployeeById = await _employeeRepository.GetEmployeeByIdAsync(employee.employeeId);
+        //    if (getSingleEmployeeById == null)
+        //    {
+
+        //    }
+
+
+        //    var updatedEmployee = await _employeeRepository.UpdateEmployeeAsync(employee);
+        //    return updatedEmployee;
+        //}
         public async Task<Employee> UpdateEmployeeAsync(Employee employee)
         {
-            var updatedEmployee = await _employeeRepository.UpdateEmployeeAsync(employee);
-            return updatedEmployee;
+            using var transaction = _employeeRepository.BeginTransaction(System.Data.IsolationLevel.ReadCommitted); // Specify the isolation level
+
+            try
+            {
+                var getSingleEmployeeById = await _employeeRepository.GetEmployeeByIdAsync(employee.employeeId);
+                if (getSingleEmployeeById == null)
+                {
+                    throw new ApplicationException("Employee not found"); // You can use a custom exception or a more appropriate one
+                }
+
+                // Update the properties of getSingleEmployeeById with the values from the employee object
+                getSingleEmployeeById.firstName = employee.firstName;
+                getSingleEmployeeById.emailAddress = employee.emailAddress;
+                getSingleEmployeeById.mobileNo = employee.mobileNo;
+                getSingleEmployeeById.lastName = employee.lastName;
+                getSingleEmployeeById.genderId = employee.genderId;
+                getSingleEmployeeById.designationId = employee.designationId;
+                getSingleEmployeeById.isActive = employee.isActive;
+                getSingleEmployeeById.dateOfJoining = employee.dateOfJoining;
+                getSingleEmployeeById.dateOfBirth = employee.dateOfBirth;
+             //   getSingleEmployeeById.employeePassword = employee.employeePassword;
+
+                // Save the changes to the database
+                var updatedEmployee = await _employeeRepository.UpdateEmployeeAsync(getSingleEmployeeById);
+
+                // Commit the transaction if everything is successful
+                transaction.Commit();
+
+                return updatedEmployee;
+            }
+            catch (Exception ex)
+            {
+                // Handle the error and optionally log it
+                transaction.Rollback(); // Rollback the transaction if an error occurs
+                throw; // Re-throw the exception for higher-level error handling
+            }
         }
-       
+        public async Task<Employee> GetEmployeeByEmailAsync(string email)
+        {
+            return await _employeeRepository.GetEmployeeByEmailAsync(email);
+        }
+
 
         public async Task DeleteEmployeeAsync(long id)
         {
@@ -85,17 +134,13 @@ namespace leaveApplication2.Services
 
         public async Task<Employee> EmployeeLoginAsync(EmployeeLoginDto employee)
         {
-            var loggedEmployee = await _employeeRepository.EmployeeLoginAsync(new Employee() {  employeeEmail = employee.email, employeePassword = employee.password });
+            var loggedEmployee = await _employeeRepository.EmployeeLoginAsync(new Employee() { emailAddress = employee.email, employeePassword = employee.password });
             
             
 
             return loggedEmployee;
         }
-        public async Task<Employee> GetEmployeeByEmailAsync(string email)
-        {
-            // You can add additional validation or logic here if needed
-            return await _employeeRepository.GetEmployeeByEmailAsync(email);
-        }
+
 
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
@@ -106,24 +151,7 @@ namespace leaveApplication2.Services
             }
         }
 
-        private string CreateToken(Employee employee)
-        {
-
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, employee.employeeEmail)
-            };
-
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Secret").Value));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: creds);
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-            return jwt;
-        }
+      
 
 
         /*public async Task<bool> VerifyPasswordAsync(long id, string password)

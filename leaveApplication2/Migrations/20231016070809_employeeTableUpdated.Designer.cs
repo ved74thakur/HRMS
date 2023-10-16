@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using leaveApplication2.Data;
@@ -11,9 +12,11 @@ using leaveApplication2.Data;
 namespace leaveApplication2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231016070809_employeeTableUpdated")]
+    partial class employeeTableUpdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -241,25 +244,6 @@ namespace leaveApplication2.Migrations
                     b.ToTable("EmployeeLeaves");
                 });
 
-            modelBuilder.Entity("leaveApplication2.Models.FinancialYear", b =>
-                {
-                    b.Property<int>("financialYearId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("financialYearId"));
-
-                    b.Property<DateOnly>("endDate")
-                        .HasColumnType("date");
-
-                    b.Property<DateOnly>("startDate")
-                        .HasColumnType("date");
-
-                    b.HasKey("financialYearId");
-
-                    b.ToTable("FinancialYears");
-                });
-
             modelBuilder.Entity("leaveApplication2.Models.Gender", b =>
                 {
                     b.Property<int>("genderId")
@@ -282,32 +266,6 @@ namespace leaveApplication2.Migrations
                     b.HasKey("genderId");
 
                     b.ToTable("Genders");
-                });
-
-            modelBuilder.Entity("leaveApplication2.Models.LeaveAllocation", b =>
-                {
-                    b.Property<int>("leaveAllocationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("leaveAllocationId"));
-
-                    b.Property<int>("financialYearId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("leaveCount")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("leaveTypeId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("leaveAllocationId");
-
-                    b.HasIndex("financialYearId");
-
-                    b.HasIndex("leaveTypeId");
-
-                    b.ToTable("LeaveAllocations");
                 });
 
             modelBuilder.Entity("leaveApplication2.Models.LeaveStatus", b =>
@@ -442,25 +400,6 @@ namespace leaveApplication2.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
-
-                    b.Navigation("LeaveType");
-                });
-
-            modelBuilder.Entity("leaveApplication2.Models.LeaveAllocation", b =>
-                {
-                    b.HasOne("leaveApplication2.Models.FinancialYear", "FinancialYear")
-                        .WithMany()
-                        .HasForeignKey("financialYearId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("leaveApplication2.Models.LeaveType", "LeaveType")
-                        .WithMany()
-                        .HasForeignKey("leaveTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("FinancialYear");
 
                     b.Navigation("LeaveType");
                 });

@@ -1,10 +1,9 @@
 ﻿using leaveApplication2.Data;
-using leaveApplication2.Dtos;
 using leaveApplication2.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+using System.Data;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
@@ -23,7 +22,7 @@ namespace leaveApplication2.Repostories
             _configuration = configuration;
         }
 
-        public async Task<IReadOnlyCollection<Employee>> GetAllEmployeesAsync()
+        public async Task<IReadOnlyCollection<Employee>> GetEmployeesAsync()
         {
             // return await _context.Employees.ToListAsync();
             return await _context.Employees.Include(e => e.Designation).AsNoTracking().ToListAsync();
@@ -75,7 +74,7 @@ namespace leaveApplication2.Repostories
                 // Logging the exception is a good practice to help with debugging
                 // Example: _logger.LogError(ex, "An error occurred while updating the applied leave.");
 
-                throw; // Rethrow the exception to propagate it up the call stack
+                throw ex; // Rethrow the exception to propagate it up the call stack
             }
         }
 
@@ -92,12 +91,12 @@ namespace leaveApplication2.Repostories
         }
         public async Task<Employee> GetEmployeeByEmailAsync(string email)
         {
-            return await _context.Employees.SingleOrDefaultAsync(e => e.employeeEmail == email);
+            return await _context.Employees.SingleOrDefaultAsync(e => e.emailAddress == email);
         }
 
         public async Task<Employee> EmployeeLoginAsync(Employee  employee)
         {
-            return await _context.Employees.SingleOrDefaultAsync(e => e.employeeEmail == employee.employeeEmail && e.employeePassword == employee.employeePassword);
+            return await _context.Employees.SingleOrDefaultAsync(e => e.emailAddress == employee.emailAddress && e.employeePassword == employee.employeePassword);
         }
 
         public async Task<string> VerifyEmployeeEmailAsync(string employeeEmail)
@@ -105,17 +104,20 @@ namespace leaveApplication2.Repostories
             // Check if the email already exists in the database
 
             var existingEmployee = await _context.Employees
-                .Where(e => e.employeeEmail == employeeEmail)
+                .Where(e => e.emailAddress == employeeEmail)
                 .FirstOrDefaultAsync();
 
             if (existingEmployee != null)
             {
-                return existingEmployee.employeeEmail;
+                return existingEmployee.emailAddress;
             }
 
             return null; // Email doesn't exist
         }
-
+        public IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel)
+        {
+            return _context.Database.BeginTransaction(isolationLevel);
+        }
 
 
     }

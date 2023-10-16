@@ -32,24 +32,43 @@ namespace leaveApplication2.Controllers
         {
             var employee = await _employeeService.GetEmployeeByEmailAsync(email.email);
 
-            if (employee != null && employee.employeeEmail != null && employee.employeeEmail == email.email)
+            if (employee != null && employee.emailAddress != null && employee.emailAddress == email.email)
             {
                 DateTime currentDateTime = DateTime.Now;
                 string formattedDateTime = currentDateTime.ToString("yyyy-MM-dd HH:mm:ss");
-                var body = $"";
+                var body = "";
 
+                // CSS style for the email body
+                string emailStyle = @"
+            <style>
+                p {
+                    font-size: 16px;
+                    color: #333;
+                }
+                a {
+                    text-decoration: none;
+                    background-color: #007BFF;
+                    color: white;
+                    padding: 10px 20px;
+                }
+            </style>
+        ";
+
+                body += $"<html><head>{emailStyle}</head><body>";
                 body += $"<p>Email sent on: {formattedDateTime}</p>";
-                body += "<p>Please click one of the following buttons:</p>";
-                body += $"<a href=http://localhost:3000/updatepassword/{employee.employeeId}";
+                body += "<p>Please click the following button:</p>";
+                body += $"<a href='http://localhost:3000/updatepassword/{employee.employeeId}'>Reset Password</a>";
+                body += "</body></html>";
 
-                await _genericEmail.SendEmailAsync(employee.employeeEmail, "Reset Password", body);
+                await _genericEmail.SendEmailAsync(employee.emailAddress, "Reset Password", body);
                 return Ok("Password reset email sent.");
             }
 
             return NotFound("Email not found.");
         }
 
-     
+
+
 
 
     }
