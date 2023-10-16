@@ -237,7 +237,7 @@ namespace leaveApplication2.Controllers
         
                 // Successful deletion
                 _logger.LogInformation($"End DeleteAppliedLeave");
-                return this.CreateResponse<Employee>(Microsoft.AspNetCore.Http.StatusCodes.Status204NoContent, "Success", selectedEmployee);
+                return this.CreateResponse<Employee>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", selectedEmployee);
             }
             catch (Exception ex)
             {

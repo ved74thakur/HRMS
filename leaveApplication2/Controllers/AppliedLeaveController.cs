@@ -1,4 +1,5 @@
-﻿using leaveApplication2.Models;
+﻿using Leave.EmailTemplate;
+using leaveApplication2.Models;
 using leaveApplication2.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,16 +12,17 @@ namespace leaveApplication2.Controllers
     {
         
         private readonly IAppliedLeaveService _leaveService;
-
+        private readonly GenericEmail _genericEmail;
         private readonly ILogger<EmployeeController> _logger;
 
         //private readonly IEmployeeLeaveService _employeeLeaveService;
-        public AppliedLeaveController(IAppliedLeaveService leaveService, ILogger<EmployeeController> logger)
+        public AppliedLeaveController(GenericEmail genericEmail,IAppliedLeaveService leaveService, ILogger<EmployeeController> logger)
         {
 
             
             _leaveService = leaveService;
             _logger = logger;
+            _genericEmail = genericEmail;
             //_employeeLeaveService = employeeLeaveService;
 
         }
@@ -60,6 +62,7 @@ namespace leaveApplication2.Controllers
         public async Task<CommonResponse<ActionResult<AppliedLeave>>> CreateAppliedLeaveAsync(AppliedLeave leave)
         {
             _logger.LogInformation($"Start CreateAppliedLeave");
+    
 
             try
             {
@@ -74,7 +77,7 @@ namespace leaveApplication2.Controllers
 
 
                 var newAppliedLeaveCreated = await _leaveService.CreateAppliedLeave(leave);
-
+                
 
                 //var newAppliedLeaveCreated = CreatedAtAction(nameof(GetEmployeeById), new { id = employee.employeeId }, employee);
                 if (newAppliedLeaveCreated == null)
@@ -86,7 +89,25 @@ namespace leaveApplication2.Controllers
                 }
                 _logger.LogInformation($"Get the values of AddAppliedLeave");
                 _logger.LogInformation($"End CreateAppliedLeave");
+                if (newAppliedLeaveCreated.IsApproved)
+                {
+                    return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest, "Leave is already approved. Cannot approve again.");
+                }
+                if (newAppliedLeaveCreated.IsRejected)
+                {
+                    return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest, "Leave is already rejected. Cannot reject again.");
+                }
                 //Salutions found
+                var appliedLeaveTypeId = newAppliedLeaveCreated.appliedLeaveTypeId;
+
+                DateTime currentDateTime = DateTime.Now;
+                string formattedDateTime = currentDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+                var body = "";
+                body += "<p>Please click one of the following buttons:</p>";
+                body += $"<a href='http://localhost:5024/api/appliedLeave/UpdateIsApprovedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: green; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Approve</a>";
+                body += $"<a href='http://localhost:5024/api/appliedLeave/UpdateIsRejectedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: red; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reject</a>";
+
+                await _genericEmail.SendEmailAsync("ved.thakur@wonderbiz.in", "Leave Approval", body);
 
                 return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", newAppliedLeaveCreated);
 
@@ -215,7 +236,7 @@ namespace leaveApplication2.Controllers
 
                 // Successful deletion
                 _logger.LogInformation($"End DeleteAppliedLeave");
-                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status204NoContent, "Success");
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success");
             }
             catch (Exception ex)
             {
@@ -227,7 +248,7 @@ namespace leaveApplication2.Controllers
 
 
         // Update IsRejected
-        [HttpPut("UpdateIsRejectedAsync/{appliedLeaveTypeId}/{isRejected}")]
+        [HttpGet("UpdateIsRejectedAsync/{appliedLeaveTypeId}/{isRejected}")]
         public async Task<ActionResult<CommonResponse<AppliedLeave>>> UpdateIsRejectedAsync(long appliedLeaveTypeId, bool isRejected)
         {
             try
@@ -239,7 +260,7 @@ namespace leaveApplication2.Controllers
                 }
 
                 _logger.LogInformation($"End DeleteAppliedLeave");
-                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status204NoContent, "Success");
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Rejected");
             }
             catch (Exception ex)
             {
@@ -249,7 +270,7 @@ namespace leaveApplication2.Controllers
         }
 
         // Update IsApproved
-        [HttpPut("UpdateIsApprovedAsync/{appliedLeaveTypeId}/{isApproved}")]
+        [HttpGet("UpdateIsApprovedAsync/{appliedLeaveTypeId}/{isApproved}")]
         public async Task<ActionResult<CommonResponse<AppliedLeave>>> UpdateIsApprovedAsync([FromRoute] long appliedLeaveTypeId, [FromRoute] bool isApproved)
         {
             try
@@ -270,7 +291,7 @@ namespace leaveApplication2.Controllers
 
                 // Successful deletion
                 _logger.LogInformation($"End DeleteAppliedLeave");
-                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status204NoContent, "Success");
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Approved");
             }
             catch (Exception ex)
             {
@@ -294,7 +315,7 @@ namespace leaveApplication2.Controllers
 
                 // Successful deletion
                 _logger.LogInformation($"End DeleteAppliedLeave");
-                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status204NoContent, "Success");
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success");
             }
             catch (Exception ex)
             {
