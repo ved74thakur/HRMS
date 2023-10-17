@@ -65,7 +65,7 @@ namespace leaveApplication2.Controllers
 
                 body += $"<html><head>{emailStyle}</head><body>";
                 body += $"<p>Email sent on: {formattedDateTime}</p>";
-                body += $"<p>Please click the following button:</p>";
+                body += $"<p>Please click the following button for resetting your password:</p>";
                 body += $"<a href='http://localhost:3000/updatepassword/{employee.employeeId}'>Reset Password</a>";
                 body += "</body></html>";
                 await _genericEmail.SendEmailAsync(employee.emailAddress, "Reset Password", body);

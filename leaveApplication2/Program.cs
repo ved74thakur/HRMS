@@ -34,6 +34,8 @@ internal class Program
         builder.Services.AddScoped<IGenderService, GenderService>();
         builder.Services.AddScoped<IDesignationRepository, DesignationRepository>();
         builder.Services.AddScoped<IDesignationService, DesignationService>();
+        builder.Services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
+        builder.Services.AddScoped<ILeaveAllocationService, LeaveAllocationService>();
         
         builder.Services.AddScoped<ILeaveStatusService, LeaveStatusService>();
         builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();

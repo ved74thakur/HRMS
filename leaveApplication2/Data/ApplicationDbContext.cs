@@ -1,4 +1,5 @@
 ﻿using leaveApplication2.Models;
+using leaveApplication2.Models.leaveApplication2.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace leaveApplication2.Data
@@ -20,6 +21,8 @@ namespace leaveApplication2.Data
         public DbSet<LeaveAllocation> LeaveAllocations { get; set; }
 
         public DbSet<FinancialYear> FinancialYears { get; set; }
+
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
