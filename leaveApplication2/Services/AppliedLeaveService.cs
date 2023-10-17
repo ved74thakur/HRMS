@@ -25,7 +25,7 @@ namespace leaveApplication2.Services
         {
             return await _leaveRepository.GetAppliedLeavesAsync();
         }
-
+       
         public async Task<AppliedLeave> CreateAppliedLeave(AppliedLeave leave)
         {
             //var singleLeave = await _leaveRepository.GetAppliedLeaveByIdAsync(id);
@@ -62,6 +62,23 @@ namespace leaveApplication2.Services
 
         }
         
+        //public async Task<IEnumerable<AppliedLeave>> GetAppliedLeavesAsync(long employeeId)
+        //{
+        //    try
+        //    {
+        //        Expression<Func<AppliedLeave, bool>> filter = la => la.employeeId == employeeId;
+        //        IReadOnlyCollection<AppliedLeave> leaveAllocations = await _leaveRepository.GetAppliedLeavesAsync(filter);
+
+        //        return leaveAllocations;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Handle the exception here, you can log it or take appropriate action
+        //        // You can also throw a custom exception or return a default value if needed.
+        //        //Console.WriteLine("An error occurred: " + ex.Message);
+        //        throw ex; // rethrow the exception or return a default value as needed
+        //    }
+        //}
 
 
         public async Task<AppliedLeave> GetAppliedLeaveByIdAsync(long id)
@@ -226,6 +243,11 @@ namespace leaveApplication2.Services
           var unApprovedAppliedLeaves =  await _leaveRepository.GetUnApprovedAppliedLeavesAsync(appliedLeave);
 
             return unApprovedAppliedLeaves;
+        }
+
+        public async Task<IEnumerable<AppliedLeave>> GetAppliedLeavesAsync(Expression<Func<AppliedLeave, bool>> filter)
+        {
+            return await _leaveRepository.GetAppliedLeavesAsync(filter);
         }
     }
 }

@@ -21,6 +21,12 @@ namespace leaveApplication2.Repostories
             
             //return await _context.EmployeeLeaves.Include(e => e.LeaveType).AsNoTracking().ToListAsync();
         }
+        public async Task<IReadOnlyCollection<AppliedLeave>> GetAppliedLeavesAsync(Expression<Func<AppliedLeave, bool>> filter)
+        {
+            return await _context.AppliedLeaves.Where(filter).ToListAsync();
+        }
+
+
 
         public async Task<AppliedLeave> CreateAppliedLeave(AppliedLeave leave)
         {

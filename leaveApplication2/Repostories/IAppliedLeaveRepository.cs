@@ -6,6 +6,8 @@ namespace leaveApplication2.Repostories
     public interface IAppliedLeaveRepository
     {
         Task<IReadOnlyCollection<AppliedLeave>> GetAppliedLeavesAsync();
+        Task<IReadOnlyCollection<AppliedLeave>> GetAppliedLeavesAsync(Expression<Func<AppliedLeave, bool>> filter);
+
         Task<AppliedLeave> CreateAppliedLeave(AppliedLeave leave);
         Task<AppliedLeave> GetAppliedLeaveByIdAsync(long id);
         Task<AppliedLeave> UpdateAppliedLeaveAsync(long id, AppliedLeave leave);
