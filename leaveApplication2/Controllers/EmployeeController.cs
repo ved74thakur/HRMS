@@ -25,7 +25,7 @@ namespace leaveApplication2.Controllers
         private readonly IConfiguration _configuration;
 
         private readonly ILogger<EmployeeController> _logger;
-
+        
         //private readonly IEmployeeLeaveService _employeeLeaveService;
         public EmployeeController(IEmployeeService employeeService, IAppliedLeaveService leaveService, ILogger<EmployeeController> logger, IConfiguration configuration)
         {
@@ -33,6 +33,7 @@ namespace leaveApplication2.Controllers
             _employeeService = employeeService;
             _leaveService = leaveService;
             _logger  = logger;
+            
             //_employeeLeaveService = employeeLeaveService;
 
         }
@@ -237,7 +238,7 @@ namespace leaveApplication2.Controllers
         
                 // Successful deletion
                 _logger.LogInformation($"End DeleteAppliedLeave");
-                return this.CreateResponse<Employee>(Microsoft.AspNetCore.Http.StatusCodes.Status204NoContent, "Success", selectedEmployee);
+                return this.CreateResponse<Employee>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", selectedEmployee);
             }
             catch (Exception ex)
             {

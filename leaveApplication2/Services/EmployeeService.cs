@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Mvc;
 using leaveApplication2.Dtos;
+using System.Linq.Expressions;
 
 namespace leaveApplication2.Services
 {
@@ -18,10 +19,12 @@ namespace leaveApplication2.Services
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IConfiguration _configuration;
+        private readonly ILeaveAllocationRepository _leaveAllocationRepository;
+        private readonly IEmployeeLeaveRepository _employeeLeaveRepository;
         //private readonly SmtpClient _smtpClient;
         //private readonly SmtpSettings _smtpSettings;
 
-        public EmployeeService(IEmployeeRepository employeeRepository, IConfiguration configuration)
+        public EmployeeService(IEmployeeRepository employeeRepository, IConfiguration configuration, ILeaveAllocationRepository leaveAllocationRepository, IEmployeeLeaveRepository employeeLeaveRepository)
         {
             /*
             _smtpSettings = smtpSettings.Value;
@@ -41,6 +44,8 @@ namespace leaveApplication2.Services
             */
             _employeeRepository = employeeRepository;
             _configuration = configuration;
+            _leaveAllocationRepository = leaveAllocationRepository;
+            _employeeLeaveRepository = employeeLeaveRepository;
         }
 
         public async Task<IEnumerable<Employee>> GetEmployeesAsync()
@@ -61,6 +66,30 @@ namespace leaveApplication2.Services
         {
             //employee.SetPassword(employee.passwordHash);
             var createdEmployee = await _employeeRepository.CreateEmployeeAsync(employee);
+            Expression<Func<LeaveAllocation, bool>> filter = la => la.financialYearId == 1;
+            IReadOnlyCollection<LeaveAllocation> leaveAllocations = await _leaveAllocationRepository.GetLeaveAllocationsAsync(filter);
+
+
+            // Assuming you have the filter and leaveAllocations as mentioned in your code
+
+            foreach (var leaveAllocation in leaveAllocations)
+            {
+                // Create an EmployeeLeave object based on the LeaveAllocation
+                var leave = new EmployeeLeave
+                {
+                    employeeId = createdEmployee.employeeId, // Set the appropriate employeeId
+                    leaveTypeId = leaveAllocation.leaveTypeId,
+                    leaveCount = leaveAllocation.leaveCount,
+                    consumedLeaves = 0, // Initialize consumedLeaves as required
+                    balanceLeaves = leaveAllocation.leaveCount, // Initialize balanceLeaves as the leaveCount from LeaveAllocation
+                    isActive = true // Set isActive as required
+                };
+
+                // Insert the created EmployeeLeave object into your repository
+                var createdLeave = await _employeeLeaveRepository.CreateEmployeeLeaveAsync(leave);
+
+                // If needed, you can work with the createdLeave object or perform additional operations here.
+            }
             return createdEmployee;
         }
         public async Task<Employee> RegisterEmployeeAsync(Employee employee)
@@ -131,7 +160,7 @@ namespace leaveApplication2.Services
         {
             await _employeeRepository.DeleteEmployeeAsync(id);
         }
-
+            
         public async Task<Employee> EmployeeLoginAsync(EmployeeLoginDto employee)
         {
             var loggedEmployee = await _employeeRepository.EmployeeLoginAsync(new Employee() { emailAddress = employee.email, employeePassword = employee.password });

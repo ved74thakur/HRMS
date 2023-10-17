@@ -1,5 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using leaveApplication2.Models.leaveApplication2.Models;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace leaveApplication2.Models
 {
@@ -21,6 +22,6 @@ namespace leaveApplication2.Models
         [Required(ErrorMessage = "Leave count is required")]
         public int leaveCount { get; set; }
 
-     
+
     }
 }
