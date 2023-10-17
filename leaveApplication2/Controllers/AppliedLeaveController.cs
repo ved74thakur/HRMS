@@ -39,7 +39,7 @@ namespace leaveApplication2.Controllers
                 {
                     _logger.LogInformation($"Start GetAllEmployeesLeaves null");
                     //no salutions found
-                    return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+                    return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No Employees Found.");
 
                     //this.CreateResponse<Employee> (,)
                 }
@@ -71,7 +71,7 @@ namespace leaveApplication2.Controllers
                 {
                     _logger.LogInformation($"Start GetAllEmployeesLeaves null");
                     //no salutions found
-                    return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+                    return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No Employee found.");
 
                     //this.CreateResponse<Employee> (,)
                 }
@@ -94,65 +94,51 @@ namespace leaveApplication2.Controllers
         [HttpPost("CreateAppliedLeaveAsync")]
         public async Task<CommonResponse<ActionResult<AppliedLeave>>> CreateAppliedLeaveAsync(AppliedLeave leave)
         {
-            _logger.LogInformation($"Start CreateAppliedLeave");
-    
+            _logger.LogInformation("Start CreateAppliedLeave");
 
             try
             {
-
-                var previousAppliedLeaves =  await _leaveService.GetUnApprovedAppliedLeavesAsync(leave);
+                var previousAppliedLeaves = await _leaveService.GetUnApprovedAppliedLeavesAsync(leave);
 
                 if (previousAppliedLeaves.Count > 0)
                 {
-                    return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Already applied for the leave and approval is pending");
+                    return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Already applied for the leave, and approval is pending");
                 }
-
-
 
                 var newAppliedLeaveCreated = await _leaveService.CreateAppliedLeave(leave);
-                
 
-                //var newAppliedLeaveCreated = CreatedAtAction(nameof(GetEmployeeById), new { id = employee.employeeId }, employee);
                 if (newAppliedLeaveCreated == null)
                 {
-                    _logger.LogInformation($"Start AddAppliedLeave null");
-                    //no salutions found
-                    return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+                    _logger.LogInformation("Start AddAppliedLeave null");
+                    return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutations found.");
+                }
 
-                }
-                _logger.LogInformation($"Get the values of AddAppliedLeave");
-                _logger.LogInformation($"End CreateAppliedLeave");
-                if (newAppliedLeaveCreated.IsApproved)
-                {
-                    return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest, "Leave is already approved. Cannot approve again.");
-                }
-                if (newAppliedLeaveCreated.IsRejected)
-                {
-                    return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest, "Leave is already rejected. Cannot reject again.");
-                }
-                //Salutions found
+                _logger.LogInformation("Get the values of AddAppliedLeave");
+                _logger.LogInformation("End CreateAppliedLeave");
+
+               
+
                 var appliedLeaveTypeId = newAppliedLeaveCreated.appliedLeaveTypeId;
 
                 DateTime currentDateTime = DateTime.Now;
                 string formattedDateTime = currentDateTime.ToString("yyyy-MM-dd HH:mm:ss");
                 var body = "";
-                body += "<p>Please click one of the following buttons:</p>";
+                body += "<p>Employee has request for leave approval</p>";
+                body += "<p>Please click one of the following buttons to approve or reject leave:</p>";
                 body += $"<a href='http://localhost:5024/api/appliedLeave/UpdateIsApprovedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: green; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Approve</a>";
                 body += $"<a href='http://localhost:5024/api/appliedLeave/UpdateIsRejectedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: red; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reject</a>";
 
                 await _genericEmail.SendEmailAsync("ved.thakur@wonderbiz.in", "Leave Approval", body);
 
                 return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", newAppliedLeaveCreated);
-
-
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured while creating new leave request");
-                return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message  + ex.InnerException);
+                _logger.LogError(ex, "An error occurred while creating a new leave request");
+                return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message + ex.InnerException);
             }
-
         }
+
         //update leave
         [HttpPut("UpdateAppliedLeaveAsync/{id}")]
         public async Task<CommonResponse<ActionResult<AppliedLeave>>> UpdateAppliedLeaveAsync(long id, AppliedLeave leave)
@@ -187,38 +173,38 @@ namespace leaveApplication2.Controllers
         }
         //updateleavestatusasync
 
-        [HttpPut("UpdateLeaveStatusAsync/{appliedLeaveTypeId}/{leaveStatusId}")]
+        //[HttpPut("UpdateLeaveStatusAsync/{appliedLeaveTypeId}/{leaveStatusId}")]
 
-        public async Task<CommonResponse<ActionResult<AppliedLeave>>> UpdateLeaveStatusAsync(long appliedLeaveTypeId, int leaveStatusId)
-        {
-            _logger.LogInformation($"Start UpdateAppliedLeave");
+        //public async Task<CommonResponse<ActionResult<AppliedLeave>>> UpdateLeaveStatusAsync(long appliedLeaveTypeId, int leaveStatusId)
+        //{
+        //    _logger.LogInformation($"Start UpdateAppliedLeave");
 
 
-            //return Ok(result);
-            try
-            {
-                var updatedLeaveStatus = await _leaveService.UpdateLeaveStatusAsync(appliedLeaveTypeId, leaveStatusId);
-                if (updatedLeaveStatus == null)
-                {
-                    _logger.LogInformation($"Start UpdateAppliedLeave null");
-                    //no salutions found
+        //    //return Ok(result);
+        //    try
+        //    {
+        //        var updatedLeaveStatus = await _leaveService.UpdateLeaveStatusAsync(appliedLeaveTypeId, leaveStatusId);
+        //        if (updatedLeaveStatus == null)
+        //        {
+        //            _logger.LogInformation($"Start UpdateAppliedLeave null");
+        //            //no salutions found
 
-                    return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+        //            return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
                     
-                }
-                _logger.LogInformation($"Get the values of GetEmployeeByIdAsync");
-                _logger.LogInformation($"End GetEmployeeByIdAsync");
-                //Salutions found
-                return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", updatedLeaveStatus);
-                // return this.CreateResponse<IEnumerable<Employee>>(StatusCode.Status200K, "Success", employee);
-            }
-            catch (Exception ex)
-            {
-                //error occured
-                _logger.LogError(ex, "An error occured while retrieving all salutions");
-                return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
+        //        }
+        //        _logger.LogInformation($"Get the values of GetEmployeeByIdAsync");
+        //        _logger.LogInformation($"End GetEmployeeByIdAsync");
+        //        //Salutions found
+        //        return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", updatedLeaveStatus);
+        //        // return this.CreateResponse<IEnumerable<Employee>>(StatusCode.Status200K, "Success", employee);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //error occured
+        //        _logger.LogError(ex, "An error occured while retrieving all salutions");
+        //        return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+        //    }
+        //}
         //getSingleLeave
 
         [HttpGet("GetAppliedLeaveByIdAsync/{id}")]
@@ -286,6 +272,17 @@ namespace leaveApplication2.Controllers
         {
             try
             {
+                var existingLeave = await _leaveService.GetAppliedLeaveByIdAsync(appliedLeaveTypeId);
+                if (existingLeave == null)
+                {
+                    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Leave not found.");
+                }
+
+                if (existingLeave.IsRejected)
+                {
+                    // Leave is already approved
+                    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest, "Leave is already rejected.");
+                }
                 var updatedLeave = await _leaveService.UpdateIsRejectedAsync(appliedLeaveTypeId, isRejected);
                 if (updatedLeave == null)
                 {
@@ -312,14 +309,24 @@ namespace leaveApplication2.Controllers
                 //if (singleAppliedLeave.IsApproved) {
                 //    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status208AlreadyReported, "Leave already approve");
                 //}
+                var existingLeave = await _leaveService.GetAppliedLeaveByIdAsync(appliedLeaveTypeId);
+                if (existingLeave == null)
+                {
+                    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Leave not found.");
+                }
 
+                if (existingLeave.IsApproved)
+                {
+                    // Leave is already approved
+                    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest, "Leave is already approved.");
+                }
 
 
                 var updatedLeave = await _leaveService.UpdateIsApprovedAsync(appliedLeaveTypeId, isApproved);
                 if (updatedLeave == null)
                 {
                     // Leave not found
-                    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+                    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Leave not found.");
                 }
 
                 // Successful deletion

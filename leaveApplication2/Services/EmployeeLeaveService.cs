@@ -8,12 +8,12 @@ namespace leaveApplication2.Services
     {
 
         private readonly IEmployeeLeaveRepository _employeeLeaveRepository;
-        private readonly ILeaveStatusRepository _leaveStatusRepository;
+        //private readonly ILeaveStatusRepository _leaveStatusRepository;
 
-        public EmployeeLeaveService(IEmployeeLeaveRepository employeeLeaveRepository, ILeaveStatusRepository leaveStatusRepository)
+        public EmployeeLeaveService(IEmployeeLeaveRepository employeeLeaveRepository)
         {
             _employeeLeaveRepository = employeeLeaveRepository;
-            _leaveStatusRepository = leaveStatusRepository;
+            
 
         }
 
@@ -51,21 +51,21 @@ namespace leaveApplication2.Services
         }
         //UPDATE EMPLOYEE LEAVE BASED ON STATUSCODE FOR APPROVE
 
-        public async Task<EmployeeLeave> UpdateEmployeeLeaveIfAPV(long id, string leaveStatusNameCode, EmployeeLeave employeeLeave)
-        {
-            var leaveStatusCode = await _leaveStatusRepository.GetLeaveStatusByCodeAsync(leaveStatusNameCode);
-            if (leaveStatusCode == null)
-            {
-                return null;
-            }
+        //public async Task<EmployeeLeave> UpdateEmployeeLeaveIfAPV(long id, string leaveStatusNameCode, EmployeeLeave employeeLeave)
+        //{
+        //    var leaveStatusCode = await _leaveStatusRepository.GetLeaveStatusByCodeAsync(leaveStatusNameCode);
+        //    if (leaveStatusCode == null)
+        //    {
+        //        return null;
+        //    }
 
-            else if (leaveStatusCode.leaveStatusNameCode == "APV")
-            {
-                return await UpdateEmployeeLeaveAsync(id, employeeLeave);
-            }
+        //    else if (leaveStatusCode.leaveStatusNameCode == "APV")
+        //    {
+        //        return await UpdateEmployeeLeaveAsync(id, employeeLeave);
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
         
 
 

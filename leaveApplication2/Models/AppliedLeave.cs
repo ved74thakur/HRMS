@@ -43,7 +43,7 @@ namespace leaveApplication2.Models
 
         [ForeignKey("LeaveStatus")]
         public int leaveStatusId { get; set; } 
-        public virtual LeaveStatus? LeaveStatus { get; set; }
+        //public virtual LeaveStatus? LeaveStatus { get; set; }
 
 
 

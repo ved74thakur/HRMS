@@ -10,7 +10,7 @@ namespace leaveApplication2.Services
         Task<AppliedLeave> CreateAppliedLeave(AppliedLeave leave);
         Task<AppliedLeave> GetAppliedLeaveByIdAsync(long id);
         Task<AppliedLeave> UpdateAppliedLeaveAsync(long id, AppliedLeave leave);
-        Task<AppliedLeave> UpdateLeaveStatusAsync(long appliedLeaveTypeId, int leaveStatusId);
+        //Task<AppliedLeave> UpdateLeaveStatusAsync(long appliedLeaveTypeId, int leaveStatusId);
         Task DeleteAppliedLeaveByIdAsync(long id);
 
         Task<AppliedLeave> UpdateIsRejectedAsync(long id, bool isRejected);

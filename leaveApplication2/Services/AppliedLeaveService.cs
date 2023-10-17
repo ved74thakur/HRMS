@@ -11,13 +11,13 @@ namespace leaveApplication2.Services
     public class AppliedLeaveService : IAppliedLeaveService
     {
         private readonly IAppliedLeaveRepository _leaveRepository;
-        private readonly ILeaveStatusRepository _leaveStatusRepository;
+        //private readonly ILeaveStatusRepository _leaveStatusRepository;
         private readonly IEmployeeLeaveRepository _employeeLeaveRepository;
 
-        public AppliedLeaveService(IAppliedLeaveRepository leaveRepository, ILeaveStatusRepository leaveStatusRepository, IEmployeeLeaveRepository employeeLeaveRepository)
+        public AppliedLeaveService(IAppliedLeaveRepository leaveRepository,  IEmployeeLeaveRepository employeeLeaveRepository)
         {
             _leaveRepository = leaveRepository;
-            _leaveStatusRepository = leaveStatusRepository;
+           
             _employeeLeaveRepository = employeeLeaveRepository;
         }
 
@@ -36,31 +36,31 @@ namespace leaveApplication2.Services
         }
 
         //END POINT
-        public async Task<AppliedLeave> UpdateLeaveStatusAsync(long appliedLeaveTypeId , int leaveStatusId)
-        {
-            var singleLeave = await _leaveRepository.GetAppliedLeaveByIdAsync(appliedLeaveTypeId);
-            if (singleLeave == null)
-            {
-                return null;
-            } 
-            singleLeave.leaveStatusId = leaveStatusId;
-            var updateLeave = await _leaveRepository.UpdateAppliedLeaveAsync(appliedLeaveTypeId, singleLeave);
-            var leaveStatus = await _leaveStatusRepository.GetLeaveStatusByIdAsync(leaveStatusId);
-            if (leaveStatus == null)
-            {
-                return null;
-            }
-            if(leaveStatus.leaveStatusNameCode == "APV")
-            {
+        //public async Task<AppliedLeave> UpdateLeaveStatusAsync(long appliedLeaveTypeId , int leaveStatusId)
+        //{
+        //    var singleLeave = await _leaveRepository.GetAppliedLeaveByIdAsync(appliedLeaveTypeId);
+        //    if (singleLeave == null)
+        //    {
+        //        return null;
+        //    } 
+        //    singleLeave.leaveStatusId = leaveStatusId;
+        //    var updateLeave = await _leaveRepository.UpdateAppliedLeaveAsync(appliedLeaveTypeId, singleLeave);
+        //    var leaveStatus = await _leaveStatusRepository.GetLeaveStatusByIdAsync(leaveStatusId);
+        //    if (leaveStatus == null)
+        //    {
+        //        return null;
+        //    }
+        //    if(leaveStatus.leaveStatusNameCode == "APV")
+        //    {
 
-            }
+        //    }
 
 
 
-            return updateLeave;
+        //    return updateLeave;
            
 
-        }
+        //}
         
         //public async Task<IEnumerable<AppliedLeave>> GetAppliedLeavesAsync(long employeeId)
         //{
