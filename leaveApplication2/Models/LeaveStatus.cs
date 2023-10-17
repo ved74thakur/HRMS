@@ -1,18 +1,20 @@
-﻿//using System.ComponentModel.DataAnnotations.Schema;
-//using System.ComponentModel.DataAnnotations;
+﻿
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-//namespace leaveApplication2.Models
-//{
-//    [Table("LeaveStatuses")]
-//    public class LeaveStatus
-//    {
-//        [Key]
-//        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-//        public int leaveStatusId { get; set; }
+namespace leaveapplication2.models
+{
+    [Table("leavestatuses")]
+    public class LeaveStatus
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int LeaveStatusId { get; set; }
 
-//        [Required]
-//        public string leaveStatusName { get; set; } = string.Empty;
-//        public string leaveStatusNameCode { get; set; } = string.Empty;
-//        public bool isActive { get; set; } = false;
-//    }
-//}
+        [Required]
+        public string LeaveStatusName { get; set; } = string.Empty;
+
+        public string LeaveStatusNameCode { get; set; } = string.Empty;
+        public bool IsActive { get; set; } = false;
+    }
+}

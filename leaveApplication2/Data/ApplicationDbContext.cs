@@ -22,7 +22,7 @@ namespace leaveApplication2.Data
 
         public DbSet<FinancialYear> FinancialYears { get; set; }
 
-
+        public DbSet<Holiday> Holidays { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
