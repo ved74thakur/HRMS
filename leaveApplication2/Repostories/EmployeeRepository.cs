@@ -32,11 +32,14 @@ namespace leaveApplication2.Repostories
 
         public async Task<Employee> GetEmployeeByIdAsync(long id)
         {
-            var singleEmployee =  await _context.Employees.FindAsync(id);
+            
+            var singleEmployee = await _context.Employees.Include(e => e.Designation).Include(e => e.Gender).AsNoTracking().FirstOrDefaultAsync(e => e.employeeId == id);
+           
             if (singleEmployee == null) 
             {
                 return null;
             }
+            
             return singleEmployee;
         }
 
