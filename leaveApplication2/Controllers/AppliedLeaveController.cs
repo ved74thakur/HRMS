@@ -135,7 +135,7 @@ namespace leaveApplication2.Controllers
 
                 await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Approval", body);
 
-                return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", newAppliedLeaveCreated);
+                return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Applied Successfully", newAppliedLeaveCreated);
             }
             catch (Exception ex)
             {
