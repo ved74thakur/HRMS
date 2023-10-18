@@ -36,7 +36,8 @@ internal class Program
         builder.Services.AddScoped<IDesignationService, DesignationService>();
         builder.Services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
         builder.Services.AddScoped<ILeaveAllocationService, LeaveAllocationService>();
-        
+        builder.Services.AddScoped<IHolidayRepository, HolidayRepository>();
+        builder.Services.AddScoped<IHolidayService, HolidayService>();
         //builder.Services.AddScoped<ILeaveStatusService, LeaveStatusService>();
         builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
         

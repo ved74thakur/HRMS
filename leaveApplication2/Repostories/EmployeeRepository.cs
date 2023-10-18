@@ -25,10 +25,11 @@ namespace leaveApplication2.Repostories
         public async Task<IReadOnlyCollection<Employee>> GetEmployeesAsync()
         {
             // return await _context.Employees.ToListAsync();
-            return await _context.Employees.Include(e => e.Designation).AsNoTracking().ToListAsync();
+            return await _context.Employees.Include(e => e.Designation).Include(e => e.Gender).AsNoTracking().ToListAsync();
+
         }
 
-       
+
         public async Task<Employee> GetEmployeeByIdAsync(long id)
         {
             var singleEmployee =  await _context.Employees.FindAsync(id);
