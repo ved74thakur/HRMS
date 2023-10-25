@@ -133,6 +133,7 @@ namespace leaveApplication2.Services
                 getSingleEmployeeById.isActive = employee.isActive;
                 getSingleEmployeeById.dateOfJoining = employee.dateOfJoining;
                 getSingleEmployeeById.dateOfBirth = employee.dateOfBirth;
+                getSingleEmployeeById.RoleAssignId = employee.RoleAssignId;
              //   getSingleEmployeeById.employeePassword = employee.employeePassword;
 
                 // Save the changes to the database

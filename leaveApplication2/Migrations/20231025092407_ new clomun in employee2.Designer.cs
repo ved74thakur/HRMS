@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using leaveApplication2.Data;
@@ -11,9 +12,11 @@ using leaveApplication2.Data;
 namespace leaveApplication2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231025092407_ new clomun in employee2")]
+    partial class newclomuninemployee2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -170,9 +173,6 @@ namespace leaveApplication2.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("employeeId"));
 
-                    b.Property<int>("RoleAssignId")
-                        .HasColumnType("integer");
-
                     b.Property<DateOnly>("dateOfBirth")
                         .HasColumnType("date");
 
@@ -216,9 +216,10 @@ namespace leaveApplication2.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.HasKey("employeeId");
+                    b.Property<int>("roleID")
+                        .HasColumnType("integer");
 
-                    b.HasIndex("RoleAssignId");
+                    b.HasKey("employeeId");
 
                     b.HasIndex("designationId");
 
@@ -226,6 +227,8 @@ namespace leaveApplication2.Migrations
                         .IsUnique();
 
                     b.HasIndex("genderId");
+
+                    b.HasIndex("roleID");
 
                     b.ToTable("Employees");
                 });
@@ -474,12 +477,6 @@ namespace leaveApplication2.Migrations
 
             modelBuilder.Entity("leaveApplication2.Models.Employee", b =>
                 {
-                    b.HasOne("leaveApplication2.Models.RoleAssign", "RoleAssign")
-                        .WithMany()
-                        .HasForeignKey("RoleAssignId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("leaveApplication2.Models.Designation", "Designation")
                         .WithMany()
                         .HasForeignKey("designationId")
@@ -489,6 +486,12 @@ namespace leaveApplication2.Migrations
                     b.HasOne("leaveApplication2.Models.Gender", "Gender")
                         .WithMany()
                         .HasForeignKey("genderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("leaveApplication2.Models.RoleAssign", "RoleAssign")
+                        .WithMany()
+                        .HasForeignKey("roleID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -48,5 +48,10 @@ namespace leaveApplication2.Models
 
         public string employeePassword { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Role is required")]
+        [ForeignKey("RoleAssign")]
+        public int RoleAssignId {  get; set; }
+        public virtual RoleAssign? RoleAssign { get; set; }
+
     }
 }
