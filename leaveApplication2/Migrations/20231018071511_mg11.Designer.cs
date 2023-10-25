@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using leaveApplication2.Data;
@@ -11,40 +12,18 @@ using leaveApplication2.Data;
 namespace leaveApplication2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231018071511_mg11")]
+    partial class mg11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.12")
+                .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("leaveApplication2.Models.ApplicationPages", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("PageCode")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PageName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ApplicationPages");
-                });
 
             modelBuilder.Entity("leaveApplication2.Models.AppliedLeave", b =>
                 {
@@ -324,6 +303,10 @@ namespace leaveApplication2.Migrations
                     b.Property<int>("leaveTypeId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("test")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("leaveAllocationId");
 
                     b.HasIndex("financialYearId");
@@ -358,33 +341,6 @@ namespace leaveApplication2.Migrations
                     b.ToTable("LeaveTypes");
                 });
 
-            modelBuilder.Entity("leaveApplication2.Models.RoleAssign", b =>
-                {
-                    b.Property<int>("RoleAssignId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RoleAssignId"));
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsSuperAdmin")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("RoleAssignCodeName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("RoleAssignName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("RoleAssignId");
-
-                    b.ToTable("RoleAssign");
-                });
-
             modelBuilder.Entity("leaveApplication2.Models.Test", b =>
                 {
                     b.Property<long>("employeeId")
@@ -407,25 +363,6 @@ namespace leaveApplication2.Migrations
                     b.ToTable("Tests");
                 });
 
-            modelBuilder.Entity("leaveApplication2.Models.UserRoleMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ApplicationPageId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("RoleAssignId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserRoleMapping");
-                });
-
             modelBuilder.Entity("leaveApplication2.Models.leaveApplication2.Models.FinancialYear", b =>
                 {
                     b.Property<int>("financialYearId")
@@ -434,7 +371,7 @@ namespace leaveApplication2.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("financialYearId"));
 
-                    b.Property<bool>("ActiveYear")
+                    b.Property<bool>("activeYear")
                         .HasColumnType("boolean");
 
                     b.Property<DateOnly>("endDate")
@@ -442,6 +379,10 @@ namespace leaveApplication2.Migrations
 
                     b.Property<DateOnly>("startDate")
                         .HasColumnType("date");
+
+                    b.Property<string>("test")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("financialYearId");
 

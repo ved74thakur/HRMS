@@ -23,6 +23,10 @@ namespace leaveApplication2.Data
         public DbSet<FinancialYear> FinancialYears { get; set; }
 
         public DbSet<Holiday> Holidays { get; set; }
+        public DbSet<RoleAssign> RoleAssigns { get; set; }
+        public DbSet<ApplicationPages> ApplicationPages { get; set; }
+        public DbSet<UserRoleMapping> UserRoleMappings { get; set; }
+        //public DbSet<Test2> Test2s { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

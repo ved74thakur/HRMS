@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using leaveApplication2.Data;
@@ -11,9 +12,11 @@ using leaveApplication2.Data;
 namespace leaveApplication2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231025070530_suhaskkk")]
+    partial class suhaskkk
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -405,6 +408,19 @@ namespace leaveApplication2.Migrations
                     b.HasKey("employeeId");
 
                     b.ToTable("Tests");
+                });
+
+            modelBuilder.Entity("leaveApplication2.Models.Test2", b =>
+                {
+                    b.Property<int>("testUD")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("testUD"));
+
+                    b.HasKey("testUD");
+
+                    b.ToTable("Test2");
                 });
 
             modelBuilder.Entity("leaveApplication2.Models.UserRoleMapping", b =>

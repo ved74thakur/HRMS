@@ -38,6 +38,13 @@ internal class Program
         builder.Services.AddScoped<ILeaveAllocationService, LeaveAllocationService>();
         builder.Services.AddScoped<IHolidayRepository, HolidayRepository>();
         builder.Services.AddScoped<IHolidayService, HolidayService>();
+        builder.Services.AddScoped<IRoleAssignRepository, RoleAssignRepository>();
+        builder.Services.AddScoped<IRoleAssignService, RoleAssignService>();
+        builder.Services.AddScoped<IApplicationPageRepository, ApplicationPageRepository>();
+        builder.Services.AddScoped<IApplicationPageServices, ApplicationPageServices>();
+        builder.Services.AddScoped<IUserRoleMappingRepository, UserRoleMappingRepository>();
+        builder.Services.AddScoped<IUserRoleMappingServices, UserRoleMappingServices>();
+
         //builder.Services.AddScoped<ILeaveStatusService, LeaveStatusService>();
         builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
         

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using leaveApplication2.Data;
@@ -11,9 +12,11 @@ using leaveApplication2.Data;
 namespace leaveApplication2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231025062320_new tables")]
+    partial class newtables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -423,6 +426,10 @@ namespace leaveApplication2.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ApplicationPageId");
+
+                    b.HasIndex("RoleAssignId");
+
                     b.ToTable("UserRoleMapping");
                 });
 
@@ -522,6 +529,25 @@ namespace leaveApplication2.Migrations
                     b.Navigation("FinancialYear");
 
                     b.Navigation("LeaveType");
+                });
+
+            modelBuilder.Entity("leaveApplication2.Models.UserRoleMapping", b =>
+                {
+                    b.HasOne("leaveApplication2.Models.ApplicationPages", "ApplicationPage")
+                        .WithMany()
+                        .HasForeignKey("ApplicationPageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("leaveApplication2.Models.RoleAssign", "RoleAssignment")
+                        .WithMany()
+                        .HasForeignKey("RoleAssignId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationPage");
+
+                    b.Navigation("RoleAssignment");
                 });
 #pragma warning restore 612, 618
         }
