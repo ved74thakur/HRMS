@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using leaveapplication2.models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace leaveApplication2.Models
@@ -41,11 +42,11 @@ namespace leaveApplication2.Models
         [Range(0, double.MaxValue, ErrorMessage = "NumberOFDays  must be a non-negative number.")]
         public double applyLeaveDay { get; set; } = 0;
 
-        [ForeignKey("LeaveStatus")]
-        public int leaveStatusId { get; set; } 
-        public virtual LeaveStatus? LeaveStatus { get; set; }
+        //[ForeignKey("LeaveStatus")]
+        //public int LeaveStatusId { get; set; }
+        //public virtual LeaveStatus? LeaveStatus { get; set; }
 
-
+        //public int testId { get; set; }
 
 
 

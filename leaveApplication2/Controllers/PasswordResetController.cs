@@ -40,28 +40,31 @@ namespace leaveApplication2.Controllers
 
                 // Updated CSS style for the email body
                 string emailStyle = @"
-    <style>
-        body {
-            background-color: #f5f5f5; /* Light grey background color */
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Center align content horizontally */
-            justify-content: center; /* Center align content vertically */
-            height: 100vh; /* Ensure content takes up the full viewport height */
-        }
-        p {
-            font-size: 16px;
-            color: #333;
-            text-align: center; /* Center-align text */
-        }
-        a {
-            text-decoration: none;
-            background-color: #007BFF;
-            color: white;
-            padding: 10px 20px;
-        }
-    </style>
+<style>
+    body {
+        background-color: #f5f5f5; /* Light grey background color */
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Center align content horizontally */
+        justify-content: center; /* Center align content vertically */
+        height: 100vh; /* Ensure content takes up the full viewport height */
+    }
+    p {
+        font-size: 16px;
+        color: #333;
+        text-align: center; /* Center-align text */
+    }
+    a {
+        text-decoration: none;
+        background-color: #007BFF; /* Blue background color */
+        color: white; /* White text color */
+        padding: 10px 20px;
+        display: inline-block; /* Ensures the button size is based on content */
+        border-radius: 5px; /* Rounded button corners */
+    }
+</style>
 ";
+
 
                 body += $"<html><head>{emailStyle}</head><body>";
                 body += $"<p>Email sent on: {formattedDateTime}</p>";

@@ -6,10 +6,11 @@ namespace leaveApplication2.Services
     public interface IAppliedLeaveService
     {
         Task<IEnumerable<AppliedLeave>> GetAppliedLeavesAsync();
+        Task<IEnumerable<AppliedLeave>> GetAppliedLeavesAsync(Expression<Func<AppliedLeave, bool>> filter);
         Task<AppliedLeave> CreateAppliedLeave(AppliedLeave leave);
         Task<AppliedLeave> GetAppliedLeaveByIdAsync(long id);
         Task<AppliedLeave> UpdateAppliedLeaveAsync(long id, AppliedLeave leave);
-        Task<AppliedLeave> UpdateLeaveStatusAsync(long appliedLeaveTypeId, int leaveStatusId);
+        //Task<AppliedLeave> UpdateLeaveStatusAsync(long appliedLeaveTypeId, int leaveStatusId);
         Task DeleteAppliedLeaveByIdAsync(long id);
 
         Task<AppliedLeave> UpdateIsRejectedAsync(long id, bool isRejected);

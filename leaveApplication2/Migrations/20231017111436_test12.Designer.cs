@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using leaveApplication2.Data;
@@ -11,9 +12,11 @@ using leaveApplication2.Data;
 namespace leaveApplication2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231017111436_test12")]
+    partial class test12
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,6 +55,9 @@ namespace leaveApplication2.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
+                    b.Property<int>("LeaveStatusId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("RejectedDate")
                         .HasColumnType("timestamp without time zone");
 
@@ -77,6 +83,8 @@ namespace leaveApplication2.Migrations
                         .HasColumnType("double precision");
 
                     b.HasKey("appliedLeaveTypeId");
+
+                    b.HasIndex("LeaveStatusId");
 
                     b.HasIndex("employeeId");
 
@@ -378,8 +386,38 @@ namespace leaveApplication2.Migrations
                     b.ToTable("FinancialYears");
                 });
 
+            modelBuilder.Entity("leaveapplication2.models.LeaveStatus", b =>
+                {
+                    b.Property<int>("LeaveStatusId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LeaveStatusId"));
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LeaveStatusName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LeaveStatusNameCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("LeaveStatusId");
+
+                    b.ToTable("leavestatuses");
+                });
+
             modelBuilder.Entity("leaveApplication2.Models.AppliedLeave", b =>
                 {
+                    b.HasOne("leaveapplication2.models.LeaveStatus", "LeaveStatus")
+                        .WithMany()
+                        .HasForeignKey("LeaveStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("leaveApplication2.Models.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("employeeId")
@@ -393,6 +431,8 @@ namespace leaveApplication2.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
+
+                    b.Navigation("LeaveStatus");
 
                     b.Navigation("LeaveType");
                 });

@@ -42,10 +42,7 @@ namespace Leave.EmailTemplate
 
         public async Task SendEmailAsync(List<string> emails, string subject, string body, string emailCC , string emailBCC, long appliedLeaveTypeId)
         {
-            body += "<p>Please click one of the following buttons:</p>";
-            body += $"<a href='http://localhost:5024/api/appliedLeave/UpdateIsApprovedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: green; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Approve</a>";
-            body += $"<a href='http://localhost:5024/api/appliedLeave/UpdateIsRejectedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: red; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reject</a>";
-
+           
             var mailMessage = new MailMessage
             {
                 From = new MailAddress("ved74thakur@gmail.com", "Ved Thakur"),
@@ -88,10 +85,7 @@ namespace Leave.EmailTemplate
         }
         public async Task SendEmailAsync(string email, string subject, string body, string emailCC, string emailBCC, long appliedLeaveTypeId)
         {
-            body += "<p>Please click one of the following buttons:</p>";
-            body += $"<a href='http://localhost:5024/api/appliedLeave/UpdateIsApprovedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: green; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Approve</a>";
-            body += $"<a href='http://localhost:5024/api/appliedLeave/UpdateIsRejectedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: red; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reject</a>";
-
+           
             var mailMessage = new MailMessage
             {
                 From = new MailAddress("ved74thakur@gmail.com", "Ved Thakur"),
@@ -135,9 +129,7 @@ namespace Leave.EmailTemplate
 
         public async Task SendEmail(List<string> emails, string subject, string body, long appliedLeaveTypeId)
         {
-            body += "<p>Please click one of the following buttons:</p>";
-            body += $"<a href='http://localhost:5024/api/appliedLeave/UpdateIsApprovedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: green; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Approve</a>";
-            body += $"<a href='http://localhost:5024/api/appliedLeave/UpdateIsRejectedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: red; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reject</a>";
+           
             var mailMessage = new MailMessage
             {
                 From = new MailAddress("ved74thakur@gmail.com", "Ved Thakur"),

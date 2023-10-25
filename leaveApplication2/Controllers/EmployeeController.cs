@@ -123,7 +123,7 @@ namespace leaveApplication2.Controllers
                 _logger.LogInformation($"End CreateAppliedLeave");
                 //Salutions found
 
-                return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", newEmployeeCreated);
+                return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Employee Registered Successfully", newEmployeeCreated);
 
 
             }

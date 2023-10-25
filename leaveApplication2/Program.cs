@@ -29,15 +29,16 @@ internal class Program
         builder.Services.AddScoped<IAppliedLeaveService, AppliedLeaveService>();
         builder.Services.AddScoped<IEmployeeLeaveRepository, EmployeeLeaveRepository>();
         builder.Services.AddScoped<IEmployeeLeaveService, EmployeeLeaveService>();
-        builder.Services.AddScoped<ILeaveStatusRepository, LeaveStatusRepository>();
+        //builder.Services.AddScoped<ILeaveStatusRepository, LeaveStatusRepository>();
         builder.Services.AddScoped<IGenderRepository, GenderRepository>();
         builder.Services.AddScoped<IGenderService, GenderService>();
         builder.Services.AddScoped<IDesignationRepository, DesignationRepository>();
         builder.Services.AddScoped<IDesignationService, DesignationService>();
         builder.Services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
         builder.Services.AddScoped<ILeaveAllocationService, LeaveAllocationService>();
-        
-        builder.Services.AddScoped<ILeaveStatusService, LeaveStatusService>();
+        builder.Services.AddScoped<IHolidayRepository, HolidayRepository>();
+        builder.Services.AddScoped<IHolidayService, HolidayService>();
+        //builder.Services.AddScoped<ILeaveStatusService, LeaveStatusService>();
         builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
         
         builder.Services.AddTransient<GenericEmail>();

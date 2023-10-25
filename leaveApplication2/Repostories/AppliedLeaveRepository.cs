@@ -21,6 +21,12 @@ namespace leaveApplication2.Repostories
             
             //return await _context.EmployeeLeaves.Include(e => e.LeaveType).AsNoTracking().ToListAsync();
         }
+        public async Task<IReadOnlyCollection<AppliedLeave>> GetAppliedLeavesAsync(Expression<Func<AppliedLeave, bool>> filter)
+        {
+            return await _context.AppliedLeaves.Where(filter).ToListAsync();
+        }
+
+
 
         public async Task<AppliedLeave> CreateAppliedLeave(AppliedLeave leave)
         {
@@ -142,8 +148,8 @@ namespace leaveApplication2.Repostories
         {
             // Replace the condition with your specific criteria
             var unapprovedLeaves = await _context.AppliedLeaves
-                .Where(leave => leave.employeeId == appliedLeave.employeeId && leave.IsApproved == appliedLeave.IsApproved && leave.leaveTypeId == appliedLeave.leaveTypeId && leave.IsHalfDay == appliedLeave.IsHalfDay)
-                .ToListAsync();
+    .Where(leave => leave.employeeId == appliedLeave.employeeId && leave.IsApproved == appliedLeave.IsApproved && leave.leaveTypeId == appliedLeave.leaveTypeId && leave.IsHalfDay == appliedLeave.IsHalfDay && leave.IsRejected == appliedLeave.IsRejected)
+    .ToListAsync();
 
             return unapprovedLeaves;
         }
