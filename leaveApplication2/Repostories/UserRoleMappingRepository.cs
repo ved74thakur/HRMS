@@ -32,6 +32,24 @@ namespace leaveApplication2.Repostories
             {
                 foreach (var mapping in mappings)
                 {
+                    // Check if a mapping with the same RoleAssignId and ApplicationPageId already exists
+                    bool mappingExists = await _context.UserRoleMappings
+                        .AnyAsync(m => m.RoleAssignId == mapping.RoleAssignId && m.ApplicationPageId == mapping.ApplicationPageId);
+
+                    if (!mappingExists)
+                    {
+                        var userRoleMapping = new UserRoleMapping
+                        {
+                            // Map properties from UserRoleMappingDTO to UserRoleMapping here
+                            ApplicationPageId = mapping.ApplicationPageId,
+                            RoleAssignId = mapping.RoleAssignId
+                        };
+
+                        _context.UserRoleMappings.Add(userRoleMapping);
+                    }
+                }
+                /* foreach (var mapping in mappings)
+                {
                     var userRoleMapping = new UserRoleMapping
                     {
                         // Map properties from UserRoleMappingDTO to UserRoleMapping here
@@ -40,7 +58,7 @@ namespace leaveApplication2.Repostories
                     };
 
                     _context.UserRoleMappings.Add(userRoleMapping);
-                }
+                } */
 
                 await _context.SaveChangesAsync();
                 return mappings;
