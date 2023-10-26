@@ -35,9 +35,22 @@ namespace leaveApplication2.Data
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+           
             builder.Entity<Employee>()
-                .HasIndex(u => u.emailAddress)
-                .IsUnique();
+               .HasIndex(u => u.emailAddress)
+               .IsUnique();
+
+            // Configure the relationship between UserRoleMapping, ApplicationPages, and RoleAssign
+            /* builder.Entity<UserRoleMapping>()
+                .HasOne(mapping => mapping.ApplicationPages)
+                .WithMany()
+                .HasForeignKey(mapping => mapping.ApplicationPageId);
+
+            builder.Entity<UserRoleMapping>()
+                .HasOne(mapping => mapping.RoleAssignment)
+                .WithMany()
+                .HasForeignKey(mapping => mapping.RoleAssignId); */
         }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using leaveApplication2.Models;
+﻿using leaveApplication2.Dtos;
+using leaveApplication2.Models;
 using leaveApplication2.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -64,29 +65,52 @@ namespace leaveApplication2.Controllers
             }
         }
 
-        [HttpPost("CreateUserRoleMappingAsync")]
-        public async Task<CommonResponse<UserRoleMapping>> CreateUserRoleMappingAsync(UserRoleMapping mapping)
+        [HttpPost("CreateUserRoleMappingsAsync")]
+        public async Task<CommonResponse<List<UserRoleMappingDTO>>> CreateUserRoleMappingsAsync(List<UserRoleMappingDTO> mappings)
         {
-            _logger.LogInformation("Start CreateUserRoleMappingAsync");
+            _logger.LogInformation("Start CreateUserRoleMappingsAsync");
 
             try
             {
-                var newMapping = await _mappingService.CreateUserRoleMappingAsync(mapping);
+                var createdMappings = await _mappingService.CreateUserRoleMappings(mappings);
 
-                if (newMapping == null)
+                if (createdMappings == null || createdMappings.Count == 0)
                 {
-                    return this.CreateResponse<UserRoleMapping>(StatusCodes.Status404NotFound, "Failed to create the user-role mapping.");
+                    return this.CreateResponse<List<UserRoleMappingDTO>>(StatusCodes.Status404NotFound, "Failed to create the user-role mappings.");
                 }
 
-                _logger.LogInformation("End CreateUserRoleMappingAsync");
-                return this.CreateResponse<UserRoleMapping>(StatusCodes.Status200OK, "User-role mapping created successfully", newMapping);
+                _logger.LogInformation("End CreateUserRoleMappingsAsync");
+                return this.CreateResponse<List<UserRoleMappingDTO>>(StatusCodes.Status200OK, "User-role mappings created successfully", createdMappings);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while creating a new user-role mapping.");
-                return this.CreateResponse<UserRoleMapping>(StatusCodes.Status500InternalServerError, ex.Message);
+                _logger.LogError(ex, "An error occurred while creating new user-role mappings.");
+                return this.CreateResponse<List<UserRoleMappingDTO>>(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        /* [HttpPost("CreateUserRoleMappingAsync")]
+         public async Task<CommonResponse<UserRoleMapping>> CreateUserRoleMappingAsync(UserRoleMapping mapping)
+         {
+             _logger.LogInformation("Start CreateUserRoleMappingAsync");
+
+             try
+             {
+                 var newMapping = await _mappingService.CreateUserRoleMappingAsync(mapping);
+
+                 if (newMapping == null)
+                 {
+                     return this.CreateResponse<UserRoleMapping>(StatusCodes.Status404NotFound, "Failed to create the user-role mapping.");
+                 }
+
+                 _logger.LogInformation("End CreateUserRoleMappingAsync");
+                 return this.CreateResponse<UserRoleMapping>(StatusCodes.Status200OK, "User-role mapping created successfully", newMapping);
+             }
+             catch (Exception ex)
+             {
+                 _logger.LogError(ex, "An error occurred while creating a new user-role mapping.");
+                 return this.CreateResponse<UserRoleMapping>(StatusCodes.Status500InternalServerError, ex.Message);
+             }
+         } */
 
         [HttpPost("UpdateUserRoleMappingAsync/{id}")]
         public async Task<CommonResponse<UserRoleMapping>> UpdateUserRoleMappingAsync(int id, UserRoleMapping mapping)

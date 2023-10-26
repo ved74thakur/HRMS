@@ -1,4 +1,5 @@
-﻿using leaveApplication2.Models;
+﻿using leaveApplication2.Dtos;
+using leaveApplication2.Models;
 using leaveApplication2.Repostories;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -18,7 +19,24 @@ namespace leaveApplication2.Services
             return await _mappingRepository.GetUserRoleMappingsAsync();
         }
 
-        public async Task<UserRoleMapping> CreateUserRoleMappingAsync(UserRoleMapping mapping)
+        public async Task<List<UserRoleMappingDTO>> CreateUserRoleMappings(List<UserRoleMappingDTO> mappings)
+        {
+            try
+            {
+                // You may want to perform validation or other operations here before creating the mappings.
+
+                // Pass the list of mappings to the repository to create them.
+                List<UserRoleMappingDTO> createdMappings = await _mappingRepository.CreateUserRoleMappings(mappings);
+
+                return createdMappings;
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception here, log it, or take appropriate action.
+                throw; // Rethrow the exception to propagate it up the call stack
+            }
+        }
+        /* public async Task<UserRoleMapping> CreateUserRoleMappingAsync(UserRoleMapping mapping)
         {
             // Other code here...
 
@@ -26,7 +44,7 @@ namespace leaveApplication2.Services
 
             try
             {
-                createdMapping = await _mappingRepository.CreateUserRoleMapping(mapping);
+                createdMapping = await _mappingRepository.CreateUserRoleMappings(mapping);
                 // Other code...
             }
             catch (Exception ex)
@@ -37,7 +55,7 @@ namespace leaveApplication2.Services
 
             // Return 'createdMapping' here
             return createdMapping;
-        }
+        } */
 
         public async Task<UserRoleMapping> GetUserRoleMappingByIdAsync(int id)
         {

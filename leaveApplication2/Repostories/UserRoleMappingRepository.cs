@@ -1,4 +1,5 @@
 ﻿using leaveApplication2.Data;
+using leaveApplication2.Dtos;
 using leaveApplication2.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,32 @@ namespace leaveApplication2.Repostories
             return await _context.UserRoleMappings.Where(filter).ToListAsync();
         }
 
-        public async Task<UserRoleMapping> CreateUserRoleMapping(UserRoleMapping mapping)
+        public async Task<List<UserRoleMappingDTO>> CreateUserRoleMappings(List<UserRoleMappingDTO> mappings)
+        {
+            try
+            {
+                foreach (var mapping in mappings)
+                {
+                    var userRoleMapping = new UserRoleMapping
+                    {
+                        // Map properties from UserRoleMappingDTO to UserRoleMapping here
+                        ApplicationPageId = mapping.ApplicationPageId,
+                        RoleAssignId = mapping.RoleAssignId
+                    };
+
+                    _context.UserRoleMappings.Add(userRoleMapping);
+                }
+
+                await _context.SaveChangesAsync();
+                return mappings;
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception here, log it, or take appropriate action.
+                throw; // Rethrow the exception to propagate it up the call stack
+            }
+        }
+        /* public async Task<UserRoleMapping> CreateUserRoleMapping(UserRoleMapping mapping)
         {
             try
             {
@@ -38,7 +64,21 @@ namespace leaveApplication2.Repostories
                 // Handle the exception here, log it, or take appropriate action.
                 throw; // Rethrow the exception to propagate it up the call stack
             }
-        }
+        } */
+        /* public async Task<IEnumerable<UserRoleMapping>> CreateUserRoleMapping(IEnumerable<UserRoleMapping> mappings)
+        {
+            try
+            {
+                _context.UserRoleMappings.AddRange(mappings);
+                await _context.SaveChangesAsync();
+                return mappings; // Return the UserRoleMapping objects, not a Task<IEnumerable<UserRoleMapping>>
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception here, log it, or take appropriate action.
+                throw; // Rethrow the exception to propagate it up the call stack
+            }
+        } */
 
         public async Task<UserRoleMapping> GetUserRoleMappingById(int id)
         {
