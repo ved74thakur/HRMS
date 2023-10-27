@@ -26,15 +26,19 @@ namespace leaveApplication2.Repostories
             return await _context.UserRoleMappings.Where(filter).ToListAsync();
         }
 
+
         public async Task<List<UserRoleMappingDTO>> CreateUserRoleMappings(List<UserRoleMappingDTO> mappings)
         {
             try
             {
+                _context.UserRoleMappings.RemoveRange(_context.UserRoleMappings);
+                _context.SaveChanges();
                 foreach (var mapping in mappings)
                 {
                     // Check if a mapping with the same RoleAssignId and ApplicationPageId already exists
                     bool mappingExists = await _context.UserRoleMappings
                         .AnyAsync(m => m.RoleAssignId == mapping.RoleAssignId && m.ApplicationPageId == mapping.ApplicationPageId);
+                  
 
                     if (!mappingExists)
                     {
