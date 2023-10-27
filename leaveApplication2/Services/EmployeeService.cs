@@ -12,6 +12,7 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Mvc;
 using leaveApplication2.Dtos;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 
 namespace leaveApplication2.Services
 {
@@ -21,10 +22,11 @@ namespace leaveApplication2.Services
         private readonly IConfiguration _configuration;
         private readonly ILeaveAllocationRepository _leaveAllocationRepository;
         private readonly IEmployeeLeaveRepository _employeeLeaveRepository;
+        private readonly IUserRoleMappingRepository _userRoleMappingRepository;
         //private readonly SmtpClient _smtpClient;
         //private readonly SmtpSettings _smtpSettings;
 
-        public EmployeeService(IEmployeeRepository employeeRepository, IConfiguration configuration, ILeaveAllocationRepository leaveAllocationRepository, IEmployeeLeaveRepository employeeLeaveRepository)
+        public EmployeeService(IEmployeeRepository employeeRepository,IUserRoleMappingRepository userRoleMappingRepository, IConfiguration configuration, ILeaveAllocationRepository leaveAllocationRepository, IEmployeeLeaveRepository employeeLeaveRepository)
         {
             /*
             _smtpSettings = smtpSettings.Value;
@@ -46,6 +48,7 @@ namespace leaveApplication2.Services
             _configuration = configuration;
             _leaveAllocationRepository = leaveAllocationRepository;
             _employeeLeaveRepository = employeeLeaveRepository;
+            _userRoleMappingRepository = userRoleMappingRepository;
         }
 
         public async Task<IEnumerable<Employee>> GetEmployeesAsync()
@@ -162,11 +165,23 @@ namespace leaveApplication2.Services
             await _employeeRepository.DeleteEmployeeAsync(id);
         }
             
-        public async Task<Employee> EmployeeLoginAsync(EmployeeLoginDto employee)
+        public async Task<object> EmployeeLoginAsync(EmployeeLoginDto employee)
         {
             var loggedEmployee = await _employeeRepository.EmployeeLoginAsync(new Employee() { emailAddress = employee.email, employeePassword = employee.password });
-            
-            
+            Expression<Func<UserRoleMapping, bool>> filter = urm => urm.RoleAssignId == loggedEmployee.RoleAssignId;
+
+            IReadOnlyCollection<UserRoleMapping> roleMappings = await _userRoleMappingRepository.GetRoleAssignIDbyUserRoleMapping(filter);
+
+
+            if (roleMappings.Count > 0)
+            {
+                // Create an EmployeeRoleDTO and populate its properties.
+                var employeeRoleDTO = new EmployeeRoleDTO();
+                employeeRoleDTO.Employee = loggedEmployee;
+                employeeRoleDTO.UserRoleMappings = roleMappings.ToList();
+                return employeeRoleDTO;
+            }
+
 
             return loggedEmployee;
         }

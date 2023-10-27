@@ -1,4 +1,5 @@
-﻿using leaveApplication2.Dtos;
+﻿using System.Linq.Expressions;
+using leaveApplication2.Dtos;
 using leaveApplication2.Models;
 
 namespace leaveApplication2.Repostories
@@ -13,5 +14,7 @@ namespace leaveApplication2.Repostories
         Task<IReadOnlyCollection<UserRoleMapping>> GetUserRoleMappingsAsync();
         Task<UserRoleMapping> UpdateUserRoleMapping(UserRoleMapping mapping);
         Task<UserRoleMapping> DeleteUserRoleMappingById(int id);
+        Task<IReadOnlyCollection<UserRoleMapping>> GetRoleAssignIDbyUserRoleMapping(Expression<Func<UserRoleMapping, bool>> filter);
+
     }
 }

@@ -107,6 +107,10 @@ namespace leaveApplication2.Repostories
             var mapping = await _context.UserRoleMappings.FindAsync(id);
             return mapping;
         }
+        public async Task<IReadOnlyCollection<UserRoleMapping>> GetRoleAssignIDbyUserRoleMapping(Expression<Func<UserRoleMapping, bool>> filter)
+        {
+            return await _context.UserRoleMappings.Where(filter).ToListAsync();
+        }
 
         public async Task<UserRoleMapping> UpdateUserRoleMapping(UserRoleMapping mapping)
         {
@@ -154,5 +158,6 @@ namespace leaveApplication2.Repostories
 
             return await query.ToListAsync();
         }
+
     }
 }

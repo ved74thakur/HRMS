@@ -223,14 +223,14 @@ namespace leaveApplication2.Controllers
         }
 
         [HttpPost("EmployeeLoginAsync")]
-        public async Task<CommonResponse<Employee>> EmployeeLoginAsync([FromBody] EmployeeLoginDto employee)
+        public async Task<CommonResponse<object>> EmployeeLoginAsync([FromBody] EmployeeLoginDto employee)
         {
             var selectedEmployee = await _employeeService.EmployeeLoginAsync(employee);
             if (selectedEmployee == null)
             {
                 _logger.LogInformation($"Start EmployeeLoginAsync null");
                 //no salutions found
-                return this.CreateResponse<Employee>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+                return this.CreateResponse<object>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
             }
             _logger.LogInformation($"Start DeleteAppliedLeave");
             try
@@ -238,13 +238,13 @@ namespace leaveApplication2.Controllers
         
                 // Successful deletion
                 _logger.LogInformation($"End DeleteAppliedLeave");
-                return this.CreateResponse<Employee>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", selectedEmployee);
+                return this.CreateResponse<object>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", selectedEmployee);
             }
             catch (Exception ex)
             {
                 // Error occurred during deletion
                 _logger.LogError(ex, "An error occurred while deleting the applied leave");
-                return this.CreateResponse<Employee>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+                return this.CreateResponse<object>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
