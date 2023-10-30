@@ -12,8 +12,8 @@ using leaveApplication2.Data;
 namespace leaveApplication2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231025062320_new tables")]
-    partial class newtables
+    [Migration("20231030095732_new amit001000000")]
+    partial class newamit001000000
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace leaveApplication2.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("leaveApplication2.Models.ApplicationPages", b =>
+            modelBuilder.Entity("leaveApplication2.Models.ApplicationPage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -46,7 +46,7 @@ namespace leaveApplication2.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ApplicationPages");
+                    b.ToTable("ApplicationPage");
                 });
 
             modelBuilder.Entity("leaveApplication2.Models.AppliedLeave", b =>
@@ -173,6 +173,12 @@ namespace leaveApplication2.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("employeeId"));
 
+                    b.Property<long?>("ReportingPersonId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("RoleAssignId")
+                        .HasColumnType("integer");
+
                     b.Property<DateOnly>("dateOfBirth")
                         .HasColumnType("date");
 
@@ -218,6 +224,8 @@ namespace leaveApplication2.Migrations
 
                     b.HasKey("employeeId");
 
+                    b.HasIndex("RoleAssignId");
+
                     b.HasIndex("designationId");
 
                     b.HasIndex("emailAddress")
@@ -261,6 +269,25 @@ namespace leaveApplication2.Migrations
                     b.HasIndex("leaveTypeId");
 
                     b.ToTable("EmployeeLeaves");
+                });
+
+            modelBuilder.Entity("leaveApplication2.Models.EmployeeReporting", b =>
+                {
+                    b.Property<long>("EmployeeReportingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("EmployeeReportingId"));
+
+                    b.Property<long>("EmployeeId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ReportingPersonId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("EmployeeReportingId");
+
+                    b.ToTable("EmployeeReporting");
                 });
 
             modelBuilder.Entity("leaveApplication2.Models.Gender", b =>
@@ -426,10 +453,6 @@ namespace leaveApplication2.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationPageId");
-
-                    b.HasIndex("RoleAssignId");
-
                     b.ToTable("UserRoleMapping");
                 });
 
@@ -476,6 +499,12 @@ namespace leaveApplication2.Migrations
 
             modelBuilder.Entity("leaveApplication2.Models.Employee", b =>
                 {
+                    b.HasOne("leaveApplication2.Models.RoleAssign", "RoleAssign")
+                        .WithMany()
+                        .HasForeignKey("RoleAssignId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("leaveApplication2.Models.Designation", "Designation")
                         .WithMany()
                         .HasForeignKey("designationId")
@@ -491,6 +520,8 @@ namespace leaveApplication2.Migrations
                     b.Navigation("Designation");
 
                     b.Navigation("Gender");
+
+                    b.Navigation("RoleAssign");
                 });
 
             modelBuilder.Entity("leaveApplication2.Models.EmployeeLeave", b =>
@@ -529,25 +560,6 @@ namespace leaveApplication2.Migrations
                     b.Navigation("FinancialYear");
 
                     b.Navigation("LeaveType");
-                });
-
-            modelBuilder.Entity("leaveApplication2.Models.UserRoleMapping", b =>
-                {
-                    b.HasOne("leaveApplication2.Models.ApplicationPages", "ApplicationPage")
-                        .WithMany()
-                        .HasForeignKey("ApplicationPageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("leaveApplication2.Models.RoleAssign", "RoleAssignment")
-                        .WithMany()
-                        .HasForeignKey("RoleAssignId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationPage");
-
-                    b.Navigation("RoleAssignment");
                 });
 #pragma warning restore 612, 618
         }

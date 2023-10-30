@@ -206,8 +206,14 @@ namespace leaveApplication2.Services
                 return computedHash.SequenceEqual(passwordHash);
             }
         }
+        public async Task<EmployeeReporting> CreateEmployeeReportingAsync(long employeeId, long reportingPersonId)
+        {
+            var employeeReporting = await _employeeRepository.CreateEmployeeReportingAsync(employeeId, reportingPersonId);
 
-      
+            return employeeReporting;
+        }
+
+
 
 
         /*public async Task<bool> VerifyPasswordAsync(long id, string password)

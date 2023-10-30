@@ -17,6 +17,7 @@ namespace leaveApplication2.Repostories
         Task DeleteEmployeeAsync(long id);
         Task<string> VerifyEmployeeEmailAsync(string employeeEmail);
         Task<Employee> EmployeeLoginAsync(Employee employee);
+        Task<EmployeeReporting> CreateEmployeeReportingAsync(long employeeId, long reportingPersonId);
 
 
         // Add a method for starting a transaction

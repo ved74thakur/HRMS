@@ -1,5 +1,7 @@
-﻿using leaveApplication2.Models;
+﻿using System.Reflection.Emit;
+using leaveApplication2.Models;
 using leaveApplication2.Models.leaveApplication2.Models;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.EntityFrameworkCore;
 
 namespace leaveApplication2.Data
@@ -24,8 +26,10 @@ namespace leaveApplication2.Data
 
         public DbSet<Holiday> Holidays { get; set; }
         public DbSet<RoleAssign> RoleAssigns { get; set; }
-        public DbSet<ApplicationPages> ApplicationPages { get; set; }
+        public DbSet<ApplicationPage> ApplicationPages { get; set; }
         public DbSet<UserRoleMapping> UserRoleMappings { get; set; }
+
+        public DbSet<EmployeeReporting> EmployeeReporting { get; set; }
         //public DbSet<Test2> Test2s { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -38,7 +42,22 @@ namespace leaveApplication2.Data
            
             builder.Entity<Employee>()
                .HasIndex(u => u.emailAddress)
-               .IsUnique();
+            .IsUnique();
+            // Configure the relationship between Employee and EmployeeReporting
+            /* builder.Entity<EmployeeReporting>()
+                .HasOne(er => er.EmployeeId)
+                .WithMany()
+                .HasForeignKey(er => er.EmployeeId);
+
+            builder.Entity<EmployeeReporting>()
+                .HasOne(er => er.ReportingPersonId)
+                .WithMany()
+                .HasForeignKey(er => er.ReportingPersonId); */
+
+
+            /*   builder.Entity<Employee>().ToTable("employeeReporting");
+              builder.Entity<Employee>().HasKey(e => new { e.employeeId, e.ReportingPersonId }); */
+
 
             // Configure the relationship between UserRoleMapping, ApplicationPages, and RoleAssign
             /* builder.Entity<UserRoleMapping>()

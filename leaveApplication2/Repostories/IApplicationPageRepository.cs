@@ -4,10 +4,10 @@ namespace leaveApplication2.Repostories
 {
     public interface IApplicationPageRepository
     {
-        Task<ApplicationPages> CreateApplicationPage(ApplicationPages page);
-        ApplicationPages GetById(int id);
-        Task<IReadOnlyCollection<ApplicationPages>> GetApplicationPagesAsync();
-        Task<ApplicationPages> UpdateApplicationPage(ApplicationPages page);
+        Task<ApplicationPage> CreateApplicationPage(ApplicationPage page);
+        ApplicationPage GetById(int id);
+        Task<IReadOnlyCollection<ApplicationPage>> GetApplicationPagesAsync();
+        Task<ApplicationPage> UpdateApplicationPage(ApplicationPage page);
         Task DeleteApplicationPageAsync(int id);
     }
 }

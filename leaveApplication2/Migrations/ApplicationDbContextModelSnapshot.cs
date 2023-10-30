@@ -22,7 +22,7 @@ namespace leaveApplication2.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("leaveApplication2.Models.ApplicationPages", b =>
+            modelBuilder.Entity("leaveApplication2.Models.ApplicationPage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -43,7 +43,7 @@ namespace leaveApplication2.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ApplicationPages");
+                    b.ToTable("ApplicationPage");
                 });
 
             modelBuilder.Entity("leaveApplication2.Models.AppliedLeave", b =>
@@ -170,6 +170,9 @@ namespace leaveApplication2.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("employeeId"));
 
+                    b.Property<long?>("ReportingPersonId")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("RoleAssignId")
                         .HasColumnType("integer");
 
@@ -263,6 +266,25 @@ namespace leaveApplication2.Migrations
                     b.HasIndex("leaveTypeId");
 
                     b.ToTable("EmployeeLeaves");
+                });
+
+            modelBuilder.Entity("leaveApplication2.Models.EmployeeReporting", b =>
+                {
+                    b.Property<long>("EmployeeReportingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("EmployeeReportingId"));
+
+                    b.Property<long>("EmployeeId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ReportingPersonId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("EmployeeReportingId");
+
+                    b.ToTable("EmployeeReporting");
                 });
 
             modelBuilder.Entity("leaveApplication2.Models.Gender", b =>

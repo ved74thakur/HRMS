@@ -122,6 +122,8 @@ namespace leaveApplication2.Controllers
                 _logger.LogInformation($"Get the values of AddAppliedLeave");
                 _logger.LogInformation($"End CreateAppliedLeave");
                 //Salutions found
+                await _employeeService.CreateEmployeeReportingAsync(employee.employeeId, employee.ReportingPersonId ?? 0);
+
 
                 return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Employee Registered Successfully", newEmployeeCreated);
 

@@ -123,6 +123,31 @@ namespace leaveApplication2.Repostories
             return _context.Database.BeginTransaction(isolationLevel);
         }
 
+        public async Task<EmployeeReporting> CreateEmployeeReportingAsync(long employeeId, long reportingPersonId)
+        {
+            var existingRecord = await _context.EmployeeReporting
+        .Where(er => er.EmployeeId == employeeId && er.ReportingPersonId == reportingPersonId)
+        .FirstOrDefaultAsync();
+
+            if (existingRecord != null)
+            {
+                // A record with the same combination already exists. You can return an error here.
+                throw new Exception("A record with the same combination of employeeId and reportingPersonId already exists.");
+            }
+
+            // If no matching record exists, create a new EmployeeReporting record.
+            var employeeReporting = new EmployeeReporting
+            {
+                EmployeeId = employeeId,
+                ReportingPersonId = reportingPersonId
+            };
+
+            _context.EmployeeReporting.Add(employeeReporting);
+            await _context.SaveChangesAsync();
+
+            return employeeReporting;
+        }
+
 
     }
 }

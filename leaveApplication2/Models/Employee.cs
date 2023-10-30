@@ -53,5 +53,10 @@ namespace leaveApplication2.Models
         public int RoleAssignId {  get; set; }
         public virtual RoleAssign? RoleAssign { get; set; }
 
+        public long? ReportingPersonId { get; set; }
+
+
+        // public Employee ReportingPerson { get; set; }
+
     }
 }

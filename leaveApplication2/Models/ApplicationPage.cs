@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace leaveApplication2.Models
 {
-    [Table("ApplicationPages")]
-    public class ApplicationPages
+    [Table("ApplicationPage")]
+    public class ApplicationPage
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
