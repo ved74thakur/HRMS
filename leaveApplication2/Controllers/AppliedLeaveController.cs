@@ -13,12 +13,13 @@ namespace leaveApplication2.Controllers
     {
         
         private readonly IAppliedLeaveService _leaveService;
+        private readonly IEmailService _emailService;
         private readonly IEmployeeService _employeeService;
         private readonly GenericEmail _genericEmail;
         private readonly ILogger<EmployeeController> _logger;
 
         //private readonly IEmployeeLeaveService _employeeLeaveService;
-        public AppliedLeaveController(GenericEmail genericEmail,IAppliedLeaveService leaveService, ILogger<EmployeeController> logger, IEmployeeService employeeService)
+        public AppliedLeaveController(GenericEmail genericEmail,IAppliedLeaveService leaveService, ILogger<EmployeeController> logger, IEmployeeService employeeService, IEmailService emailService)
         {
 
             
@@ -26,6 +27,7 @@ namespace leaveApplication2.Controllers
             _logger = logger;
             _genericEmail = genericEmail;
             _employeeService = employeeService;
+            _emailService = emailService;
             //_employeeLeaveService = employeeLeaveService;
 
         }
@@ -118,22 +120,9 @@ namespace leaveApplication2.Controllers
                 _logger.LogInformation("Get the values of AddAppliedLeave");
                 _logger.LogInformation("End CreateAppliedLeave");
 
-               
-                
-                var appliedLeaveTypeId = newAppliedLeaveCreated.appliedLeaveTypeId;
-                var employee = await _employeeService.GetEmployeeByIdAsync(newAppliedLeaveCreated.employeeId);
-                DateTime currentDateTime = DateTime.Now;
-                string formattedDateTime = currentDateTime.ToString("yyyy-MM-dd HH:mm:ss");
-                var body = "";
-                
-                body += $"<p>Employee: {employee.firstName} {employee.lastName} has requested for leave approval</p>";
-                body += $"<p>Leave Type :{newAppliedLeaveCreated.LeaveReason}</p>";
-                body += $"<p>Applied from :{newAppliedLeaveCreated.StartDate} to {newAppliedLeaveCreated.EndDate}</p>";
-                body += "<p>Please click one of the following buttons to approve or reject leave:</p>";
-                body += $"<a href='http://localhost:5024/api/appliedLeave/UpdateIsApprovedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: green; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Approve</a>";
-                body += $"<a href='http://localhost:5024/api/appliedLeave/UpdateIsRejectedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: red; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reject</a>";
 
-                await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Approval", body);
+                //await 
+                await _emailService.SendLeaveApprovalEmail(newAppliedLeaveCreated);
 
                 return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Applied Successfully", newAppliedLeaveCreated);
             }
