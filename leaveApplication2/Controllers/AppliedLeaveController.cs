@@ -284,7 +284,9 @@ namespace leaveApplication2.Controllers
                 }
 
                 _logger.LogInformation($"End DeleteAppliedLeave");
+                await _emailService.SendLeaveRejectedEmail(updatedLeave);
                 return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Rejected");
+                
             }
             catch (Exception ex)
             {
@@ -325,7 +327,9 @@ namespace leaveApplication2.Controllers
 
                 // Successful deletion
                 _logger.LogInformation($"End DeleteAppliedLeave");
+                await _emailService.SendLeaveApprovedEmail(updatedLeave);
                 return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Approved");
+                // add approved email
             }
             catch (Exception ex)
             {

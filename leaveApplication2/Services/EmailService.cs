@@ -11,6 +11,7 @@ namespace leaveApplication2.Services
         {
             var appliedLeaveTypeId = newAppliedLeave.appliedLeaveTypeId;
             var employee = await _employeeService.GetEmployeeByIdAsync(newAppliedLeave.employeeId);
+            
             DateTime currentDateTime = DateTime.Now;
             string formattedDateTime = currentDateTime.ToString("yyyy-MM-dd HH:mm:ss");
             var body = "";
