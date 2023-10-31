@@ -33,6 +33,7 @@ internal class Program
         builder.Services.AddScoped<IGenderRepository, GenderRepository>();
         builder.Services.AddScoped<IGenderService, GenderService>();
         builder.Services.AddScoped<IDesignationRepository, DesignationRepository>();
+        builder.Services.AddScoped<IEmailService, EmailService>();
         builder.Services.AddScoped<IDesignationService, DesignationService>();
         builder.Services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
         builder.Services.AddScoped<ILeaveAllocationService, LeaveAllocationService>();
@@ -44,6 +45,7 @@ internal class Program
         builder.Services.AddScoped<IApplicationPageServices, ApplicationPageServices>();
         builder.Services.AddScoped<IUserRoleMappingRepository, UserRoleMappingRepository>();
         builder.Services.AddScoped<IUserRoleMappingServices, UserRoleMappingServices>();
+        
 
         //builder.Services.AddScoped<ILeaveStatusService, LeaveStatusService>();
         builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();

@@ -13,7 +13,7 @@ namespace leaveApplication2.Repostories
             _context = context;
         }
 
-        public async Task<ApplicationPage> CreateApplicationPage(ApplicationPage page)
+        public async Task<ApplicationPages> CreateApplicationPage(ApplicationPages page)
         {
             try
             {
@@ -27,7 +27,7 @@ namespace leaveApplication2.Repostories
             }
 
         }
-        public async Task<ApplicationPage> UpdateApplicationPage(ApplicationPage page)
+        public async Task<ApplicationPages> UpdateApplicationPage(ApplicationPages page)
         {
             try
             {
@@ -43,12 +43,12 @@ namespace leaveApplication2.Repostories
         }
 
 
-        public ApplicationPage GetById(int id)
+        public ApplicationPages GetById(int id)
         {
             return _context.ApplicationPages.FirstOrDefault(r => r.Id == id);
         }
 
-        public async Task<IReadOnlyCollection<ApplicationPage>> GetApplicationPagesAsync()
+        public async Task<IReadOnlyCollection<ApplicationPages>> GetApplicationPagesAsync()
         {
             return await _context.ApplicationPages.ToListAsync();
         }

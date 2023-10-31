@@ -20,7 +20,7 @@ namespace leaveApplication2.Controllers
 
         // Get all application pages
         [HttpGet("GetApplicationPagesAsync")]
-        public async Task<CommonResponse<IEnumerable<ApplicationPage>>> GetApplicationPagesAsync()
+        public async Task<CommonResponse<IEnumerable<ApplicationPages>>> GetApplicationPagesAsync()
         {
             _logger.LogInformation("Start GetApplicationPagesAsync");
             try
@@ -29,22 +29,22 @@ namespace leaveApplication2.Controllers
 
                 if (pages == null)
                 {
-                    return this.CreateResponse<IEnumerable<ApplicationPage>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No application pages found.");
+                    return this.CreateResponse<IEnumerable<ApplicationPages>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No application pages found.");
                 }
 
                 _logger.LogInformation("End GetApplicationPagesAsync");
-                return this.CreateResponse<IEnumerable<ApplicationPage>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", pages);
+                return this.CreateResponse<IEnumerable<ApplicationPages>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", pages);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while retrieving application pages.");
-                return this.CreateResponse<IEnumerable<ApplicationPage>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+                return this.CreateResponse<IEnumerable<ApplicationPages>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
         // Get a single application page by ID
         [HttpGet("GetApplicationPageByIdAsync/{id}")]
-        public async Task<CommonResponse<ApplicationPage>> GetApplicationPageByIdAsync(int id)
+        public async Task<CommonResponse<ApplicationPages>> GetApplicationPageByIdAsync(int id)
         {
             _logger.LogInformation("Start GetApplicationPageByIdAsync");
             try
@@ -53,22 +53,22 @@ namespace leaveApplication2.Controllers
 
                 if (page == null)
                 {
-                    return this.CreateResponse<ApplicationPage>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Application page not found.");
+                    return this.CreateResponse<ApplicationPages>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Application page not found.");
                 }
 
                 _logger.LogInformation("End GetApplicationPageByIdAsync");
-                return this.CreateResponse<ApplicationPage>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", page);
+                return this.CreateResponse<ApplicationPages>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", page);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while retrieving the application page.");
-                return this.CreateResponse<ApplicationPage>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+                return this.CreateResponse<ApplicationPages>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
         // Create a new application page
         [HttpPost("CreateApplicationPageAsync")]
-        public async Task<CommonResponse<ApplicationPage>> CreateApplicationPageAsync(ApplicationPage page)
+        public async Task<CommonResponse<ApplicationPages>> CreateApplicationPageAsync(ApplicationPages page)
         {
             _logger.LogInformation("Start CreateApplicationPageAsync");
 
@@ -78,22 +78,22 @@ namespace leaveApplication2.Controllers
 
                 if (newPage == null)
                 {
-                    return this.CreateResponse<ApplicationPage>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Failed to create the application page.");
+                    return this.CreateResponse<ApplicationPages>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Failed to create the application page.");
                 }
 
                 _logger.LogInformation("End CreateApplicationPageAsync");
-                return this.CreateResponse<ApplicationPage>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Application page created successfully", newPage);
+                return this.CreateResponse<ApplicationPages>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Application page created successfully", newPage);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while creating a new application page.");
-                return this.CreateResponse<ApplicationPage>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+                return this.CreateResponse<ApplicationPages>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
         // Update an application page
         [HttpPost("UpdateApplicationPageAsync/{id}")]
-        public async Task<CommonResponse<ApplicationPage>> UpdateApplicationPageAsync(int id, ApplicationPage page)
+        public async Task<CommonResponse<ApplicationPages>> UpdateApplicationPageAsync(int id, ApplicationPages page)
         {
             _logger.LogInformation("Start UpdateApplicationPageAsync");
 
@@ -103,22 +103,22 @@ namespace leaveApplication2.Controllers
 
                 if (updatedPage == null)
                 {
-                    return this.CreateResponse<ApplicationPage>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Failed to update the application page.");
+                    return this.CreateResponse<ApplicationPages>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Failed to update the application page.");
                 }
 
                 _logger.LogInformation("End UpdateApplicationPageAsync");
-                return this.CreateResponse<ApplicationPage>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Application page updated successfully", updatedPage);
+                return this.CreateResponse<ApplicationPages>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Application page updated successfully", updatedPage);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while updating the application page.");
-                return this.CreateResponse<ApplicationPage>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+                return this.CreateResponse<ApplicationPages>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
         // Delete an application page by ID
         [HttpDelete("DeleteApplicationPageAsync/{id}")]
-        public async Task<CommonResponse<ApplicationPage>> DeleteApplicationPageAsync(int id)
+        public async Task<CommonResponse<ApplicationPages>> DeleteApplicationPageAsync(int id)
         {
             _logger.LogInformation("Start DeleteApplicationPageAsync");
 
@@ -127,12 +127,12 @@ namespace leaveApplication2.Controllers
                 await _pageService.DeleteApplicationPageAsync(id);
 
                 _logger.LogInformation("End DeleteApplicationPageAsync");
-                return this.CreateResponse<ApplicationPage>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Application page deleted successfully");
+                return this.CreateResponse<ApplicationPages>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Application page deleted successfully");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while deleting the application page.");
-                return this.CreateResponse<ApplicationPage>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+                return this.CreateResponse<ApplicationPages>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
     }

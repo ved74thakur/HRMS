@@ -12,22 +12,22 @@ namespace leaveApplication2.Services
             _pageRepository = pageRepository;
         }
 
-        public async Task<IEnumerable<ApplicationPage>> GetApplicationPagesAsync()
+        public async Task<IEnumerable<ApplicationPages>> GetApplicationPagesAsync()
         {
             return await _pageRepository.GetApplicationPagesAsync();
         }
 
-        public async Task<ApplicationPage> CreateApplicationPageAsync(ApplicationPage page)
+        public async Task<ApplicationPages> CreateApplicationPageAsync(ApplicationPages page)
         {
             return await _pageRepository.CreateApplicationPage(page);
         }
 
-        public async Task<ApplicationPage> GetApplicationPageByIdAsync(int id)
+        public async Task<ApplicationPages> GetApplicationPageByIdAsync(int id)
         {
             return _pageRepository.GetById(id);
         }
 
-        public async Task<ApplicationPage> UpdateApplicationPageAsync(int id, ApplicationPage page)
+        public async Task<ApplicationPages> UpdateApplicationPageAsync(int id, ApplicationPages page)
         {
             var existingPage = _pageRepository.GetById(id);
             if (existingPage == null)

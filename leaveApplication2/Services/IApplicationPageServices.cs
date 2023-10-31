@@ -5,10 +5,10 @@ namespace leaveApplication2.Services
     public interface IApplicationPageServices
     {
 
-        Task<IEnumerable<ApplicationPage>> GetApplicationPagesAsync();
-        Task<ApplicationPage> CreateApplicationPageAsync(ApplicationPage page);
-        Task<ApplicationPage> GetApplicationPageByIdAsync(int id);
-        Task<ApplicationPage> UpdateApplicationPageAsync(int id, ApplicationPage page);
+        Task<IEnumerable<ApplicationPages>> GetApplicationPagesAsync();
+        Task<ApplicationPages> CreateApplicationPageAsync(ApplicationPages page);
+        Task<ApplicationPages> GetApplicationPageByIdAsync(int id);
+        Task<ApplicationPages> UpdateApplicationPageAsync(int id, ApplicationPages page);
         Task DeleteApplicationPageAsync(int id);
     }
 }

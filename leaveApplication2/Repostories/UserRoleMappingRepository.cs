@@ -18,7 +18,26 @@ namespace leaveApplication2.Repostories
 
         public async Task<IReadOnlyCollection<UserRoleMapping>> GetUserRoleMappingsAsync()
         {
-            return await _context.UserRoleMappings.ToListAsync();
+            try
+            {
+                var query = _context.UserRoleMappings
+                    .Include(mapping => mapping.ApplicationPage) // Include ApplicationPage
+                    .Include(mapping => mapping.RoleAssignment);  // Include RoleAssignment
+
+                return await query.ToListAsync();
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle DbUpdateException (e.g., database-specific errors)
+                Console.WriteLine($"DbUpdateException: {dbEx.Message}");
+                throw; // Rethrow the exception or perform specific error handling
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"General Exception: {ex.Message}");
+                throw; // Rethrow the exception or perform specific error handling
+            }
         }
 
         public async Task<IReadOnlyCollection<UserRoleMapping>> GetUserRoleMappingsAsync(Expression<Func<UserRoleMapping, bool>> filter)
@@ -37,7 +56,7 @@ namespace leaveApplication2.Repostories
                 {
                     // Check if a mapping with the same RoleAssignId and ApplicationPageId already exists
                     bool mappingExists = await _context.UserRoleMappings
-                        .AnyAsync(m => m.RoleAssignId == mapping.RoleAssignId && m.ApplicationPageId == mapping.ApplicationPageId);
+                        .AnyAsync(m => m.RoleAssignId == mapping.roleAssignId && m.ApplicationPageId == mapping.ApplicationPageId);
                   
 
                     if (!mappingExists)
@@ -46,7 +65,7 @@ namespace leaveApplication2.Repostories
                         {
                             // Map properties from UserRoleMappingDTO to UserRoleMapping here
                             ApplicationPageId = mapping.ApplicationPageId,
-                            RoleAssignId = mapping.RoleAssignId
+                            RoleAssignId = mapping.roleAssignId
                         };
 
                         _context.UserRoleMappings.Add(userRoleMapping);

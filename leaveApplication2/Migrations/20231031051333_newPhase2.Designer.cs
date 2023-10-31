@@ -12,8 +12,8 @@ using leaveApplication2.Data;
 namespace leaveApplication2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231030095732_new amit001000000")]
-    partial class newamit001000000
+    [Migration("20231031051333_newPhase2")]
+    partial class newPhase2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

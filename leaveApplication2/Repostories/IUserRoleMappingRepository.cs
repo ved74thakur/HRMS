@@ -11,6 +11,7 @@ namespace leaveApplication2.Repostories
         Task<List<UserRoleMappingDTO>> CreateUserRoleMappings(List<UserRoleMappingDTO> mappings);
 
         Task<UserRoleMapping> GetUserRoleMappingById(int id);
+
         Task<IReadOnlyCollection<UserRoleMapping>> GetUserRoleMappingsAsync();
         Task<UserRoleMapping> UpdateUserRoleMapping(UserRoleMapping mapping);
         Task<UserRoleMapping> DeleteUserRoleMappingById(int id);
