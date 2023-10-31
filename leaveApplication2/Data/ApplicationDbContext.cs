@@ -26,7 +26,7 @@ namespace leaveApplication2.Data
 
         public DbSet<Holiday> Holidays { get; set; }
         public DbSet<RoleAssign> RoleAssigns { get; set; }
-        public DbSet<ApplicationPage> ApplicationPages { get; set; }
+        public DbSet<ApplicationPages> ApplicationPages { get; set; }
         public DbSet<UserRoleMapping> UserRoleMappings { get; set; }
 
         public DbSet<EmployeeReporting> EmployeeReporting { get; set; }

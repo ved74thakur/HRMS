@@ -20,7 +20,7 @@ namespace leaveApplication2.Controllers
         }
 
         [HttpGet("GetUserRoleMappingsAsync")]
-        public async Task<CommonResponse<IEnumerable<UserRoleMapping>>> GetUserRoleMappingsAsync()
+        public async Task<CommonResponse<IEnumerable<UserRoleMappingDTO>>> GetUserRoleMappingsAsync()
         {
             _logger.LogInformation("Start GetUserRoleMappingsAsync");
             try
@@ -29,16 +29,16 @@ namespace leaveApplication2.Controllers
 
                 if (mappings == null)
                 {
-                    return this.CreateResponse<IEnumerable<UserRoleMapping>>(StatusCodes.Status404NotFound, "No user-role mappings found.");
+                    return this.CreateResponse<IEnumerable<UserRoleMappingDTO>>(StatusCodes.Status404NotFound, "No user-role mappings found.");
                 }
 
                 _logger.LogInformation("End GetUserRoleMappingsAsync");
-                return this.CreateResponse<IEnumerable<UserRoleMapping>>(StatusCodes.Status200OK, "Success", mappings);
+                return this.CreateResponse<IEnumerable<UserRoleMappingDTO>>(StatusCodes.Status200OK, "Success", mappings);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while retrieving user-role mappings.");
-                return this.CreateResponse<IEnumerable<UserRoleMapping>>(StatusCodes.Status500InternalServerError, ex.Message);
+                return this.CreateResponse<IEnumerable<UserRoleMappingDTO>>(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 

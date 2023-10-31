@@ -13,11 +13,13 @@ namespace leaveApplication2.Models
         // Foreign key to ApplicationPages
         [ForeignKey("ApplicationPage")]
         public int ApplicationPageId { get; set; }
-        //public ApplicationPages ApplicationPage { get; set; }
+        public virtual ApplicationPages ApplicationPage { get; set; }
 
         // Foreign key to RoleAssign
         [ForeignKey("RoleAssignment")]
         public int RoleAssignId { get; set; }
-        //public RoleAssign RoleAssignment { get; set; }
+        public virtual RoleAssign RoleAssignment { get; set; }
+
+
     }
 }

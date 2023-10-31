@@ -44,6 +44,7 @@ internal class Program
         builder.Services.AddScoped<IApplicationPageServices, ApplicationPageServices>();
         builder.Services.AddScoped<IUserRoleMappingRepository, UserRoleMappingRepository>();
         builder.Services.AddScoped<IUserRoleMappingServices, UserRoleMappingServices>();
+        builder.Services.AddScoped<IEmailService, EmailService>();
 
         //builder.Services.AddScoped<ILeaveStatusService, LeaveStatusService>();
         builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();

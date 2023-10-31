@@ -40,7 +40,7 @@ namespace Leave.EmailTemplate
             }
         }
 
-        public async Task SendEmailAsync(List<string> emails, string subject, string body, string emailCC , string emailBCC, long appliedLeaveTypeId)
+        public async Task SendEmailAsync(List<string> emails, string subject, string body, string emailCC , string emailBCC)
         {
            
             var mailMessage = new MailMessage
@@ -83,7 +83,7 @@ namespace Leave.EmailTemplate
                 Console.WriteLine("Error sending email: " + ex.Message);
             }
         }
-        public async Task SendEmailAsync(string email, string subject, string body, string emailCC, string emailBCC, long appliedLeaveTypeId)
+        public async Task SendEmailAsync(string email, string subject, string body, string emailCC, string emailBCC)
         {
            
             var mailMessage = new MailMessage

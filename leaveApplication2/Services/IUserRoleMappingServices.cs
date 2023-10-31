@@ -5,7 +5,7 @@ namespace leaveApplication2.Services
 {
     public interface IUserRoleMappingServices
     {
-        Task<IEnumerable<UserRoleMapping>> GetUserRoleMappingsAsync();
+        Task<IEnumerable<UserRoleMappingDTO>> GetUserRoleMappingsAsync();
         //Task<UserRoleMapping> CreateUserRoleMappingAsync(UserRoleMapping mapping);
         Task<List<UserRoleMappingDTO>> CreateUserRoleMappings(List<UserRoleMappingDTO> mappings);
 

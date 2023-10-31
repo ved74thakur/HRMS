@@ -14,9 +14,30 @@ namespace leaveApplication2.Services
             _mappingRepository = mappingRepository;
         }
 
-        public async Task<IEnumerable<UserRoleMapping>> GetUserRoleMappingsAsync()
+        //public async Task<IEnumerable<UserRoleMapping>> GetUserRoleMappingsAsync()
+        //{
+        //    return await _mappingRepository.GetUserRoleMappingsAsync();
+        //}
+        public async Task<IEnumerable<UserRoleMappingDTO>> GetUserRoleMappingsAsync()
         {
-            return await _mappingRepository.GetUserRoleMappingsAsync();
+
+            var userMappings = await _mappingRepository.GetUserRoleMappingsAsync();
+            var userRoleMappingDTOs = userMappings.Select(mapping => new UserRoleMappingDTO
+            {
+                roleAssignId = mapping.RoleAssignId,
+                ApplicationPageId = mapping.ApplicationPageId,
+                roleAssignName = mapping.RoleAssignment.RoleAssignName,
+                roleAssignCodeName = mapping.RoleAssignment.RoleAssignCodeName,
+                pageName = mapping.ApplicationPage.PageName,
+                pageCode = mapping.ApplicationPage.PageCode,
+                routePath = mapping.ApplicationPage.routePath,
+                menuPath = mapping.ApplicationPage.menuPath,
+                isMenuPage = mapping.ApplicationPage.isMenuPage,
+                componentName = mapping.ApplicationPage.componentName
+
+
+            });
+            return userRoleMappingDTOs;
         }
 
         public async Task<List<UserRoleMappingDTO>> CreateUserRoleMappings(List<UserRoleMappingDTO> mappings)
