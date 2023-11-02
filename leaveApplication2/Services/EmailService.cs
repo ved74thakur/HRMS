@@ -33,8 +33,8 @@ namespace leaveApplication2.Services
 
             await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Approval", body);
 
-            body += $"<a href='http://localhost:5024/api/appliedLeave/UpdateIsApprovedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: green; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Approve</a>";
-            body += $"<a href='http://localhost:5024/api/appliedLeave/UpdateIsRejectedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: red; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reject</a>";
+            body += $"<a href='http://192.168.1.5/api/appliedLeave/UpdateIsApprovedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: green; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Approve</a>";
+            body += $"<a href='http://192.168.1.5/api/appliedLeave/UpdateIsRejectedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: red; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reject</a>";
 
             await _genericEmail.SendEmailAsync(reportingEmployee.emailAddress, "Leave Approval", body);
         }

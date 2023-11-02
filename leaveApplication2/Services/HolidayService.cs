@@ -11,9 +11,18 @@ namespace leaveApplication2.Services
         {
             _holidayRepository = holidayRepository;
         }
-        public async Task<IEnumerable<Holiday>> GetHolidaysAsync()
+        public async Task<IEnumerable<Holiday>> GetAllHolidaysAsync()
         {
             return await _holidayRepository.GetHolidaysAsync();
+
+        }
+        public async Task<IEnumerable<Holiday>> GetHolidaysAsync()
+        {
+            var allHolidays = await _holidayRepository.GetHolidaysAsync();
+            var today = DateTime.Today;
+            var filteredHolidays = allHolidays.Where(holiday => holiday.HolidayDate >= today);
+
+            return filteredHolidays;
 
         }
 

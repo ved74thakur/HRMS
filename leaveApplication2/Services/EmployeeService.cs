@@ -69,7 +69,7 @@ namespace leaveApplication2.Services
         {
             //employee.SetPassword(employee.passwordHash);
             var createdEmployee = await _employeeRepository.CreateEmployeeAsync(employee);
-            Expression<Func<LeaveAllocation, bool>> filter = la => la.financialYearId == 1;
+            Expression<Func<LeaveAllocation, bool>> filter = la => la.financialYearId == 2;
             IReadOnlyCollection<LeaveAllocation> leaveAllocations = await _leaveAllocationRepository.GetLeaveAllocationsAsync(filter);
 
 
