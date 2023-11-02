@@ -1,6 +1,7 @@
 ﻿using leaveApplication2.Models;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
+using System.Linq.Expressions;
 
 namespace leaveApplication2.Repostories
 {
@@ -9,6 +10,7 @@ namespace leaveApplication2.Repostories
         Task<IReadOnlyCollection<Employee>> GetEmployeesAsync();
         
         Task<Employee> GetEmployeeByIdAsync(long id);
+        Task<IEnumerable<Employee>> GetEmployeesAsync(Expression<Func<Employee, bool>> filter);
         Task<Employee> CreateEmployeeAsync(Employee employee);
         
         Task<Employee> UpdateEmployeeAsync(Employee employee);

@@ -65,6 +65,7 @@ namespace leaveApplication2.Services
 
 
 
+
         public async Task<Employee> CreateEmployeeAsync(Employee employee)
         {
             //employee.SetPassword(employee.passwordHash);
@@ -213,6 +214,10 @@ namespace leaveApplication2.Services
             return employeeReporting;
         }
 
+        public async Task<IEnumerable<Employee>> GetEmployeesAsync(Expression<Func<Employee, bool>> filter)
+        {
+            return await _employeeRepository.GetEmployeesAsync(filter);
+        }
 
 
 

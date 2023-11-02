@@ -24,6 +24,7 @@ namespace leaveApplication2.Services
         public async Task<IEnumerable<AppliedLeave>> GetAppliedLeavesAsync()
         {
             return await _leaveRepository.GetAppliedLeavesAsync();
+
         }
        
         public async Task<AppliedLeave> CreateAppliedLeave(AppliedLeave leave)
@@ -34,6 +35,7 @@ namespace leaveApplication2.Services
             var createdLeave = await _leaveRepository.CreateAppliedLeave(leave);
             return createdLeave;
         }
+
 
         //END POINT
         //public async Task<AppliedLeave> UpdateLeaveStatusAsync(long appliedLeaveTypeId , int leaveStatusId)
@@ -249,5 +251,7 @@ namespace leaveApplication2.Services
         {
             return await _leaveRepository.GetAppliedLeavesAsync(filter);
         }
+
+        
     }
 }

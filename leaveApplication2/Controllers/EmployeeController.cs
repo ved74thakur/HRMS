@@ -13,6 +13,7 @@ using System.Net;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http.HttpResults;
 using leaveApplication2.Dtos;
+using System.Linq.Expressions;
 
 namespace leaveApplication2.Controllers     
 {
@@ -74,6 +75,7 @@ namespace leaveApplication2.Controllers
         [HttpGet("GetEmployeeByIdAsync/{employeeId}")]
         public async Task<CommonResponse<Employee>> GetEmployeeByIdAsync(long employeeId)
         {
+
             _logger.LogInformation($"Start GetEmployeeByIdAsync");
             try
             {
@@ -139,39 +141,7 @@ namespace leaveApplication2.Controllers
 
         }
 
-        /*
-        //verifypassword
-        [HttpPost("VerifyPasswordAsync")]
-        public async Task<CommonResponse<bool>> VerifyPasswordAsync([FromBody] Employee request)
-        {
-            _logger.LogInformation($"Start VerifyPasswordAsync");
-            try
-            {
-                var isPasswordValid = await _employeeService.VerifyPasswordAsync(request.employeeId, request.passwordHash);
-                if (isPasswordValid == false)
-                {
-                    _logger.LogInformation($"Start GetAllEmployees null");
-                    //no salutions found
-                    return this.CreateResponse<bool>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
-
-                    //this.CreateResponse<Employee> (,)
-                }
-                _logger.LogInformation($"Get the values of GetAllEmployeeAsync");
-                _logger.LogInformation($"End GetAllEmployeeAsync");
-                //Salutions found
-
-                return this.CreateResponse<bool>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success: User is verfied", isPasswordValid);
-            }
-            catch (Exception ex)
-            {
-                //error occured
-                _logger.LogError(ex, "An error occured while retrieving all salutions");
-                return this.CreateResponse<bool>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
-            }
-
-        }
-        */
-
+        
         [HttpPost("UpdateEmployeeAsync")]
         public async Task<CommonResponse<ActionResult<Employee>>> UpdateEmployeeAsync([FromBody] Employee employee)
         {
@@ -277,6 +247,74 @@ namespace leaveApplication2.Controllers
         }
 
 
+        [HttpGet("GetEmployeesByReportingIdAsync/{employeeId}")]
+        public async Task<CommonResponse<IEnumerable<Employee>>> GetEmployeesByReportingPersonIdAsync(long employeeId)
+        {
+            _logger.LogInformation($"Start GetEmployeesByReportingPersonIdAsync");
+            try
+            {
+                Expression<Func<Employee, bool>> filter = emp => emp.ReportingPersonId == employeeId;
+                var employees = await _employeeService.GetEmployeesAsync(filter);
+
+            
+                if (employees == null)
+                {
+                    _logger.LogInformation($"Start GetEmployeesAsync null");
+                    //no salutions found
+                    return this.CreateResponse<IEnumerable<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No Employee found.");
+
+                    //this.CreateResponse<Employee> (,)
+                }
+                _logger.LogInformation($"Get the values of GetEmployeesAsync");
+                _logger.LogInformation($"End GetEmployeesAsync");
+                //Salutions found
+
+                return this.CreateResponse<IEnumerable<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", employees);
+            }
+            catch (Exception ex)
+            {
+                //error occured
+                _logger.LogError(ex, "An error occured while retrieving all salutions");
+                return this.CreateResponse<IEnumerable<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
+
+        //including that employee itself
+        //[HttpGet("GetEmployeesByReportingPersonIdAsync/{employeeId}")]
+        //public async Task<CommonResponse<IEnumerable<Employee>>> GetEmployeesByReportingPersonIdAsync(long employeeId)
+        //{
+        //    _logger.LogInformation("Start GetEmployeesByReportingPersonIdAsync");
+        //    try
+        //    {
+        //        // Retrieve the selected employee
+        //        var selectedEmployee = await _employeeService.GetEmployeeByIdAsync(employeeId);
+
+        //        if (selectedEmployee == null)
+        //        {
+        //            _logger.LogInformation("Start GetEmployeesByReportingPersonIdAsync - Selected employee not found");
+        //            return this.CreateResponse(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Selected employee not found.", null);
+        //        }
+
+        //        // Retrieve employees by reportingPersonId
+        //        Expression<Func<Employee, bool>> filter = emp => emp.ReportingPersonId == employeeId;
+        //        var employees = await _employeeService.GetEmployeesAsync(filter);
+
+        //        _logger.LogInformation("Get the values of GetEmployeesByReportingPersonIdAsync");
+        //        _logger.LogInformation("End GetEmployeesByReportingPersonIdAsync");
+
+        //        // Combine the selected employee and related employees into a single list
+        //        var result = new List<Employee> { selectedEmployee };
+        //        result.AddRange(employees);
+
+        //        return this.CreateResponse(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "An error occurred while retrieving employees by reportingPersonId");
+        //        return this.CreateResponse(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message, null);
+        //    }
+        //}
 
 
         /*

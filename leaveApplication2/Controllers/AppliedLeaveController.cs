@@ -69,6 +69,7 @@ namespace leaveApplication2.Controllers
             try
             {
                 Expression<Func<AppliedLeave, bool>> filter = la => la.employeeId == employeeId;
+
                
                 var leaves = await _leaveService.GetAppliedLeavesAsync(filter);
                 if (leaves == null)
@@ -93,6 +94,43 @@ namespace leaveApplication2.Controllers
             }
 
         }
+
+        //getAppliedLeavesOfAllEmployeesMappedUnderReportingId
+        [HttpGet("GetAppliedLeavesByReportingPersonIdAsync/{employeeId}")]
+        public async Task<CommonResponse<IEnumerable<AppliedLeave>>>GetAppliedLeavesByReportingPersonIdAsync(long employeeId)
+        {
+            _logger.LogInformation("Start GetAppliedLeavesByReportingPersonIdAsync");
+            try
+            {
+                // Retrieve employees by reportingPersonId
+                Expression<Func<Employee, bool>> filter = emp => emp.ReportingPersonId == employeeId;
+                var employees = await _employeeService.GetEmployeesAsync(filter);
+
+                if (employees == null || !employees.Any())
+                {
+                    _logger.LogInformation("Start GetAppliedLeavesByReportingPersonIdAsync - No employees found.");
+                    return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No employees found.", null);
+                }
+
+                // Extract employeeIds from the list of employees
+                var employeeIds = employees.Select(emp => emp.employeeId).ToList();
+
+                // Retrieve applied leaves for the selected employees
+                Expression<Func<AppliedLeave, bool>> leavesFilter = la => employeeIds.Contains(la.employeeId);
+                var leaves = await _leaveService.GetAppliedLeavesAsync(leavesFilter);
+
+                _logger.LogInformation("Get the values of GetAppliedLeavesByReportingPersonIdAsync");
+                _logger.LogInformation("End GetAppliedLeavesByReportingPersonIdAsync");
+
+                return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", leaves);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving applied leaves by reportingPersonId");
+                return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message, null);
+            }
+        }
+
 
         //Create leaves
         [HttpPost("CreateAppliedLeaveAsync")]

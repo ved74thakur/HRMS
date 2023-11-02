@@ -1,5 +1,6 @@
 ﻿using leaveApplication2.Dtos;
 using leaveApplication2.Models;
+using System.Linq.Expressions;
 
 namespace leaveApplication2.Services
 {
@@ -8,6 +9,7 @@ namespace leaveApplication2.Services
         Task<IEnumerable<Employee>> GetEmployeesAsync();
         
         Task<Employee> GetEmployeeByIdAsync(long id);
+        Task<IEnumerable<Employee>> GetEmployeesAsync(Expression<Func<Employee, bool>> filter);
         Task<Employee> CreateEmployeeAsync(Employee employee);
         
         Task<Employee> UpdateEmployeeAsync(Employee employee);

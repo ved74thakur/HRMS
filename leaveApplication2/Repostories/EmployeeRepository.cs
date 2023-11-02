@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using System.Data;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
@@ -30,6 +31,9 @@ namespace leaveApplication2.Repostories
         }
 
 
+
+
+
         public async Task<Employee> GetEmployeeByIdAsync(long id)
         {
             
@@ -44,7 +48,11 @@ namespace leaveApplication2.Repostories
         }
 
 
-        
+        public async Task<IEnumerable<Employee>> GetEmployeesAsync(Expression<Func<Employee, bool>> filter)
+        {
+            return await _context.Employees.Where(filter).ToListAsync();
+        }
+
 
         public async Task<Employee> CreateEmployeeAsync(Employee employee)
         {
