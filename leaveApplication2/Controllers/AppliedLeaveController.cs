@@ -114,7 +114,7 @@ namespace leaveApplication2.Controllers
 
                 // Extract employeeIds from the list of employees
                 var employeeIds = employees.Select(emp => emp.employeeId).ToList();
-
+                employeeIds.Add(employeeId);    
                 // Retrieve applied leaves for the selected employees
                 Expression<Func<AppliedLeave, bool>> leavesFilter = la => employeeIds.Contains(la.employeeId);
                 var leaves = await _leaveService.GetAppliedLeavesAsync(leavesFilter);
