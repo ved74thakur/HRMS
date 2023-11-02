@@ -47,6 +47,36 @@ namespace leaveApplication2.Controllers
             }
 
         }
+        //GetAllHolidays
+        [HttpGet("GetAllHolidaysAsync")]
+        public async Task<CommonResponse<IEnumerable<Holiday>>> GetAllHolidaysAsync()
+        {
+            _logger.LogInformation($"Start GetAllHolidaysAsync");
+            try
+            {
+                var holidays = await _holidayService.GetAllHolidaysAsync();
+                if (holidays == null)
+                {
+                    _logger.LogInformation($"Start GetAllLeaveStatusesAsync null");
+                    //no salutions found
+                    return this.CreateResponse<IEnumerable<Holiday>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+
+                    //this.CreateResponse<Employee> (,)
+                }
+                _logger.LogInformation($"Get the values of GetAllLeaveStatusesAsync");
+                _logger.LogInformation($"End GetAllLeaveStatusesAsync");
+                //Salutions found
+
+                return this.CreateResponse<IEnumerable<Holiday>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", holidays);
+            }
+            catch (Exception ex)
+            {
+                //error occured
+                _logger.LogError(ex, "An error occured while retrieving all salutions");
+                return this.CreateResponse<IEnumerable<Holiday>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
 
         //getSingleHoliday
 

@@ -4,6 +4,7 @@ namespace leaveApplication2.Services
 {
     public interface IHolidayService
     {
+        Task<IEnumerable<Holiday>> GetAllHolidaysAsync();
         Task<IEnumerable<Holiday>> GetHolidaysAsync();
         Task<Holiday> GetHolidayByIdAsync(int id);
         Task<Holiday> CreateHoliday(Holiday holiday);
