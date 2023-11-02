@@ -106,7 +106,7 @@ namespace leaveApplication2.Controllers
                 Expression<Func<Employee, bool>> filter = emp => emp.ReportingPersonId == employeeId;
                 var employees = await _employeeService.GetEmployeesAsync(filter);
 
-                if (employees == null || !employees.Any())
+                if (employees == null)
                 {
                     _logger.LogInformation("Start GetAppliedLeavesByReportingPersonIdAsync - No employees found.");
                     return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No employees found.", null);
