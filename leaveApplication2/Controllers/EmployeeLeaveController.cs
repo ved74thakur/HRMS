@@ -123,6 +123,10 @@ namespace leaveApplication2.Controllers
             _logger.LogInformation($"Start GetEmployeeByIdAsync");
             try
             {
+
+              
+
+
                 var singleEmployeeLeave = await _employeeLeaveService.GetEmployeeLeaveByEmployeeId(employeeId);
                 if (singleEmployeeLeave == null)
                 {
