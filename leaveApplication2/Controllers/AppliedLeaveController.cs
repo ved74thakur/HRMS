@@ -1,4 +1,5 @@
 ﻿using Leave.EmailTemplate;
+using leaveApplication2.Dtos;
 using leaveApplication2.Models;
 using leaveApplication2.Services;
 using Microsoft.AspNetCore.Http;
@@ -63,7 +64,7 @@ namespace leaveApplication2.Controllers
         }
         //getAllAppliedLeaveByEmployeeId
         [HttpGet("GetAppliedLeavesByEmpIdAsync/{employeeId}")]
-        public async Task<CommonResponse<IEnumerable<AppliedLeave>>> GetAppliedLeavesAsync(long employeeId)
+        public async Task<CommonResponse<IEnumerable<AppliedLeaveDTO>>> GetAppliedLeavesAsync(long employeeId)
         {
             _logger.LogInformation($"Start GetAllEmployeesLeaves");
             try
@@ -76,7 +77,7 @@ namespace leaveApplication2.Controllers
                 {
                     _logger.LogInformation($"Start GetAllEmployeesLeaves null");
                     //no salutions found
-                    return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No Employee found.");
+                    return this.CreateResponse<IEnumerable<AppliedLeaveDTO>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No Employee found.");
 
                     //this.CreateResponse<Employee> (,)
                 }
@@ -84,20 +85,20 @@ namespace leaveApplication2.Controllers
                 _logger.LogInformation($"End GetAllEmployeeLeavesAsync");
                 //Salutions found
 
-                return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", leaves);
+                return this.CreateResponse<IEnumerable<AppliedLeaveDTO>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", leaves);
             }
             catch (Exception ex)
             {
                 //error occured
                 _logger.LogError(ex, "An error occured while retrieving all salutions");
-                return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+                return this.CreateResponse<IEnumerable<AppliedLeaveDTO>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
 
         }
 
         //getAppliedLeavesOfAllEmployeesMappedUnderReportingId
         [HttpGet("GetAppliedLeavesByReportingPersonIdAsync/{employeeId}")]
-        public async Task<CommonResponse<IEnumerable<AppliedLeave>>>GetAppliedLeavesByReportingPersonIdAsync(long employeeId)
+        public async Task<CommonResponse<IEnumerable<AppliedLeaveDTO>>>GetAppliedLeavesByReportingPersonIdAsync(long employeeId)
         {
             _logger.LogInformation("Start GetAppliedLeavesByReportingPersonIdAsync");
             try
@@ -109,7 +110,7 @@ namespace leaveApplication2.Controllers
                 if (employees == null)
                 {
                     _logger.LogInformation("Start GetAppliedLeavesByReportingPersonIdAsync - No employees found.");
-                    return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No employees found.", null);
+                    return this.CreateResponse<IEnumerable<AppliedLeaveDTO>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No employees found.", null);
                 }
 
                 // Extract employeeIds from the list of employees
@@ -122,12 +123,12 @@ namespace leaveApplication2.Controllers
                 _logger.LogInformation("Get the values of GetAppliedLeavesByReportingPersonIdAsync");
                 _logger.LogInformation("End GetAppliedLeavesByReportingPersonIdAsync");
 
-                return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", leaves);
+                return this.CreateResponse<IEnumerable<AppliedLeaveDTO>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", leaves);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while retrieving applied leaves by reportingPersonId");
-                return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message, null);
+                return this.CreateResponse<IEnumerable<AppliedLeaveDTO>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message, null);
             }
         }
 
@@ -376,6 +377,61 @@ namespace leaveApplication2.Controllers
             }
         }
 
+        //amit upodate method
+        [HttpGet("UpdateIsApprovedEmailAsync/{appliedLeaveTypeId}/{isApproved}")]
+        public async Task<ActionResult<CommonResponse<AppliedLeave>>> UpdateIsApprovedEmailAsync([FromRoute] long appliedLeaveTypeId, [FromRoute] bool isApproved)
+        {
+            try
+            {
+                var updateStatus = await UpdateUpdateStatus(appliedLeaveTypeId, isApproved);
+
+                return Ok(updateStatus.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the applied leave");
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        public async Task<CommonResponse<AppliedLeave>> UpdateUpdateStatus([FromRoute] long appliedLeaveTypeId, [FromRoute] bool isApproved)
+        {
+
+            try
+            {
+
+                var existingLeave = await _leaveService.GetAppliedLeaveByIdAsync(appliedLeaveTypeId);
+                if (existingLeave == null)
+                {
+                    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Leave not found.");
+                }
+
+                if (existingLeave.IsApproved)
+                {
+                    // Leave is already approved
+                    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest, "Leave is already approved.");
+                }
+
+
+                var updatedLeave = await _leaveService.UpdateIsApprovedAsync(appliedLeaveTypeId, isApproved);
+                if (updatedLeave == null)
+                {
+                    // Leave not found
+                    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Leave not found.");
+                }
+
+                // Successful deletion
+                _logger.LogInformation($"End DeleteAppliedLeave");
+                await _emailService.SendLeaveApprovedEmail(updatedLeave);
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Approved");
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the applied leave");
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
         // Update IsApproved
         [HttpPut("UpdateIsApprovedCancelAsync/{appliedLeaveTypeId}/{isApproved}")]
         public async Task<ActionResult<CommonResponse<AppliedLeave>>> UpdateIsApprovedCancelAsync([FromRoute] long appliedLeaveTypeId, [FromRoute] bool isApproved)

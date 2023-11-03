@@ -25,6 +25,7 @@ namespace leaveApplication2.Controllers
         private readonly IEmailService _emailService;
         private readonly IAppliedLeaveService _leaveService;
         private readonly IConfiguration _configuration;
+        private readonly IEmailService _emailService;
 
         private readonly ILogger<EmployeeController> _logger;
         
