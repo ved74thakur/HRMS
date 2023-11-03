@@ -21,9 +21,29 @@ namespace leaveApplication2.Repostories
             
             //return await _context.EmployeeLeaves.Include(e => e.LeaveType).AsNoTracking().ToListAsync();
         }
+        //public async Task<IReadOnlyCollection<AppliedLeave>> GetAppliedLeavesAsync(Expression<Func<AppliedLeave, bool>> filter)
+        //{
+        //    return await _context.AppliedLeaves.Where(filter).ToListAsync();
+        //}
         public async Task<IReadOnlyCollection<AppliedLeave>> GetAppliedLeavesAsync(Expression<Func<AppliedLeave, bool>> filter)
         {
-            return await _context.AppliedLeaves.Where(filter).ToListAsync();
+            try
+            {
+                return await _context.AppliedLeaves
+                    .Where(filter)
+                    .Include(appliedLeave => appliedLeave.Employee)
+                    .Include(appliedLeave => appliedLeave.LeaveType)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Handle or log the exception here
+                // You can rethrow the exception or return an empty collection, depending on your requirements
+                // For logging, you can use a logging library or simply write to the console
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                // You may want to rethrow the exception to let the caller know about it
+                throw;
+            }
         }
 
 
