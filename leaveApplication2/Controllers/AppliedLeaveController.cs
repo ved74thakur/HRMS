@@ -1,4 +1,5 @@
 ﻿using Leave.EmailTemplate;
+using leaveApplication2.Dtos;
 using leaveApplication2.Models;
 using leaveApplication2.Services;
 using Microsoft.AspNetCore.Http;
@@ -63,7 +64,7 @@ namespace leaveApplication2.Controllers
         }
         //getAllAppliedLeaveByEmployeeId
         [HttpGet("GetAppliedLeavesByEmpIdAsync/{employeeId}")]
-        public async Task<CommonResponse<IEnumerable<AppliedLeave>>> GetAppliedLeavesAsync(long employeeId)
+        public async Task<CommonResponse<IEnumerable<AppliedLeaveDTO>>> GetAppliedLeavesAsync(long employeeId)
         {
             _logger.LogInformation($"Start GetAllEmployeesLeaves");
             try
@@ -76,7 +77,7 @@ namespace leaveApplication2.Controllers
                 {
                     _logger.LogInformation($"Start GetAllEmployeesLeaves null");
                     //no salutions found
-                    return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No Employee found.");
+                    return this.CreateResponse<IEnumerable<AppliedLeaveDTO>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No Employee found.");
 
                     //this.CreateResponse<Employee> (,)
                 }
@@ -84,20 +85,20 @@ namespace leaveApplication2.Controllers
                 _logger.LogInformation($"End GetAllEmployeeLeavesAsync");
                 //Salutions found
 
-                return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", leaves);
+                return this.CreateResponse<IEnumerable<AppliedLeaveDTO>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", leaves);
             }
             catch (Exception ex)
             {
                 //error occured
                 _logger.LogError(ex, "An error occured while retrieving all salutions");
-                return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+                return this.CreateResponse<IEnumerable<AppliedLeaveDTO>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
 
         }
 
         //getAppliedLeavesOfAllEmployeesMappedUnderReportingId
         [HttpGet("GetAppliedLeavesByReportingPersonIdAsync/{employeeId}")]
-        public async Task<CommonResponse<IEnumerable<AppliedLeave>>>GetAppliedLeavesByReportingPersonIdAsync(long employeeId)
+        public async Task<CommonResponse<IEnumerable<AppliedLeaveDTO>>>GetAppliedLeavesByReportingPersonIdAsync(long employeeId)
         {
             _logger.LogInformation("Start GetAppliedLeavesByReportingPersonIdAsync");
             try
@@ -109,7 +110,7 @@ namespace leaveApplication2.Controllers
                 if (employees == null)
                 {
                     _logger.LogInformation("Start GetAppliedLeavesByReportingPersonIdAsync - No employees found.");
-                    return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No employees found.", null);
+                    return this.CreateResponse<IEnumerable<AppliedLeaveDTO>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No employees found.", null);
                 }
 
                 // Extract employeeIds from the list of employees
@@ -122,12 +123,12 @@ namespace leaveApplication2.Controllers
                 _logger.LogInformation("Get the values of GetAppliedLeavesByReportingPersonIdAsync");
                 _logger.LogInformation("End GetAppliedLeavesByReportingPersonIdAsync");
 
-                return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", leaves);
+                return this.CreateResponse<IEnumerable<AppliedLeaveDTO>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", leaves);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while retrieving applied leaves by reportingPersonId");
-                return this.CreateResponse<IEnumerable<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message, null);
+                return this.CreateResponse<IEnumerable<AppliedLeaveDTO>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message, null);
             }
         }
 
