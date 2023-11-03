@@ -376,6 +376,61 @@ namespace leaveApplication2.Controllers
             }
         }
 
+        //amit upodate method
+        [HttpGet("UpdateIsApprovedEmailAsync/{appliedLeaveTypeId}/{isApproved}")]
+        public async Task<ActionResult<CommonResponse<AppliedLeave>>> UpdateIsApprovedEmailAsync([FromRoute] long appliedLeaveTypeId, [FromRoute] bool isApproved)
+        {
+            try
+            {
+                var updateStatus = await UpdateUpdateStatus(appliedLeaveTypeId, isApproved);
+
+                return Ok(updateStatus.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the applied leave");
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        public async Task<CommonResponse<AppliedLeave>> UpdateUpdateStatus([FromRoute] long appliedLeaveTypeId, [FromRoute] bool isApproved)
+        {
+
+            try
+            {
+
+                var existingLeave = await _leaveService.GetAppliedLeaveByIdAsync(appliedLeaveTypeId);
+                if (existingLeave == null)
+                {
+                    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Leave not found.");
+                }
+
+                if (existingLeave.IsApproved)
+                {
+                    // Leave is already approved
+                    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest, "Leave is already approved.");
+                }
+
+
+                var updatedLeave = await _leaveService.UpdateIsApprovedAsync(appliedLeaveTypeId, isApproved);
+                if (updatedLeave == null)
+                {
+                    // Leave not found
+                    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Leave not found.");
+                }
+
+                // Successful deletion
+                _logger.LogInformation($"End DeleteAppliedLeave");
+                await _emailService.SendLeaveApprovedEmail(updatedLeave);
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Approved");
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the applied leave");
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
         // Update IsApproved
         [HttpPut("UpdateIsApprovedCancelAsync/{appliedLeaveTypeId}/{isApproved}")]
         public async Task<ActionResult<CommonResponse<AppliedLeave>>> UpdateIsApprovedCancelAsync([FromRoute] long appliedLeaveTypeId, [FromRoute] bool isApproved)
