@@ -54,5 +54,17 @@ namespace leaveApplication2.Services
 
             await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Rejected", body);
         }
+        public async Task SendEmployeeCreatedEmail(Employee employee)
+        {
+            
+            var body = "";
+            var subject = $"Employee: {employee.firstName} {employee.lastName} - Account Registration and Password Reset";
+            body += $"<p>You have been successfully registered.</p>";
+            body += $"<p>Please reset your password to successfully login into system.</p>";
+            body += $"<a href='http://192.168.1.5:86/updatepassword/{employee.employeeId}' style='display: inline-block; background-color: blue; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reset Password</a>";
+            body += $"<p>Please click on above link to reset password</p>";
+
+            await _genericEmail.SendEmailAsync(employee.emailAddress, subject, body);
+        }
     }
 }
