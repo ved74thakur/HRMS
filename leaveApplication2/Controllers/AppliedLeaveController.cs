@@ -141,12 +141,12 @@ namespace leaveApplication2.Controllers
 
             try
             {
-                var previousAppliedLeaves = await _leaveService.GetUnApprovedAppliedLeavesAsync(leave);
+                //var previousAppliedLeaves = await _leaveService.GetUnApprovedAppliedLeavesAsync(leave);
 
-                if (previousAppliedLeaves.Count > 0)
-                {
-                    return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Already applied for the leave, and approval is pending");
-                }
+                //if (previousAppliedLeaves.Count > 0)
+                //{
+                //    return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Already applied for the leave, and approval is pending");
+                //}
 
                 var newAppliedLeaveCreated = await _leaveService.CreateAppliedLeave(leave);
 
