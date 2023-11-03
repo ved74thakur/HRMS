@@ -13,71 +13,67 @@ namespace leaveApplication2.Controllers
     {
         private readonly IEmployeeService _employeeService;
         private readonly GenericEmail _genericEmail;
-        private readonly ILogger<EmployeeController> _logger;
+        private readonly ILogger<PasswordResetController> _logger;
+        private readonly IEmailService _emailService;
 
 
 
 
-        public PasswordResetController(GenericEmail genericEmail, ILogger<EmployeeController> logger, IEmployeeService employeeService)
+        public PasswordResetController(GenericEmail genericEmail, ILogger<PasswordResetController> logger, IEmployeeService employeeService, IEmailService emailService)
         {
 
             _employeeService = employeeService;
             _genericEmail = genericEmail;
             _logger = logger;
+            _emailService = emailService;
 
         }
 
+        //[HttpPost("VerifyEmailAsync")]
+        //public async Task<ActionResult> VerifyEmailAsync([FromBody] EmployeeEmailDto email)
+        //{
+        //    var employee = await _employeeService.GetEmployeeByEmailAsync(email.email);
+
+        //    if (employee != null && employee.emailAddress != null && employee.emailAddress == email.email)
+        //    {
+        //        await _emailService.SendPasswordResetMail(employee);
+        //        return Ok("Password reset email sent.");
+        //    }
+
+        //    return NotFound("Email not found.");
+        //}
         [HttpPost("VerifyEmailAsync")]
         public async Task<ActionResult> VerifyEmailAsync([FromBody] EmployeeEmailDto email)
         {
-            var employee = await _employeeService.GetEmployeeByEmailAsync(email.email);
-
-            if (employee != null && employee.emailAddress != null && employee.emailAddress == email.email)
+            _logger.LogInformation($"Start VerifyEmailAsyncs");
+            try
             {
-                DateTime currentDateTime = DateTime.Now;
-                string formattedDateTime = currentDateTime.ToString("yyyy-MM-dd HH:mm:ss");
-                var body = "";
+                var employee = await _employeeService.GetEmployeeByEmailAsync(email.email);
 
-                // Updated CSS style for the email body
-                string emailStyle = @"
-<style>
-    body {
-        background-color: #f5f5f5; /* Light grey background color */
-        display: flex;
-        flex-direction: column;
-        align-items: center; /* Center align content horizontally */
-        justify-content: center; /* Center align content vertically */
-        height: 100vh; /* Ensure content takes up the full viewport height */
-    }
-    p {
-        font-size: 16px;
-        color: #333;
-        text-align: center; /* Center-align text */
-    }
-    a {
-        text-decoration: none;
-        background-color: #007BFF; /* Blue background color */
-        color: white; /* White text color */
-        padding: 10px 20px;
-        display: inline-block; /* Ensures the button size is based on content */
-        border-radius: 5px; /* Rounded button corners */
-    }
-</style>
-";
+                if (employee != null && employee.emailAddress != null && employee.emailAddress == email.email)
+                {
+                    _logger.LogInformation($"Start GetAllEmployees null");
+                    //no salutions found
+                    await _emailService.SendPasswordResetMail(employee);
+                    return StatusCode(200,"Password reset email sent.");
 
+                    //this.CreateResponse<Employee> (,)
+                }
+                _logger.LogInformation($"Get the values of GetAllEmployeeAsync");
+                _logger.LogInformation($"End GetAllEmployeeAsync");
+                //Salutions found
 
-                body += $"<html><head>{emailStyle}</head><body>";
-                body += $"<p>Email sent on: {formattedDateTime}</p>";
-                body += $"<p>Please click the following button for resetting your password:</p>";
-                body += $"<a href='http://192.168.1.5:86/updatepassword/{employee.employeeId}'>Reset Password</a>";
-                body += "</body></html>";
-                await _genericEmail.SendEmailAsync(employee.emailAddress, "Reset Password", body);
-                return Ok("Password reset email sent.");
+               
+                return StatusCode(404, "Email not found");
+            }
+            catch (Exception ex)
+            {
+                //error occured
+                _logger.LogError(ex, "An error occured while retrieving all salutions");
+                return StatusCode(500, ex.Message);
             }
 
-            return NotFound("Email not found.");
         }
-
 
         //
 

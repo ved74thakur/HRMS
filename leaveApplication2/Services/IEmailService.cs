@@ -8,5 +8,6 @@ namespace leaveApplication2.Services
         Task SendLeaveApprovedEmail(AppliedLeave approvedLeave);
         Task SendLeaveRejectedEmail(AppliedLeave rejectedLeave);
         Task SendEmployeeCreatedEmail(Employee employee);
+        Task SendPasswordResetMail(Employee employee);
     }
 }
