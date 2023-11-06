@@ -43,7 +43,7 @@ namespace leaveApplication2.Services
         {
            
 
-            var previousAppliedLeaves = await _leaveRepository.GetUnApprovedAppliedLeavesAsync(new AppliedLeave() { IsApproved = false, employeeId = employeeId });
+            var previousAppliedLeaves = await _leaveRepository.GetUnApprovedAppliedLeavesAsync(new AppliedLeave() { IsApproved = false, employeeId = employeeId, IsRejected  =false });
 
             // return await _employeeLeaveRepository.GetEmployeeLeaveByEmployeeId(employeeId);
            List<EmployeeLeave> currentLeave  =  await _employeeLeaveRepository.GetEmployeeLeaveByEmployeeId(employeeId);

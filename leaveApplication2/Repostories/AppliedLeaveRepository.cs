@@ -178,7 +178,7 @@ namespace leaveApplication2.Repostories
             // Replace the condition with your specific criteria
             var unapprovedLeaves = await _context.AppliedLeaves
     .Where(leave => leave.employeeId == appliedLeave.employeeId && leave.IsApproved == appliedLeave.IsApproved && appliedLeave.IsRejected == true && appliedLeave.IsApproved == false)
-    .ToListAsync();
+.ToListAsync();
 
             return unapprovedLeaves;
         }
