@@ -17,7 +17,7 @@ namespace leaveApplication2.Controllers
             _pageService = pageService;
             _logger = logger;
         }
-
+        //changes made
         // Get all application pages
         [HttpGet("GetApplicationPagesAsync")]
         public async Task<CommonResponse<IEnumerable<ApplicationPages>>> GetApplicationPagesAsync()
