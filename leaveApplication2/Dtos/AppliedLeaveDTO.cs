@@ -3,6 +3,7 @@
     public class AppliedLeaveDTO
     {
         public long appliedLeaveTypeId { get; set; }
+        public long employeeId { get; set; }
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
