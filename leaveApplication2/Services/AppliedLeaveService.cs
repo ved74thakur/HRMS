@@ -260,6 +260,7 @@ namespace leaveApplication2.Services
             var appliedLeaveDTOs = appliedLeaves.Select(appliedLeave => new AppliedLeaveDTO
             {
                 appliedLeaveTypeId = appliedLeave.appliedLeaveTypeId,
+                employeeId = appliedLeave.employeeId,
                 FirstName = appliedLeave.Employee?.firstName ?? string.Empty,
                 LastName = appliedLeave.Employee?.lastName ?? string.Empty,
                 StartDate = appliedLeave.StartDate,
