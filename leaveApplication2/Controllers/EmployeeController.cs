@@ -323,7 +323,8 @@ namespace leaveApplication2.Controllers
 
         /*
         //controller for leaves
-        [HttpGet("GetAllAppliedLeaves")]
+        [HttpGet("GetAll
+        ")]
         public async Task<CommonResponse<IEnumerable<AppliedLeave>>> GetAppliedLeavesAsync()
         {
             _logger.LogInformation($"Start GetAllEmployeesLeaves");
