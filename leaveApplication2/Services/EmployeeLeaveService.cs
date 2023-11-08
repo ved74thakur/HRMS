@@ -1,6 +1,7 @@
 ﻿using leaveApplication2.Models;
 using leaveApplication2.Repostories;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace leaveApplication2.Services
 {
@@ -8,13 +9,14 @@ namespace leaveApplication2.Services
     {
 
         private readonly IEmployeeLeaveRepository _employeeLeaveRepository;
+        private readonly IAppliedLeaveRepository _leaveRepository;
         //private readonly ILeaveStatusRepository _leaveStatusRepository;
-
-        public EmployeeLeaveService(IEmployeeLeaveRepository employeeLeaveRepository)
+        private readonly IAppliedLeaveService _leaveService;
+        public EmployeeLeaveService(IEmployeeLeaveRepository employeeLeaveRepository, IAppliedLeaveService leaveService, IAppliedLeaveRepository leaveRepository)
         {
             _employeeLeaveRepository = employeeLeaveRepository;
-            
-
+            _leaveService = leaveService;
+            _leaveRepository = leaveRepository;
         }
 
 
@@ -39,7 +41,34 @@ namespace leaveApplication2.Services
 
         public async Task<IReadOnlyCollection<EmployeeLeave>> GetEmployeeLeaveByEmployeeId(long employeeId)
         {
-            return await _employeeLeaveRepository.GetEmployeeLeaveByEmployeeId(employeeId);
+           
+
+            var previousAppliedLeaves = await _leaveRepository.GetUnApprovedAppliedLeavesAsync(new AppliedLeave() { IsApproved = false, employeeId = employeeId, IsRejected  =false });
+
+            // return await _employeeLeaveRepository.GetEmployeeLeaveByEmployeeId(employeeId);
+           List<EmployeeLeave> currentLeave  =  await _employeeLeaveRepository.GetEmployeeLeaveByEmployeeId(employeeId);
+            //changes
+
+            foreach (var appliedLeave in previousAppliedLeaves)
+            {
+                // Find the corresponding leave type in currentLeave based on leave type ID
+                var matchingLeaveType = currentLeave.FirstOrDefault(lt => lt.leaveTypeId == appliedLeave.leaveTypeId);
+                if (matchingLeaveType != null)
+                {
+                    // Subtract the leaveCount, balance leave, and apply leave
+                    // matchingLeaveType.LeaveCount -= appliedLeave.LeaveCount;
+                    //  matchingLeaveType.balanceLeaves -= appliedLeave.remaingLeave; // You may want to use a different field if 'balance leave' is different from this
+                    // matchingLeaveType.consumedLeaves -= appliedLeave.remaingLeave; // You may want to use a different field if 'apply leave' is different from this
+
+                    matchingLeaveType.consumedLeaves += appliedLeave.applyLeaveDay;
+                    matchingLeaveType.balanceLeaves -= appliedLeave.applyLeaveDay;
+
+                }
+
+            }
+
+
+            return currentLeave;
         }
 
         public async Task<EmployeeLeave> UpdateEmployeeLeaveAsync(long id, EmployeeLeave employeeLeave)

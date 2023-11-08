@@ -13,7 +13,7 @@ namespace Leave.EmailTemplate
             
             var mailMessage = new MailMessage
             {
-                From = new MailAddress("ved74thakur@gmail.com", "Ved Thakur"),
+                From = new MailAddress("appdev.application23@gmail.com", "HRMS"),
                 Subject = subject,
                 Body = body,
                 IsBodyHtml = true,
@@ -28,7 +28,7 @@ namespace Leave.EmailTemplate
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com")
                 {
                     Port = 587, // Port for TLS/STARTTLS
-                    Credentials = new NetworkCredential("ved74thakur@gmail.com", "eyom ydgc hfae pqvi"),
+                    Credentials = new NetworkCredential("appdev.application23@gmail.com", "tphn ljsc jwng eyjo"),
                     EnableSsl = true // Enable SSL/TLS encryption
                 };
                 await smtpClient.SendMailAsync(mailMessage);
@@ -45,7 +45,7 @@ namespace Leave.EmailTemplate
            
             var mailMessage = new MailMessage
             {
-                From = new MailAddress("ved74thakur@gmail.com", "Ved Thakur"),
+                From = new MailAddress("appdev.application23@gmail.com", "HRMS"),
                 Subject = subject,
                 Body = body,
                 IsBodyHtml = true,
@@ -72,7 +72,7 @@ namespace Leave.EmailTemplate
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com")
                 {
                     Port = 587, // Port for TLS/STARTTLS
-                    Credentials = new NetworkCredential("ved74thakur@gmail.com", "eyom ydgc hfae pqvi"),
+                    Credentials = new NetworkCredential("appdev.application23@gmail.com", "tphn ljsc jwng eyjo"),
                     EnableSsl = true // Enable SSL/TLS encryption
                 };
                 await smtpClient.SendMailAsync(mailMessage);
@@ -88,7 +88,7 @@ namespace Leave.EmailTemplate
            
             var mailMessage = new MailMessage
             {
-                From = new MailAddress("ved74thakur@gmail.com", "Ved Thakur"),
+                From = new MailAddress("appdev.application23@gmail.com", "HRMS"),
                 Subject = subject,
                 Body = body,
                 IsBodyHtml = true,
@@ -115,7 +115,7 @@ namespace Leave.EmailTemplate
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com")
                 {
                     Port = 587, // Port for TLS/STARTTLS
-                    Credentials = new NetworkCredential("ved74thakur@gmail.com", "eyom ydgc hfae pqvi"),
+                    Credentials = new NetworkCredential("appdev.application23@gmail.com", "tphn ljsc jwng eyjo"),
                     EnableSsl = true // Enable SSL/TLS encryption
                 };
                 await smtpClient.SendMailAsync(mailMessage);
@@ -132,7 +132,7 @@ namespace Leave.EmailTemplate
            
             var mailMessage = new MailMessage
             {
-                From = new MailAddress("ved74thakur@gmail.com", "Ved Thakur"),
+                From = new MailAddress("appdev.application23@gmail.com", "HRMS"),
                 Subject = subject,
                 Body = body,
                 IsBodyHtml = true,
@@ -147,7 +147,7 @@ namespace Leave.EmailTemplate
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com")
                 {
                     Port = 587, // Port for TLS/STARTTLS
-                    Credentials = new NetworkCredential("ved74thakur@gmail.com", "eyom ydgc hfae pqvi"),
+                    Credentials = new NetworkCredential("appdev.application23@gmail.com", "tphn ljsc jwng eyjo"),
                     EnableSsl = true // Enable SSL/TLS encryption
                 };
                 await smtpClient.SendMailAsync(mailMessage);
@@ -166,13 +166,13 @@ namespace Leave.EmailTemplate
                 SmtpClient client = new SmtpClient("smtp.gmail.com")
                 {
                     Port = 587,
-                    Credentials = new NetworkCredential("ved74thakur@gmail.com", "eyom ydgc hfae pqvi"),
+                    Credentials = new NetworkCredential("appdev.application23@gmail.com", "tphn ljsc jwng eyjo"),
                     EnableSsl = true // Enable SSL/TLS encryption
                 };
 
                 MailMessage mail = new MailMessage
                 {
-                    From = new MailAddress("ved74thakur@gmail.com", "WonderBiz Technologies Pvt Ltd"),
+                    From = new MailAddress("appdev.application23@gmail.com", "HRMS"),
                     Subject = "Password Reset",
                     Body = $"<p>Click the link below to reset your password:</p>" +
                            $"<p><a href='{GeneratePasswordResetLink(resetToken, employeeId)}'>Reset Password</a></p>",

@@ -1,4 +1,5 @@
-﻿using leaveApplication2.Models;
+﻿using leaveApplication2.Dtos;
+using leaveApplication2.Models;
 using leaveApplication2.Repostories;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -247,11 +248,35 @@ namespace leaveApplication2.Services
             return unApprovedAppliedLeaves;
         }
 
-        public async Task<IEnumerable<AppliedLeave>> GetAppliedLeavesAsync(Expression<Func<AppliedLeave, bool>> filter)
+        //public async Task<IEnumerable<AppliedLeave>> GetAppliedLeavesAsync(Expression<Func<AppliedLeave, bool>> filter)
+        //{
+        //    return await _leaveRepository.GetAppliedLeavesAsync(filter);
+        //}
+
+        public async Task<IEnumerable<AppliedLeaveDTO>> GetAppliedLeavesAsync(Expression<Func<AppliedLeave, bool>> filter)
         {
-            return await _leaveRepository.GetAppliedLeavesAsync(filter);
+            var appliedLeaves = await _leaveRepository.GetAppliedLeavesAsync(filter);
+
+            var appliedLeaveDTOs = appliedLeaves.Select(appliedLeave => new AppliedLeaveDTO
+            {
+                appliedLeaveTypeId = appliedLeave.appliedLeaveTypeId,
+                employeeId = appliedLeave.employeeId,
+                FirstName = appliedLeave.Employee?.firstName ?? string.Empty,
+                LastName = appliedLeave.Employee?.lastName ?? string.Empty,
+                StartDate = appliedLeave.StartDate,
+                EndDate = appliedLeave.EndDate,
+                LeaveTypeName = appliedLeave.LeaveType?.leaveTypeName ?? string.Empty,
+                BalanceLeave = appliedLeave.balanceLeave, // Convert double to int if necessary
+                AppliedLeave = appliedLeave.applyLeaveDay, // Convert double to int if necessary
+                RemaingLeave = appliedLeave.remaingLeave, // Convert double to int if necessary
+                LeaveReason = appliedLeave.LeaveReason ?? string.Empty,
+                ApplyLeaveDay = appliedLeave.applyLeaveDay,
+                isApproved = appliedLeave.IsApproved,
+                isRejected = appliedLeave.IsRejected,
+            }).ToList();
+
+            return appliedLeaveDTOs;
         }
 
-        
     }
 }

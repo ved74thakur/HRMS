@@ -1,4 +1,5 @@
-﻿using leaveApplication2.Models;
+﻿using leaveApplication2.Dtos;
+using leaveApplication2.Models;
 using System.Linq.Expressions;
 
 namespace leaveApplication2.Services
@@ -6,7 +7,8 @@ namespace leaveApplication2.Services
     public interface IAppliedLeaveService
     {
         Task<IEnumerable<AppliedLeave>> GetAppliedLeavesAsync();
-        Task<IEnumerable<AppliedLeave>> GetAppliedLeavesAsync(Expression<Func<AppliedLeave, bool>> filter);
+        //Task<IEnumerable<AppliedLeave>> GetAppliedLeavesAsync(Expression<Func<AppliedLeave, bool>> filter);
+        Task<IEnumerable<AppliedLeaveDTO>> GetAppliedLeavesAsync(Expression<Func<AppliedLeave, bool>> filter);
         Task<AppliedLeave> CreateAppliedLeave(AppliedLeave leave);
         Task<AppliedLeave> GetAppliedLeaveByIdAsync(long id);
         Task<AppliedLeave> UpdateAppliedLeaveAsync(long id, AppliedLeave leave);
