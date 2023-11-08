@@ -50,6 +50,7 @@ internal class Program
         builder.Services.AddScoped<IAuthService, AuthService>();
 
 
+
         //builder.Services.AddScoped<ILeaveStatusService, LeaveStatusService>();
         builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
         
@@ -107,7 +108,7 @@ internal class Program
   //      app.UseCors();
 
         app.MapGet("/", () => "Hello World!");
-  
+   /*Test*/
 
         app.Run();
     }
