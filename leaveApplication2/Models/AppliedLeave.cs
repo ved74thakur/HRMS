@@ -66,6 +66,8 @@ namespace leaveApplication2.Models
         public bool IsRejected { get; set; } = false;
         public bool IsApproved { get; set; } = false;
 
+        public bool IsCancelled { get; set; } = false;
+
         public string? ApprovedNotes { get; set; } = string.Empty;
 
         public string? RejectedNotes { get; set; } = string.Empty;

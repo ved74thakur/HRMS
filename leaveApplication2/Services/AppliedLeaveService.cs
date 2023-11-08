@@ -87,6 +87,7 @@ namespace leaveApplication2.Services
         public async Task<AppliedLeave> GetAppliedLeaveByIdAsync(long id)
         {
             var singleLeave = await _leaveRepository.GetAppliedLeaveByIdAsync(id);
+            
             //updateLeaveStatus
             return singleLeave;
         }   
@@ -105,6 +106,17 @@ namespace leaveApplication2.Services
               await _leaveRepository.DeleteAppliedLeaveByIdAsync(id);
             
             
+        }
+
+        public async Task<AppliedLeave> CancelAppliedLeaveByIdAsync(long id)
+        {
+            
+            var cancelledLeave = await _leaveRepository.CancelAppliedLeaveByIdAsync(id);
+            //var employeeLeave = await _employeeLeaveRepository.GetEmployeeLeaveByEmployee(cancelledLeave.employeeId,cancelledLeave.leaveTypeId);
+            //employeeLeave.balanceLeaves = employeeLeave.balanceLeaves + cancelledLeave.applyLeaveDay;
+            //employeeLeave.consumedLeaves = employeeLeave.consumedLeaves - cancelledLeave.applyLeaveDay;
+            //var cancelLeaveUpdate = await _leaveRepository.UpdateAppliedLeaveAsync(cancelledLeave);
+            return cancelledLeave;
         }
 
 

@@ -133,6 +133,20 @@ namespace leaveApplication2.Repostories
             
         }
 
+        public async Task<AppliedLeave> CancelAppliedLeaveByIdAsync(long id)
+        {
+            var singleLeave = await _context.AppliedLeaves.FindAsync(id);
+            if (singleLeave == null)
+            {
+                return singleLeave;
+            }
+            singleLeave.IsCancelled = true;
+
+            await _context.SaveChangesAsync();
+            return singleLeave;
+
+        }
+
         public async Task<IReadOnlyCollection<AppliedLeave>> GetFilteredLeavesAsync(
      Expression<Func<AppliedLeave, bool>> filter = null,
      Expression<Func<AppliedLeave, object>> orderBy = null)

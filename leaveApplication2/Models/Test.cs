@@ -10,6 +10,10 @@ namespace leaveApplication2.Models
         public long employeeId { get; set; }
         public string employeeCode { get; set; } = string.Empty;
 
+        public string description { get; set; }
+
+        public string employeeName { get; set; }
+
         [Required]
         [MaxLength(255)]
         public string firstName { get; set; } = string.Empty;
