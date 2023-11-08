@@ -169,6 +169,8 @@ namespace leaveApplication2.Services
         public async Task<object> EmployeeLoginAsync(EmployeeLoginDto employee)
         {
             var loggedEmployee = await _employeeRepository.EmployeeLoginAsync(new Employee() { emailAddress = employee.email, employeePassword = employee.password });
+
+
             Expression<Func<UserRoleMapping, bool>> filter = urm => urm.RoleAssignId == loggedEmployee.RoleAssignId;
 
             IReadOnlyCollection<UserRoleMapping> roleMappings = await _userRoleMappingRepository.GetRoleAssignIDbyUserRoleMapping(filter);
