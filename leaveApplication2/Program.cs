@@ -91,7 +91,7 @@ internal class Program
             });
         });
 
-       // builder.Services.AddControllers().AddNewtonsoftJson();
+      
         builder.Services.AddControllers();
         
 
