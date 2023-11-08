@@ -45,6 +45,8 @@ internal class Program
         builder.Services.AddScoped<IApplicationPageServices, ApplicationPageServices>();
         builder.Services.AddScoped<IUserRoleMappingRepository, UserRoleMappingRepository>();
         builder.Services.AddScoped<IUserRoleMappingServices, UserRoleMappingServices>();
+        builder.Services.AddScoped<IFinancialYearService, FinancialYearService>();
+        builder.Services.AddScoped<IFinancialYearRepository, FinancialYearRepository>();
         
 
         //builder.Services.AddScoped<ILeaveStatusService, LeaveStatusService>();
