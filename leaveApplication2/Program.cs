@@ -45,7 +45,11 @@ internal class Program
         builder.Services.AddScoped<IApplicationPageServices, ApplicationPageServices>();
         builder.Services.AddScoped<IUserRoleMappingRepository, UserRoleMappingRepository>();
         builder.Services.AddScoped<IUserRoleMappingServices, UserRoleMappingServices>();
-        
+
+
+        builder.Services.AddScoped<IAuthService, AuthService>();
+
+
 
         //builder.Services.AddScoped<ILeaveStatusService, LeaveStatusService>();
         builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
@@ -56,18 +60,26 @@ internal class Program
         builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
         builder.Services.AddScoped<ILeaveTypeService, LeaveTypeService>();
 
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
+      
+        builder.Services.AddAuthorization();
+
+
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+        {
+            options.RequireHttpsMetadata = false;
+            options.SaveToken = true;
+            options.TokenValidationParameters = new TokenValidationParameters
             {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey))
-                };
-            });
+                ValidateIssuer = true,
+                ValidIssuer = builder.Configuration["Jwt:Issuer"], // Replace with your issuer
+                ValidateAudience = true,
+                ValidAudience = builder.Configuration["Jwt:Audience"], // Replace with "JWTServicePostmanClient"
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Jwt:SecretKey"])), // Replace with your secret key
+            };
+        });
+
+
 
 
         builder.Services.AddCors(options =>
@@ -80,22 +92,24 @@ internal class Program
             });
         });
 
+      
         builder.Services.AddControllers();
         
 
         var app = builder.Build();
 
-        
-        app.UseCors("EnableCORS");
+      
 
+        app.UseAuthentication();
         app.UseAuthorization();
-
+        app.UseCors("EnableCORS");
         app.MapControllers();
-        app.UseCors();
+
+  //      app.UseCors();
 
         app.MapGet("/", () => "Hello World!");
+   /*Test*/
 
-        
         app.Run();
     }
 }
