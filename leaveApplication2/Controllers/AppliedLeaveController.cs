@@ -299,6 +299,37 @@ namespace leaveApplication2.Controllers
         }
 
 
+        //cancel applied leave
+        [HttpGet("CancelAppliedLeaveByIdAsync/{id}")]
+        public async Task<CommonResponse<AppliedLeave>> CancelAppliedLeaveByIdAsync(long id)
+        {
+            _logger.LogInformation($"Start GetSingleAppliedLeave");
+            try
+            {
+                var singleAppliedLeave = await _leaveService.GetAppliedLeaveByIdAsync(id);
+                if (singleAppliedLeave == null)
+                {
+                    _logger.LogInformation($"Start GetEmployeeById null");
+                    //no salutions found
+                    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+
+                }
+                _logger.LogInformation($"Start CancelAppliedLeaveByIdAsync");
+                var cancelledAppliedLeave = await _leaveService.CancelAppliedLeaveByIdAsync(id);
+                _logger.LogInformation($"End GetEmployeeByIdAsync");
+                //Salutions found
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", cancelledAppliedLeave);
+                // return this.CreateResponse<IEnumerable<Employee>>(StatusCode.Status200K, "Success", employee);
+            }
+            catch (Exception ex)
+            {
+                //error occured
+                _logger.LogError(ex, "An error occured while retrieving all salutions");
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
+
         // Update IsRejected
         [HttpGet("UpdateIsRejectedAsync/{appliedLeaveTypeId}/{isRejected}")]
         public async Task<ActionResult<CommonResponse<AppliedLeave>>> UpdateIsRejectedAsync(long appliedLeaveTypeId, bool isRejected)

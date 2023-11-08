@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using leaveApplication2.Data;
@@ -11,9 +12,11 @@ using leaveApplication2.Data;
 namespace leaveApplication2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231107090109_newColumnCancelledAdded")]
+    partial class newColumnCancelledAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -438,15 +441,7 @@ namespace leaveApplication2.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("employeeId"));
 
-                    b.Property<string>("description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("employeeCode")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("employeeName")
                         .IsRequired()
                         .HasColumnType("text");
 

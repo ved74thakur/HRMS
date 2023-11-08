@@ -30,7 +30,7 @@ namespace leaveApplication2.Data
         public DbSet<UserRoleMapping> UserRoleMappings { get; set; }
 
         public DbSet<EmployeeReporting> EmployeeReporting { get; set; }
-        //public DbSet<Test2> Test2s { get; set; }
+        
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

@@ -12,8 +12,8 @@ using leaveApplication2.Data;
 namespace leaveApplication2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231031051333_newPhase2")]
-    partial class newPhase2
+    [Migration("20231107085901_phase2")]
+    partial class phase2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace leaveApplication2.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("leaveApplication2.Models.ApplicationPage", b =>
+            modelBuilder.Entity("leaveApplication2.Models.ApplicationPages", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -41,6 +41,21 @@ namespace leaveApplication2.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PageName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("componentName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("isMenuPage")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("menuPath")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("routePath")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -453,6 +468,10 @@ namespace leaveApplication2.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ApplicationPageId");
+
+                    b.HasIndex("RoleAssignId");
+
                     b.ToTable("UserRoleMapping");
                 });
 
@@ -560,6 +579,25 @@ namespace leaveApplication2.Migrations
                     b.Navigation("FinancialYear");
 
                     b.Navigation("LeaveType");
+                });
+
+            modelBuilder.Entity("leaveApplication2.Models.UserRoleMapping", b =>
+                {
+                    b.HasOne("leaveApplication2.Models.ApplicationPages", "ApplicationPage")
+                        .WithMany()
+                        .HasForeignKey("ApplicationPageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("leaveApplication2.Models.RoleAssign", "RoleAssignment")
+                        .WithMany()
+                        .HasForeignKey("RoleAssignId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationPage");
+
+                    b.Navigation("RoleAssignment");
                 });
 #pragma warning restore 612, 618
         }
