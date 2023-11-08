@@ -36,13 +36,13 @@ namespace leaveApplication2.Repostories
             return singleEmployeeLeave;
         }
 
-        public async Task<IReadOnlyCollection<EmployeeLeave>> GetEmployeeLeaveByEmployeeId(long employeeId)
+        public async Task<List<EmployeeLeave>> GetEmployeeLeaveByEmployeeId(long employeeId)
         {
             var employeeLeaves = await _context.EmployeeLeaves
         .Where(e => e.employeeId == employeeId)
         .ToListAsync();
 
-            return employeeLeaves.AsReadOnly();
+            return employeeLeaves;
         }
 
         //update

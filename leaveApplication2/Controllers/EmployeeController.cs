@@ -22,18 +22,21 @@ namespace leaveApplication2.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
+        private readonly IEmailService _emailService;
         private readonly IAppliedLeaveService _leaveService;
         private readonly IConfiguration _configuration;
+        //private readonly IEmailService _emailService;
 
         private readonly ILogger<EmployeeController> _logger;
         
         //private readonly IEmployeeLeaveService _employeeLeaveService;
-        public EmployeeController(IEmployeeService employeeService, IAppliedLeaveService leaveService, ILogger<EmployeeController> logger, IConfiguration configuration)
+        public EmployeeController(IEmployeeService employeeService, IAppliedLeaveService leaveService, ILogger<EmployeeController> logger, IConfiguration configuration, IEmailService emailService)
         {
 
             _employeeService = employeeService;
             _leaveService = leaveService;
             _logger  = logger;
+            _emailService = emailService;
             
             //_employeeLeaveService = employeeLeaveService;
 
@@ -124,8 +127,9 @@ namespace leaveApplication2.Controllers
                 _logger.LogInformation($"Get the values of AddAppliedLeave");
                 _logger.LogInformation($"End CreateAppliedLeave");
                 //Salutions found
+                await _emailService.SendEmployeeCreatedEmail(employee);
                 await _employeeService.CreateEmployeeReportingAsync(employee.employeeId, employee.ReportingPersonId ?? 0);
-
+                
 
                 return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Employee Registered Successfully", newEmployeeCreated);
 
