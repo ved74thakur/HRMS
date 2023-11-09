@@ -18,7 +18,7 @@ namespace leaveApplication2.Controllers
             _logger = logger;
 
         }
-        [HttpGet("GetEmployeesAsync")]
+        [HttpGet("GetLeaveAllocationsAsync")]
         public async Task<CommonResponse<IEnumerable<LeaveAllocation>>> GetLeaveAllocationsAsync()
         {
             _logger.LogInformation($"Start GetAllEmployees");
