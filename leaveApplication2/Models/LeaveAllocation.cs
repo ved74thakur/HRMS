@@ -4,24 +4,28 @@ using System.ComponentModel.DataAnnotations;
 
 namespace leaveApplication2.Models
 {
-    [Table("LeaveAllocations")]
+   [Table("LeaveAllocations")]
     public class LeaveAllocation
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+       [Key]
+       [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int leaveAllocationId { get; set; }
 
+        [Required]
+        [ForeignKey("FinancialYear")]
         public int financialYearId { get; set; }
-        [ForeignKey("financialYearId")]
-        public virtual FinancialYear FinancialYear { get; set; }
+   
+        public virtual FinancialYear? FinancialYear { get; set; }
 
+        [ForeignKey("LeaveType")]
         public int leaveTypeId { get; set; }
-        [ForeignKey("leaveTypeId")]
-        public virtual LeaveType LeaveType { get; set; }
+  
+        public virtual LeaveType? LeaveType { get; set; }
 
-        [Required(ErrorMessage = "Leave count is required")]
+       [Required(ErrorMessage = "Leave count is required")]
         public int leaveCount { get; set; }
 
 
     }
+
 }

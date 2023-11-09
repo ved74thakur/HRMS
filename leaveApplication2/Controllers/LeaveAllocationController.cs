@@ -1,4 +1,5 @@
-﻿using leaveApplication2.Models;
+﻿using leaveApplication2.Dtos;
+using leaveApplication2.Models;
 using leaveApplication2.Models.leaveApplication2.Models;
 using leaveApplication2.Services;
 using Microsoft.AspNetCore.Http;
@@ -47,20 +48,21 @@ namespace leaveApplication2.Controllers
             }
 
         }
+        
         [HttpPost("CreateLeaveAllocationAsync")]
-        public async Task<CommonResponse<ActionResult<LeaveAllocation>>> CreateLeaveAllocationAsync(LeaveAllocation leaveAllocation)
+        public async Task<CommonResponse<ActionResult<LeaveAllocation>>> CreateLeaveAllocationAsync([FromBody] LeaveAllocation leaveAllocation)
         {
             _logger.LogInformation($"Start CreateLeaveAllocationAsync");
 
             try
             {
-                var newLeaveAllocation  = await _leaveAllocationService.CreateLeaveAllocationAsync(leaveAllocation);
-                //var newAppliedLeaveCreated = CreatedAtAction(nameof(GetEmployeeById), new { id = employee.employeeId }, employee);
-                if (newLeaveAllocation == null)
+               var newLeaveAllocation  = await _leaveAllocationService.CreateLeaveAllocationAsync(leaveAllocation);
+                
+               if (newLeaveAllocation == null)
                 {
                     _logger.LogInformation($"Start CreateLeaveAllocationAsync null");
                     //no salutions found
-                    return this.CreateResponse<ActionResult<LeaveAllocation>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+                  return this.CreateResponse<ActionResult<LeaveAllocation>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
 
                 }
                 _logger.LogInformation($"Get the values of CreateLeaveAllocationAsync");
@@ -68,14 +70,16 @@ namespace leaveApplication2.Controllers
                 //Salutions found
 
                 return this.CreateResponse<ActionResult<LeaveAllocation>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", newLeaveAllocation);
+                
 
 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occured while creating new leave request");
-                return this.CreateResponse<ActionResult<LeaveAllocation>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+                //return this.CreateResponse<ActionResult<LeaveAllocation>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
+            return null;
 
         }
 
