@@ -5,25 +5,25 @@
 namespace leaveApplication2.Migrations
 {
     /// <inheritdoc />
-    public partial class changedCodeClass : Migration
+    public partial class newColumnCancelledAdded : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "ActivationToken",
-                table: "Employees",
-                type: "text",
+            migrationBuilder.AddColumn<bool>(
+                name: "IsCancelled",
+                table: "AppliedLeaves",
+                type: "boolean",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: false);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "ActivationToken",
-                table: "Employees");
+                name: "IsCancelled",
+                table: "AppliedLeaves");
         }
     }
 }

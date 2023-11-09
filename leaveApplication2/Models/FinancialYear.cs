@@ -18,7 +18,7 @@ namespace leaveApplication2.Models
             [Required(ErrorMessage = "End date is required")]
             public DateOnly endDate { get; set; }
 
-            public bool ActiveYear { get; set; }
+            public bool ActiveYear { get; set; } = true;
         }
     }
 }

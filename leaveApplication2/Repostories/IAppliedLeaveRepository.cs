@@ -13,6 +13,7 @@ namespace leaveApplication2.Repostories
         Task<AppliedLeave> UpdateAppliedLeaveAsync(long id, AppliedLeave leave);
         Task<AppliedLeave> UpdateAppliedLeaveAsync(AppliedLeave leave);
         Task<AppliedLeave> DeleteAppliedLeaveByIdAsync(long id);
+        Task<AppliedLeave> CancelAppliedLeaveByIdAsync(long id);
 
         Task<IReadOnlyCollection<AppliedLeave>> GetFilteredLeavesAsync(
            Expression<Func<AppliedLeave, bool>> filter = null,
