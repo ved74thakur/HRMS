@@ -1,5 +1,6 @@
 ﻿using leaveApplication2.Data;
 using leaveApplication2.Models;
+using leaveApplication2.Models.leaveApplication2.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -51,6 +52,41 @@ namespace leaveApplication2.Repostories
             }
 
             return leaveAllocation;
+        }
+
+        public async Task<LeaveAllocation> CreateLeaveAllocationAsync(LeaveAllocation leaveAllocation)
+        {
+
+            _context.LeaveAllocations.Add(leaveAllocation);
+            await _context.SaveChangesAsync();
+            return leaveAllocation;
+        }
+
+        public async Task<LeaveAllocation> DeleteLeaveAllocationAsync(int leaveAlloctionId)
+        {
+            var leaveAllocation = await _context.LeaveAllocations.FindAsync(leaveAlloctionId);
+            if (leaveAllocation != null)
+            {
+                _context.LeaveAllocations.Remove(leaveAllocation);
+                await _context.SaveChangesAsync();
+            }
+            return leaveAllocation;
+        }
+
+        public async Task<LeaveAllocation> UpdateLeaveAllocationAsync(int leaveAlloctionId)
+        {
+            var leaveAllocation = await _context.LeaveAllocations.FindAsync(leaveAlloctionId);
+
+            if (leaveAllocation == null)
+            {
+
+                throw new Exception("Leave allocation id not found.");
+            }
+
+            _context.LeaveAllocations.Update(leaveAllocation);
+            await _context.SaveChangesAsync();
+            return leaveAllocation;
+
         }
 
     }

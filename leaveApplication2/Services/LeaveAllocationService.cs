@@ -27,5 +27,22 @@ namespace leaveApplication2.Services
         {
             throw new NotImplementedException();
         }
+
+        public async Task<LeaveAllocation> CreateLeaveAllocationAsync(LeaveAllocation leaveAllocation)
+        {
+            return await _leaveAllocationRepository.CreateLeaveAllocationAsync(leaveAllocation);
+        }
+
+        public async Task<LeaveAllocation> DeleteLeaveAllocationAsync(int leaveAlloctionId)
+        {
+            return await _leaveAllocationRepository.DeleteLeaveAllocationAsync(leaveAlloctionId);
+        }
+
+        public async Task<LeaveAllocation> UpdateLeaveAllocationAsync(int leaveAlloctionId)
+        {
+            return await _leaveAllocationRepository.UpdateLeaveAllocationAsync(leaveAlloctionId);
+        }
+
+
     }
 }
