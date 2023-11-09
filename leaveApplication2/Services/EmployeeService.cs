@@ -201,14 +201,14 @@ namespace leaveApplication2.Services
             return updatedEmployeePassword;
         }
 
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512(passwordSalt))
-            {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return computedHash.SequenceEqual(passwordHash);
-            }
-        }
+        //private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        //{
+        //    using (var hmac = new HMACSHA512(passwordSalt))
+        //    {
+        //        var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+        //        return computedHash.SequenceEqual(passwordHash);
+        //    }
+        //}
         public async Task<EmployeeReporting> CreateEmployeeReportingAsync(long employeeId, long reportingPersonId)
         {
             var employeeReporting = await _employeeRepository.CreateEmployeeReportingAsync(employeeId, reportingPersonId);

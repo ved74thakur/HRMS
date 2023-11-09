@@ -5,7 +5,7 @@
 namespace leaveApplication2.Migrations
 {
     /// <inheritdoc />
-    public partial class pralhadisGreat2sggg : Migration
+    public partial class settedDefualtValue : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

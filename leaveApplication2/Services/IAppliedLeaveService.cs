@@ -14,6 +14,7 @@ namespace leaveApplication2.Services
         Task<AppliedLeave> UpdateAppliedLeaveAsync(long id, AppliedLeave leave);
         //Task<AppliedLeave> UpdateLeaveStatusAsync(long appliedLeaveTypeId, int leaveStatusId);
         Task DeleteAppliedLeaveByIdAsync(long id);
+        Task<AppliedLeave> CancelAppliedLeaveByIdAsync(long id);
 
         Task<AppliedLeave> UpdateIsRejectedAsync(long id, bool isRejected);
         Task<AppliedLeave> UpdateIsApprovedAsync(long id, bool isApproved);
