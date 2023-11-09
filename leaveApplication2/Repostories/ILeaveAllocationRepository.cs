@@ -9,5 +9,11 @@ namespace leaveApplication2.Repostories
         Task<IReadOnlyCollection<LeaveAllocation>> GetLeaveAllocationsAsync(Expression<Func<LeaveAllocation, bool>> filter);
         Task<LeaveAllocation> GetLeaveAllocationAsync(long id);
         Task<LeaveAllocation> GetLeaveAllocationAsync(Expression<Func<LeaveAllocation, bool>> filter);
+
+        Task<LeaveAllocation> CreateLeaveAllocationAsync(LeaveAllocation leaveAllocation);
+
+        Task<LeaveAllocation> DeleteLeaveAllocationAsync(int leaveAlloctionId);
+
+        Task<LeaveAllocation> UpdateLeaveAllocationAsync(int leaveAlloctionId);
     }
 }
