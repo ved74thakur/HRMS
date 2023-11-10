@@ -3,6 +3,7 @@ using leaveApplication2.Models;
 using leaveApplication2.Models.leaveApplication2.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Linq.Expressions;
 
 namespace leaveApplication2.Repostories
 {
@@ -68,6 +69,10 @@ namespace leaveApplication2.Repostories
             await _context.SaveChangesAsync();
 
             return existingFinancialYear;
+        }
+        public async Task<IEnumerable<FinancialYear>> GetActiveFinancialYearsAsync(Expression<Func<FinancialYear, bool>> filter)
+        {
+            return await _context.FinancialYears.Where(filter).ToListAsync();
         }
 
 

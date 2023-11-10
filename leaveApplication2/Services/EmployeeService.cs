@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using leaveApplication2.Dtos;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using leaveApplication2.Models.leaveApplication2.Models;
 
 namespace leaveApplication2.Services
 {
@@ -23,10 +24,11 @@ namespace leaveApplication2.Services
         private readonly ILeaveAllocationRepository _leaveAllocationRepository;
         private readonly IEmployeeLeaveRepository _employeeLeaveRepository;
         private readonly IUserRoleMappingRepository _userRoleMappingRepository;
+        private readonly IFinancialYearService _financialYearService;
         //private readonly SmtpClient _smtpClient;
         //private readonly SmtpSettings _smtpSettings;
 
-        public EmployeeService(IEmployeeRepository employeeRepository,IUserRoleMappingRepository userRoleMappingRepository, IConfiguration configuration, ILeaveAllocationRepository leaveAllocationRepository, IEmployeeLeaveRepository employeeLeaveRepository)
+        public EmployeeService(IEmployeeRepository employeeRepository,IUserRoleMappingRepository userRoleMappingRepository, IConfiguration configuration, ILeaveAllocationRepository leaveAllocationRepository, IEmployeeLeaveRepository employeeLeaveRepository, IFinancialYearService financialYearService)
         {
             /*
             _smtpSettings = smtpSettings.Value;
@@ -49,6 +51,7 @@ namespace leaveApplication2.Services
             _leaveAllocationRepository = leaveAllocationRepository;
             _employeeLeaveRepository = employeeLeaveRepository;
             _userRoleMappingRepository = userRoleMappingRepository;
+            _financialYearService = financialYearService;
         }
 
         public async Task<IEnumerable<Employee>> GetEmployeesAsync()
@@ -69,8 +72,13 @@ namespace leaveApplication2.Services
         public async Task<Employee> CreateEmployeeAsync(Employee employee)
         {
             //employee.SetPassword(employee.passwordHash);
+            //dynamically pass financialYearId
+            Expression<Func<FinancialYear, bool>> financialYearFilter = la => la.ActiveYear == true;
+            var activeFinancialYear = await _financialYearService.GetActiveFinancialYearsAsync(financialYearFilter);
+            var financialYearId = activeFinancialYear.First().financialYearId;
+
             var createdEmployee = await _employeeRepository.CreateEmployeeAsync(employee);
-            Expression<Func<LeaveAllocation, bool>> filter = la => la.financialYearId == 2;
+            Expression<Func<LeaveAllocation, bool>> filter = la => la.financialYearId == financialYearId;
             IReadOnlyCollection<LeaveAllocation> leaveAllocations = await _leaveAllocationRepository.GetLeaveAllocationsAsync(filter);
 
 
@@ -220,6 +228,7 @@ namespace leaveApplication2.Services
         {
             return await _employeeRepository.GetEmployeesAsync(filter);
         }
+        //Expression<Func<Employee, bool>> filter = emp => emp.ReportingPersonId == employeeId;
 
 
 

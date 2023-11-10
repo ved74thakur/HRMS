@@ -4,6 +4,7 @@ using leaveApplication2.Models.leaveApplication2.Models;
 using leaveApplication2.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 
 namespace leaveApplication2.Controllers
 {
@@ -171,6 +172,39 @@ namespace leaveApplication2.Controllers
             {
                 _logger.LogError(ex, "An error occured while creating new leave request");
                 return this.CreateResponse<ActionResult<FinancialYear>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
+
+        [HttpGet("GetActiveFinancialYearsAsync")]
+        public async Task<CommonResponse<IEnumerable<FinancialYear>>> GetActiveFinancialYearsAsync()
+        {
+            _logger.LogInformation($"Start GetActiveFinancialYearsAsync");
+            try
+            {
+                Expression<Func<FinancialYear, bool>> filter = la => la.ActiveYear == true;
+                var activeFinancialYears = await _financialYearService.GetActiveFinancialYearsAsync(filter);
+
+
+                if (activeFinancialYears == null)
+                {
+                    _logger.LogInformation($"Start GetActiveFinancialYearsAsync null");
+                    //no salutions found
+                    return this.CreateResponse<IEnumerable<FinancialYear>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No active financialYear found.");
+
+                    //this.CreateResponse<Employee> (,)
+                }
+                _logger.LogInformation($"Get the values of GetActiveFinancialYearsAsync");
+                _logger.LogInformation($"End GetActiveFinancialYearsAsync");
+                //Salutions found
+
+                return this.CreateResponse<IEnumerable<FinancialYear>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", activeFinancialYears);
+            }
+            catch (Exception ex)
+            {
+                //error occured
+                _logger.LogError(ex, "An error occured while retrieving all salutions");
+                return this.CreateResponse<IEnumerable<FinancialYear>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
 
         }
