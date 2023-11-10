@@ -40,7 +40,7 @@ namespace leaveApplication2.Repostories
         public async Task<List<EmployeeLeave>> GetEmployeeLeaveByEmployeeId(long employeeId)
         {
             var employeeLeaves = await _context.EmployeeLeaves
-        .Where(e => e.employeeId == employeeId)
+        .Where(e => e.employeeId == employeeId && e.isActive)
         .ToListAsync();
 
             return employeeLeaves;
