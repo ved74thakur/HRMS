@@ -15,5 +15,7 @@ namespace leaveApplication2.Repostories
         Task<LeaveAllocation> DeleteLeaveAllocationAsync(int leaveAlloctionId);
 
         Task<LeaveAllocation> UpdateLeaveAllocationAsync(int leaveAlloctionId);
+
+        Task RemoveLeaveAllocationsForFinancialYearAsync(int financialYearId);
     }
 }

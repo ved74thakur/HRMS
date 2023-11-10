@@ -78,6 +78,11 @@ namespace leaveApplication2.Services
             return updateEmployeeLeave;
 
         }
+
+        public async Task<EmployeeLeave> SetEmployeeLeaveToFalseAsync(long id)
+        {
+            return await _employeeLeaveRepository.SetEmployeeLeaveToFalseAsync(id);
+        }
         //UPDATE EMPLOYEE LEAVE BASED ON STATUSCODE FOR APPROVE
 
         //public async Task<EmployeeLeave> UpdateEmployeeLeaveIfAPV(long id, string leaveStatusNameCode, EmployeeLeave employeeLeave)
@@ -95,7 +100,7 @@ namespace leaveApplication2.Services
 
         //    return null;
         //}
-        
+
 
 
     }

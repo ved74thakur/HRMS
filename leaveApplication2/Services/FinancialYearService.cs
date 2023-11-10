@@ -1,6 +1,8 @@
 ﻿using leaveApplication2.Models;
 using leaveApplication2.Models.leaveApplication2.Models;
 using leaveApplication2.Repostories;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace leaveApplication2.Services
 {
@@ -45,6 +47,13 @@ namespace leaveApplication2.Services
         {
             return await _financialYearRepository.UpdateFinancialYearAsync(financialYearId);
         }
+
+        public async Task<IEnumerable<FinancialYear>> GetActiveFinancialYearsAsync(Expression<Func<FinancialYear, bool>> filter)
+        {
+            
+            return await _financialYearRepository.GetActiveFinancialYearsAsync(filter);
+        }
+
 
     }
 }

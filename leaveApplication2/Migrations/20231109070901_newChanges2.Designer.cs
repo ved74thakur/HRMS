@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using leaveApplication2.Data;
@@ -11,9 +12,11 @@ using leaveApplication2.Data;
 namespace leaveApplication2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231109070901_newChanges2")]
+    partial class newChanges2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -271,9 +274,6 @@ namespace leaveApplication2.Migrations
                     b.Property<bool>("isActive")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("leaveAllocationId")
-                        .HasColumnType("integer");
-
                     b.Property<double>("leaveCount")
                         .HasColumnType("double precision");
 
@@ -283,8 +283,6 @@ namespace leaveApplication2.Migrations
                     b.HasKey("employeeLeaveId");
 
                     b.HasIndex("employeeId");
-
-                    b.HasIndex("leaveAllocationId");
 
                     b.HasIndex("leaveTypeId");
 
@@ -564,12 +562,6 @@ namespace leaveApplication2.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("leaveApplication2.Models.LeaveAllocation", "LeaveAllocation")
-                        .WithMany()
-                        .HasForeignKey("leaveAllocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("leaveApplication2.Models.LeaveType", "LeaveType")
                         .WithMany()
                         .HasForeignKey("leaveTypeId")
@@ -577,8 +569,6 @@ namespace leaveApplication2.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
-
-                    b.Navigation("LeaveAllocation");
 
                     b.Navigation("LeaveType");
                 });
