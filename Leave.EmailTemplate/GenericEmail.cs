@@ -196,7 +196,7 @@ namespace Leave.EmailTemplate
             // Generate the URL for password reset, including the resetToken
             // Example: return $"https://yourwebsite.com/reset-password?token={resetToken}";
             //return $"http://localhost:3000/updatepassword/2?token={resestToken}/{employeeId}"
-            return $"http://localhost:3000/updatepassword/{employeeId}?token={resetToken}/";
+            return $"http://192.168.1.37:85/updatepassword/{employeeId}?token={resetToken}/";
         }
     }
 }
