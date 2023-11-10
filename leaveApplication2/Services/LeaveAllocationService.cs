@@ -58,6 +58,9 @@ namespace leaveApplication2.Services
             {
                 await _financialYearRepository.UpdateFinancialYearAsync(fy.financialYearId);
             }
+            var inactiveFinancialYearIds = financialYears.Where(fy => !fy.ActiveYear).Select(fy => fy.financialYearId);
+            var removeLeaveAllocationsTasks = inactiveFinancialYearIds.Select(id => _leaveAllocationRepository.RemoveLeaveAllocationsForFinancialYearAsync(id));
+            await Task.WhenAll(removeLeaveAllocationsTasks);
             //created new financialYear
             var newFinancialYearCreated = await _financialYearRepository.CreateFinancialYearAsync(financialYear);
             //got all the leave types available

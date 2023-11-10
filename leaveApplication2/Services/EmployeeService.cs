@@ -94,7 +94,9 @@ namespace leaveApplication2.Services
                     leaveCount = leaveAllocation.leaveCount,
                     consumedLeaves = 0, // Initialize consumedLeaves as required
                     balanceLeaves = leaveAllocation.leaveCount, // Initialize balanceLeaves as the leaveCount from LeaveAllocation
-                    isActive = true // Set isActive as required
+                    isActive = true,// Set isActive as required
+                    leaveAllocationId = leaveAllocation.leaveAllocationId
+                  
                 };
 
                 // Insert the created EmployeeLeave object into your repository

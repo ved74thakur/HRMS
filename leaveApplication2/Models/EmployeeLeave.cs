@@ -29,6 +29,12 @@ namespace leaveApplication2.Models
        
         public double balanceLeaves { get; set; }
 
+        [ForeignKey("LeaveAllocation")]
+        public int leaveAllocationId { get; set; }
+
+        public virtual LeaveAllocation? LeaveAllocation { get; set; }
+
+
         public bool isActive { get; set; } = false;
 
     }

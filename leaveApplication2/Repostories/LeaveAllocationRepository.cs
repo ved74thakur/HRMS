@@ -89,5 +89,18 @@ namespace leaveApplication2.Repostories
 
         }
 
+        public async Task RemoveLeaveAllocationsForFinancialYearAsync(int financialYearId)
+        {
+            // Implement the logic to remove leave allocations for the specified financial year
+            // Example: Assuming your leave allocations are stored in a database, you might use an ORM like Entity Framework
+
+            var leaveAllocationsToRemove = await _context.LeaveAllocations
+                .Where(la => la.financialYearId == financialYearId)
+                .ToListAsync();
+
+            _context.LeaveAllocations.RemoveRange(leaveAllocationsToRemove);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

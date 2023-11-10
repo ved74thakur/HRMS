@@ -1,5 +1,6 @@
 ﻿using leaveApplication2.Data;
 using leaveApplication2.Models;
+using leaveApplication2.Models.leaveApplication2.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace leaveApplication2.Repostories
@@ -58,6 +59,20 @@ namespace leaveApplication2.Repostories
 
         }
 
+        public async Task<EmployeeLeave> SetEmployeeLeaveToFalseAsync(long id)
+        {
+            //error
+            var employee = await _context.EmployeeLeaves.FindAsync(id);
+            if (employee == null)
+            {
+                throw new Exception("Employee Leave not found");
+            }
+
+            employee.isActive = false;
+            await _context.SaveChangesAsync();
+            return employee;
+        }
+        
         public async Task<EmployeeLeave> GetEmployeeLeaveByEmployee(long employeeId, int leaveTypeId)
         {
             // Assuming you have a DbContext called 'dbContext' with a DbSet for 'EmployeeLeave'
