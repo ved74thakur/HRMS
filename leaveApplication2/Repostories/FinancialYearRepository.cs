@@ -28,11 +28,19 @@ namespace leaveApplication2.Repostories
         //create financial Year
         public async Task<FinancialYear> CreateFinancialYearAsync(FinancialYear financialYear)
         {
+            
+            if (financialYear.startDate > financialYear.endDate)
+            {
+           
+                throw new InvalidOperationException("Start date cannot be greater than end date.");
+            }
 
+            
             _context.FinancialYears.Add(financialYear);
             await _context.SaveChangesAsync();
             return financialYear;
         }
+
 
         public async Task<FinancialYear> GetFinancialYearByIdAsync(int id)
         {

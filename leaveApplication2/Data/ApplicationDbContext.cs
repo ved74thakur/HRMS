@@ -44,12 +44,12 @@ namespace leaveApplication2.Data
                .HasIndex(u => u.emailAddress)
             .IsUnique();
 
-            //builder.Entity<FinancialYear>()
-            //    .HasIndex(f => f.startDate)
-            //    .IsUnique();
-            //builder.Entity<FinancialYear>()
-            //   .HasIndex(f => f.endDate)
-            //   .IsUnique();
+            builder.Entity<FinancialYear>()
+                .HasIndex(f => f.startDate)
+                .IsUnique();
+            builder.Entity<FinancialYear>()
+               .HasIndex(f => f.endDate)
+               .IsUnique();
             // Configure the relationship between Employee and EmployeeReporting
             /* builder.Entity<EmployeeReporting>()
                 .HasOne(er => er.EmployeeId)
