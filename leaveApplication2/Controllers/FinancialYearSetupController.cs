@@ -27,6 +27,7 @@ namespace leaveApplication2.Controllers
             _logger.LogInformation($"Start CreateLeaveAllocationForAllLeaveTypes");
             try
             {
+
                 var leaveAllocations = await _leaveAllocationService.CreateLeaveAllocationForAllLeaveTypes(request.FinancialYear, request.LeaveTypeCounts);
                 await _financialYearSetupService.CreateUpdatedEmployeeLeaveAsync();
 

@@ -30,6 +30,8 @@ namespace leaveApplication2.Data
         public DbSet<UserRoleMapping> UserRoleMappings { get; set; }
 
         public DbSet<EmployeeReporting> EmployeeReporting { get; set; }
+
+        public DbSet<PolicyDocument> PolicyDocuments { get; set; }
         
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -45,37 +47,13 @@ namespace leaveApplication2.Data
             .IsUnique();
 
             builder.Entity<FinancialYear>()
-                .HasIndex(f => f.startDate)
-                .IsUnique();
+                 .HasIndex(f => f.startDate)
+                 .IsUnique();
+
             builder.Entity<FinancialYear>()
-               .HasIndex(f => f.endDate)
-               .IsUnique();
-            // Configure the relationship between Employee and EmployeeReporting
-            /* builder.Entity<EmployeeReporting>()
-                .HasOne(er => er.EmployeeId)
-                .WithMany()
-                .HasForeignKey(er => er.EmployeeId);
+                .HasIndex(f => f.endDate)
+                .IsUnique();
 
-            builder.Entity<EmployeeReporting>()
-                .HasOne(er => er.ReportingPersonId)
-                .WithMany()
-                .HasForeignKey(er => er.ReportingPersonId); */
-
-
-            /*   builder.Entity<Employee>().ToTable("employeeReporting");
-              builder.Entity<Employee>().HasKey(e => new { e.employeeId, e.ReportingPersonId }); */
-
-
-            // Configure the relationship between UserRoleMapping, ApplicationPages, and RoleAssign
-            /* builder.Entity<UserRoleMapping>()
-                .HasOne(mapping => mapping.ApplicationPages)
-                .WithMany()
-                .HasForeignKey(mapping => mapping.ApplicationPageId);
-
-            builder.Entity<UserRoleMapping>()
-                .HasOne(mapping => mapping.RoleAssignment)
-                .WithMany()
-                .HasForeignKey(mapping => mapping.RoleAssignId); */
         }
 
     }
