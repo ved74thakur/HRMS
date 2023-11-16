@@ -1,6 +1,8 @@
 ﻿using Leave.EmailTemplate;
 using leaveApplication2.Dtos;
 using leaveApplication2.Models;
+using leaveApplication2.Other;
+using Microsoft.Extensions.Configuration;
 
 namespace leaveApplication2.Services
 {
@@ -8,11 +10,14 @@ namespace leaveApplication2.Services
     {
         private readonly IEmployeeService _employeeService;
         private readonly GenericEmail _genericEmail;
+        private readonly IConfiguration _configuration;
 
-        public EmailService(IEmployeeService employeeService, GenericEmail genericEmail)
+
+        public EmailService(IEmployeeService employeeService, GenericEmail genericEmail, IConfiguration configuration)
         {
             _employeeService = employeeService;
             _genericEmail = genericEmail;
+            _configuration = configuration;
         }
 
         public async Task SendLeaveApprovalEmail(AppliedLeave newAppliedLeave)
@@ -21,9 +26,16 @@ namespace leaveApplication2.Services
             var employee = await _employeeService.GetEmployeeByIdAsync(newAppliedLeave.employeeId);
             var reportingPersonId = employee.ReportingPersonId ?? 0;
             var reportingEmployee = await _employeeService.GetEmployeeByIdAsync(reportingPersonId);
-
+          
             DateTime currentDateTime = DateTime.Now;
             string formattedDateTime = currentDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+
+            var WebsiteURL = _configuration["BaseURL:WebsiteURL"];
+
+
+            var approveEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "APR" + "|" + 4);
+            var rejectEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "REJ" + "|" + 4);
+
             var body = "";
 
             body += $"<p>Employee: {employee.firstName} {employee.lastName} has requested for leave approval</p>";
@@ -32,12 +44,21 @@ namespace leaveApplication2.Services
             
 
 
-            await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Approval", body);
+          
             body += "<p>Please click one of the following buttons to approve or reject leave:</p>";
-            body += $"<a href='http://192.168.1.5:86/api/appliedLeave/UpdateIsApprovedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: green; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Approve</a>";
-            body += $"<a href='http://192.168.1.5:86/api/appliedLeave/UpdateIsRejectedAsync/{appliedLeaveTypeId}/true' style='display: inline-block; background-color: red; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reject</a>";
+            body += $"<a href='{WebsiteURL}/appliedleavestatus/{approveEncryption}' style='display: inline-block; background-color: green; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Approve</a>";
+            body += $"<a href='{WebsiteURL}/appliedleavestatus/{rejectEncryption}' style='display: inline-block; background-color: red; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reject</a>";
 
-            await _genericEmail.SendEmailAsync(reportingEmployee.emailAddress, "Leave Approval", body);
+
+
+
+
+
+
+
+            await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Approval" + System.DateTime.Now, body);
+
+            await _genericEmail.SendEmailAsync(reportingEmployee.emailAddress, "Leave Approval" + System.DateTime.Now, body);
         }
 
         public async Task SendLeaveApprovedEmail(AppliedLeave approvedLeave)

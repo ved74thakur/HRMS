@@ -1,5 +1,6 @@
 ﻿using leaveApplication2.Dtos;
 using leaveApplication2.Models;
+using leaveApplication2.Other;
 using leaveApplication2.Repostories;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -12,14 +13,17 @@ namespace leaveApplication2.Services
     public class AppliedLeaveService : IAppliedLeaveService
     {
         private readonly IAppliedLeaveRepository _leaveRepository;
-        //private readonly ILeaveStatusRepository _leaveStatusRepository;
+        private readonly ILeaveStatusRepository _leaveStatusRepository;
         private readonly IEmployeeLeaveRepository _employeeLeaveRepository;
 
-        public AppliedLeaveService(IAppliedLeaveRepository leaveRepository,  IEmployeeLeaveRepository employeeLeaveRepository)
+        private readonly ILeaveStatusService  _leaveStatusService;
+
+        public AppliedLeaveService(IAppliedLeaveRepository leaveRepository,  IEmployeeLeaveRepository employeeLeaveRepository, ILeaveStatusService leaveStatusService)
         {
             _leaveRepository = leaveRepository;
            
             _employeeLeaveRepository = employeeLeaveRepository;
+            _leaveStatusService = leaveStatusService;
         }
 
         public async Task<IEnumerable<AppliedLeave>> GetAppliedLeavesAsync()
@@ -30,11 +34,31 @@ namespace leaveApplication2.Services
        
         public async Task<AppliedLeave> CreateAppliedLeave(AppliedLeave leave)
         {
-            //var singleLeave = await _leaveRepository.GetAppliedLeaveByIdAsync(id);
-            //leave.leaveStatusId = singleLeave.asdsda;
 
-            var createdLeave = await _leaveRepository.CreateAppliedLeave(leave);
-            return createdLeave;
+            try
+            {
+                var leaveStatus = await _leaveStatusService.GetLeaveStatusByCodeAsync("APP");
+
+
+
+
+                if (leaveStatus == null)
+                {
+                    throw new ArgumentNullException(nameof(leaveStatus), "Leave status not found. (APP)");
+                }
+                leave.LeaveStatusId = leaveStatus.LeaveStatusId;
+
+                var createdLeave = await _leaveRepository.CreateAppliedLeave(leave);
+
+               
+
+                return createdLeave;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
 
@@ -272,10 +296,87 @@ namespace leaveApplication2.Services
                 ApplyLeaveDay = appliedLeave.applyLeaveDay,
                 isApproved = appliedLeave.IsApproved,
                 isRejected = appliedLeave.IsRejected,
+                LeaveStatusCode = appliedLeave.LeaveStatus?.LeaveStatusCode ?? string.Empty,
+                LeaveStatusName = appliedLeave.LeaveStatus?.LeaveStatusName ?? string.Empty,
             }).ToList();
 
             return appliedLeaveDTOs;
         }
 
+        public async Task<AppliedLeave> AppliedLeaveUpdateStatusAsync(AppliedLeaveUpdateStatus appliedLeaveUpdateStatus)
+        {
+            try
+            {
+                var existingLeave = await _leaveRepository.GetAppliedLeaveByIdAsync(appliedLeaveUpdateStatus.appliedLeaveTypeId);
+
+                if (existingLeave == null)
+                {
+                    throw new ArgumentNullException(nameof(existingLeave), "Leave not found");
+                }
+
+                var leaveStatus = await _leaveStatusService.GetLeaveStatusByCodeAsync(appliedLeaveUpdateStatus.statusCode);
+
+                if (leaveStatus == null)
+                {
+                    throw new ArgumentNullException(nameof(leaveStatus), "Leave status not found. " + appliedLeaveUpdateStatus.statusCode);
+                }
+
+
+                if (existingLeave.LeaveStatus.LeaveStatusCode == appliedLeaveUpdateStatus.statusCode)
+                {
+
+                    // throw new ArgumentNullException(nameof(existingLeave), "Leave already " + leaveStatus.LeaveStatusName);
+                    //throw new ArgumentNullException("Leave already " + leaveStatus.LeaveStatusName);
+
+                    throw new CustomLeaveException("The leave is already "+ leaveStatus.LeaveStatusName,900);
+                }
+
+
+                Expression<Func<EmployeeLeave, bool>> filter = x =>
+                  x.employeeId == existingLeave.employeeId &&
+                  x.leaveTypeId == existingLeave.leaveTypeId &&
+                  x.leaveAllocationId == appliedLeaveUpdateStatus.leaveAllocationId;
+
+                /*Update leave */
+                var employeeLeave = await _employeeLeaveRepository.GetEmployeeLeaveAsync(filter);
+                /*End Update Leave*/
+
+
+
+
+
+
+                if (appliedLeaveUpdateStatus.statusCode == "APR")
+                {
+                    employeeLeave.balanceLeaves -= existingLeave.applyLeaveDay;
+                    employeeLeave.consumedLeaves += existingLeave.applyLeaveDay;
+                }
+
+                if (appliedLeaveUpdateStatus.statusCode == "APC")
+                {
+                    employeeLeave.balanceLeaves += existingLeave.applyLeaveDay;
+                    employeeLeave.consumedLeaves -= existingLeave.applyLeaveDay;
+                }
+
+                if (appliedLeaveUpdateStatus.statusCode == "APR" || appliedLeaveUpdateStatus.statusCode == "APC")
+                {
+                    /*Update leave */
+                    var UpdateemployeeLeave = await _employeeLeaveRepository.UpdateEmployeeLeaveAsync(employeeLeave);
+                    /*End Update Leave*/
+                }
+
+                existingLeave.LeaveStatusId = leaveStatus.LeaveStatusId;
+                existingLeave.LeaveStatus = leaveStatus;
+
+                var applyLeaveUpdate = await _leaveRepository.UpdateAppliedLeaveAsync(existingLeave);
+
+                return applyLeaveUpdate;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

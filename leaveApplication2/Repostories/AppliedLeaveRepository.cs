@@ -33,6 +33,7 @@ namespace leaveApplication2.Repostories
                     .Where(filter)
                     .Include(appliedLeave => appliedLeave.Employee)
                     .Include(appliedLeave => appliedLeave.LeaveType)
+                    .Include(appliedLeave => appliedLeave.LeaveStatus)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -70,7 +71,13 @@ namespace leaveApplication2.Repostories
 
         public async Task<AppliedLeave> GetAppliedLeaveByIdAsync(long id)
         {
-            var singleLeave = await _context.AppliedLeaves.FindAsync(id);
+            //  var singleLeave = await _context.AppliedLeaves.Include(e=>e.LeaveStatus).AsNoTracking().FindAsync(id);
+
+            var singleLeave = await _context.AppliedLeaves
+                .Include(e => e.LeaveStatus)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(e => e.appliedLeaveTypeId == id);
+
             if (singleLeave == null)
             {
                 return null;
@@ -93,6 +100,8 @@ namespace leaveApplication2.Repostories
             singleLeave.applyLeaveDay = leave.applyLeaveDay;
             singleLeave.remaingLeave = leave.remaingLeave;
             singleLeave.balanceLeave = leave.balanceLeave;
+            singleLeave.IsHalfDay = leave.IsHalfDay;
+
 
             await _context.SaveChangesAsync();
             return singleLeave;

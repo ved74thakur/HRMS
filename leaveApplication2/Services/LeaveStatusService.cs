@@ -1,51 +1,37 @@
-﻿
-//using leaveApplication2.Models;
-//using leaveApplication2.Repostories;
-//using Microsoft.EntityFrameworkCore;
+﻿using leaveApplication2.Models;
+using leaveApplication2.Repostories;
+using System.Linq.Expressions;
 
-//namespace leaveApplication2.Services
-//{
-//    public class LeaveStatusService : ILeaveStatusService
-//    {
-//        private readonly ILeaveStatusRepository _leaveStatusRepository;
+namespace leaveApplication2.Services
+{
+    public class LeaveStatusService : ILeaveStatusService
+    {
+        private readonly ILeaveStatusRepository _leaveStatusRepository = null;
+        public LeaveStatusService(ILeaveStatusRepository leaveStatusRepository)
+        {
+            _leaveStatusRepository = leaveStatusRepository;
+        }
 
-//        public LeaveStatusService(ILeaveStatusRepository leaveStatusRepository)
-//        {
-//            _leaveStatusRepository = leaveStatusRepository;
-//        }
+        public async Task<LeaveStatus> GetLeaveStatusByCodeAsync(string statusCode)
+        {
 
-//        public async Task<IEnumerable<Models.LeaveStatus>> GetLeaveStatusesAsync()
-//        {
-//            return await _leaveStatusRepository.GetLeaveStatusesAsync();
-            
-//        }
+            try
+            {
+                Expression<Func<LeaveStatus, bool>> filter = urm => urm.LeaveStatusCode == statusCode;
+                var leaveStatus = await _leaveStatusRepository.GetLeaveStatusAsync(filter);
 
-//        public async Task<Models.LeaveStatus> GetLeaveStatusByCodeAsync(string leaveStatusNameCode)
-//        {
-//            var leaveStatusByCode = await _leaveStatusRepository.GetLeaveStatusByCodeAsync(leaveStatusNameCode);
-//            return leaveStatusByCode;
-//        }
+                return leaveStatus;
+            }
+            catch (Exception)
+            {
 
+                throw;
+            }
+        }
 
-
-//        public async Task<LeaveStatus> GetLeaveStatusByIdAsync(int leaveStatusId)
-//        {
-//            return await _leaveStatusRepository.GetLeaveStatusByIdAsync(leaveStatusId);
-//        }
-
-//        public async Task<LeaveStatus> CreateLeaveStatusAsync(LeaveStatus leaveStatus)
-//        {
-//            var createdLeaveStatus = await _leaveStatusRepository.CreateLeaveStatusAsync(leaveStatus);
-//            return createdLeaveStatus;
-//        }
-//        public async Task<LeaveStatus> UpdateLeaveStatusAsync(LeaveStatus leaveStatus)
-//        {
-//            var leaveStatusUpdated = await _leaveStatusRepository.UpdateLeaveStatusAsync(leaveStatus);
-//            return leaveStatusUpdated;
-//        }
-
-
-
-
-//    }
-//}
+        public async Task<IReadOnlyCollection<LeaveStatus>> GetLeaveStatusesAsync()
+        {
+          return await   _leaveStatusRepository.GetLeaveStatusesAsync();
+        }
+    }
+}

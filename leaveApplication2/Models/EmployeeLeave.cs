@@ -31,5 +31,11 @@ namespace leaveApplication2.Models
 
         public bool isActive { get; set; } = false;
 
+
+       
+        [ForeignKey("LeaveAllocation")]
+        public int leaveAllocationId { get; set; }
+        public virtual LeaveAllocation  LeaveAllocation { get; set; }
+
     }
 }

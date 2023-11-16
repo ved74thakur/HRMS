@@ -1,6 +1,8 @@
 ﻿using leaveApplication2.Data;
 using leaveApplication2.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace leaveApplication2.Repostories
 {
@@ -57,6 +59,16 @@ namespace leaveApplication2.Repostories
             return employeeLeave;
 
         }
+        public async Task<EmployeeLeave> UpdateEmployeeLeaveAsync(EmployeeLeave employeeLeave)
+
+        {
+
+
+            _context.EmployeeLeaves.Update(employeeLeave);
+            await _context.SaveChangesAsync();
+            return employeeLeave;
+
+        }
 
         public async Task<EmployeeLeave> GetEmployeeLeaveByEmployee(long employeeId, int leaveTypeId)
         {
@@ -76,6 +88,9 @@ namespace leaveApplication2.Repostories
 
             return employeeLeave;
         }
-
+        public async Task<EmployeeLeave> GetEmployeeLeaveAsync(Expression<Func<EmployeeLeave, bool>> filter)
+        {
+            return await _context.EmployeeLeaves.Include(e=>e.Employee).Include(e=>e.LeaveType).Include(e=>e.LeaveAllocation).FirstOrDefaultAsync(filter);
+        }
     }
 }

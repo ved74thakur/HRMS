@@ -17,6 +17,10 @@
 
         public bool isRejected { get; set; }
 
+        public string LeaveStatusName { get; set; } = string.Empty;
+
+        public string LeaveStatusCode { get; set; } = string.Empty;
+
 
     }
 }
