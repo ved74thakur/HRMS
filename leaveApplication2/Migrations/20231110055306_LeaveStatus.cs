@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace leaveApplication2.Migrations
 {
     /// <inheritdoc />
-    public partial class newPhase2 : Migration
+    public partial class LeaveStatus : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,11 @@ namespace leaveApplication2.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     PageName = table.Column<string>(type: "text", nullable: false),
                     PageCode = table.Column<string>(type: "text", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    routePath = table.Column<string>(type: "text", nullable: false),
+                    menuPath = table.Column<string>(type: "text", nullable: false),
+                    isMenuPage = table.Column<bool>(type: "boolean", nullable: false),
+                    componentName = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -118,6 +122,21 @@ namespace leaveApplication2.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "leavestatuses",
+                columns: table => new
+                {
+                    LeaveStatusId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    LeaveStatusName = table.Column<string>(type: "text", nullable: false),
+                    LeaveStatusNameCode = table.Column<string>(type: "text", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_leavestatuses", x => x.LeaveStatusId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "LeaveTypes",
                 columns: table => new
                 {
@@ -155,25 +174,12 @@ namespace leaveApplication2.Migrations
                     employeeId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     employeeCode = table.Column<string>(type: "text", nullable: false),
-                    firstName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false)
+                    firstName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    lastName = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tests", x => x.employeeId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserRoleMapping",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ApplicationPageId = table.Column<int>(type: "integer", nullable: false),
-                    RoleAssignId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserRoleMapping", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -247,6 +253,32 @@ namespace leaveApplication2.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserRoleMapping",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ApplicationPageId = table.Column<int>(type: "integer", nullable: false),
+                    RoleAssignId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRoleMapping", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserRoleMapping_ApplicationPage_ApplicationPageId",
+                        column: x => x.ApplicationPageId,
+                        principalTable: "ApplicationPage",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserRoleMapping_RoleAssign_RoleAssignId",
+                        column: x => x.RoleAssignId,
+                        principalTable: "RoleAssign",
+                        principalColumn: "RoleAssignId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AppliedLeaves",
                 columns: table => new
                 {
@@ -258,6 +290,7 @@ namespace leaveApplication2.Migrations
                     EndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     LeaveReason = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     applyLeaveDay = table.Column<double>(type: "double precision", nullable: false),
+                    LeaveStatusId = table.Column<int>(type: "integer", nullable: false),
                     remaingLeave = table.Column<double>(type: "double precision", nullable: false),
                     balanceLeave = table.Column<double>(type: "double precision", nullable: false),
                     IsRejected = table.Column<bool>(type: "boolean", nullable: false),
@@ -282,6 +315,12 @@ namespace leaveApplication2.Migrations
                         column: x => x.leaveTypeId,
                         principalTable: "LeaveTypes",
                         principalColumn: "leaveTypeId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppliedLeaves_leavestatuses_LeaveStatusId",
+                        column: x => x.LeaveStatusId,
+                        principalTable: "leavestatuses",
+                        principalColumn: "LeaveStatusId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -319,6 +358,11 @@ namespace leaveApplication2.Migrations
                 name: "IX_AppliedLeaves_employeeId",
                 table: "AppliedLeaves",
                 column: "employeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppliedLeaves_LeaveStatusId",
+                table: "AppliedLeaves",
+                column: "LeaveStatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppliedLeaves_leaveTypeId",
@@ -365,14 +409,21 @@ namespace leaveApplication2.Migrations
                 name: "IX_LeaveAllocations_leaveTypeId",
                 table: "LeaveAllocations",
                 column: "leaveTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRoleMapping_ApplicationPageId",
+                table: "UserRoleMapping",
+                column: "ApplicationPageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRoleMapping_RoleAssignId",
+                table: "UserRoleMapping",
+                column: "RoleAssignId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "ApplicationPage");
-
             migrationBuilder.DropTable(
                 name: "AppliedLeaves");
 
@@ -398,6 +449,9 @@ namespace leaveApplication2.Migrations
                 name: "UserRoleMapping");
 
             migrationBuilder.DropTable(
+                name: "leavestatuses");
+
+            migrationBuilder.DropTable(
                 name: "Employees");
 
             migrationBuilder.DropTable(
@@ -405,6 +459,9 @@ namespace leaveApplication2.Migrations
 
             migrationBuilder.DropTable(
                 name: "LeaveTypes");
+
+            migrationBuilder.DropTable(
+                name: "ApplicationPage");
 
             migrationBuilder.DropTable(
                 name: "Designations");
