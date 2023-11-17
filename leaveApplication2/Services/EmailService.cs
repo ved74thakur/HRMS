@@ -41,10 +41,10 @@ namespace leaveApplication2.Services
             body += $"<p>Employee: {employee.firstName} {employee.lastName} has requested for leave approval</p>";
             body += $"<p>Leave Type :{newAppliedLeave.LeaveReason}</p>";
             body += $"<p>Applied from :{newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}</p>";
-            
 
 
-          
+            await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Approval" + System.DateTime.Now, body);
+
             body += "<p>Please click one of the following buttons to approve or reject leave:</p>";
             body += $"<a href='{WebsiteURL}/appliedleavestatus/{approveEncryption}' style='display: inline-block; background-color: green; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Approve</a>";
             body += $"<a href='{WebsiteURL}/appliedleavestatus/{rejectEncryption}' style='display: inline-block; background-color: red; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reject</a>";
@@ -56,7 +56,7 @@ namespace leaveApplication2.Services
 
 
 
-            await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Approval" + System.DateTime.Now, body);
+        
 
             await _genericEmail.SendEmailAsync(reportingEmployee.emailAddress, "Leave Approval" + System.DateTime.Now, body);
         }
