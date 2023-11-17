@@ -64,7 +64,7 @@ namespace leaveApplication2.Services
             var leaveStatus = await _leaveStatusService.GetLeaveStatusByCodeAsync("APP");
 
             Expression<Func<AppliedLeave, bool>> filter = x =>
-                 x.LeaveStatusId == leaveStatus.LeaveStatusId;
+                 x.LeaveStatusId == leaveStatus.LeaveStatusId && x.employeeId == employeeId;
 
             var previousAppliedLeaves = await _leaveRepository.GetAppliedLeavesAsync(filter);
 
