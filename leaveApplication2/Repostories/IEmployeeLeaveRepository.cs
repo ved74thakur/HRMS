@@ -12,5 +12,8 @@ namespace leaveApplication2.Repostories
         Task<EmployeeLeave> UpdateEmployeeLeaveAsync(EmployeeLeave employeeLeave);
         Task<List<EmployeeLeave>> GetEmployeeLeaveByEmployeeId(long employeeId);
         Task<EmployeeLeave> GetEmployeeLeaveByEmployee(long employeeId, int leaveTypeId);
+        Task<EmployeeLeave> SetEmployeeLeaveToFalseAsync(long id);
+
+        Task<EmployeeLeave> GetEmployeeLeaveAsync(Expression<Func<EmployeeLeave, bool>> filter);
     }
 }

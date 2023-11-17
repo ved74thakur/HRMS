@@ -39,9 +39,7 @@ namespace leaveApplication2.Models
 
 
        
-        [ForeignKey("LeaveAllocation")]
-        public int leaveAllocationId { get; set; }
-        public virtual LeaveAllocation  LeaveAllocation { get; set; }
+      
 
     }
 }
