@@ -33,8 +33,16 @@ namespace leaveApplication2.Services
             var WebsiteURL = _configuration["BaseURL:WebsiteURL"];
 
 
+
+
+#if (DEBUG)
+            var approveEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "APR" + "|" + 4);
+            var rejectEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "REJ" + "|" + 4);
+#elif (RELEASE)
             var approveEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "APR" + "|" + 11);
             var rejectEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "REJ" + "|" + 11);
+#endif
+
 
             var body = "";
 
