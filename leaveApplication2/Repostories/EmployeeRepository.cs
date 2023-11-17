@@ -108,7 +108,15 @@ namespace leaveApplication2.Repostories
 
         public async Task<Employee> EmployeeLoginAsync(Employee  employee)
         {
-            return await _context.Employees.SingleOrDefaultAsync(e => e.emailAddress == employee.emailAddress && e.employeePassword == employee.employeePassword);
+            try
+            {
+                return await _context.Employees.SingleOrDefaultAsync(e => e.emailAddress == employee.emailAddress && e.employeePassword == employee.employeePassword);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         public async Task<string> VerifyEmployeeEmailAsync(string employeeEmail)
