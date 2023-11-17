@@ -107,5 +107,11 @@ namespace leaveApplication2.Services
 
             await _genericEmail.SendEmailAsync(employee.emailAddress, subject, body);
         }
+
+        public async Task SendErrorMail(string email,string body, string  subject)
+        {
+            subject = "Error " + " | " + subject + " | "+ System.DateTime.Now;
+            await _genericEmail.SendEmailAsync(email, subject, body);
+        }
     }
 }
