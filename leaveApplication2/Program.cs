@@ -6,6 +6,7 @@ using leaveApplication2.Repostories;
 using leaveApplication2.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -52,6 +53,13 @@ internal class Program
         builder.Services.AddScoped<IPolicyDocumentService, PolicyDocumentService>();
         
 
+
+        builder.Services.AddScoped<ILeaveStatusService, LeaveStatusService>();
+        builder.Services.AddScoped<ILeaveStatusRepository, LeaveStatusRepository>();
+
+
+
+
         builder.Services.AddScoped<IAuthService, AuthService>();
 
 
@@ -64,10 +72,9 @@ internal class Program
         //ILeaveTypeRepository
         builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
         builder.Services.AddScoped<ILeaveTypeService, LeaveTypeService>();
-
-      
         builder.Services.AddAuthorization();
 
+       
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {

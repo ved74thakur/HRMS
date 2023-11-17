@@ -29,6 +29,7 @@ namespace leaveApplication2.Services
 
         Task<IReadOnlyCollection<AppliedLeave>> GetUnApprovedAppliedLeavesAsync(AppliedLeave appliedLeave);
 
+        Task<AppliedLeave> AppliedLeaveUpdateStatusAsync(AppliedLeaveUpdateStatus appliedLeaveUpdateStatus);
 
     }
 }

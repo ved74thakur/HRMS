@@ -17,5 +17,7 @@ namespace leaveApplication2.Models
         [Required]
         [MaxLength(255)]
         public string firstName { get; set; } = string.Empty;
+
+        public string lastName { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace leaveApplication2.Data
         public DbSet<AppliedLeave> AppliedLeaves { get; set; }
 
         public DbSet<EmailModel> EmailModels { get; set; }
-        //public DbSet<LeaveStatus> LeaveStatuses { get; set; }
+        public DbSet<LeaveStatus> LeaveStatuses { get; set; }
         public DbSet<Test> Tests { get; set; }
 
         public DbSet<Gender>  Genders { get; set; }
