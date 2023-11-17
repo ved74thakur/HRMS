@@ -378,21 +378,27 @@ namespace leaveApplication2.Services
                 await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "12", "12");
                 if (appliedLeaveUpdateStatus.statusCode == "APR")
                 {
+                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "13", "13");
                     employeeLeave.balanceLeaves -= existingLeave.applyLeaveDay;
                     employeeLeave.consumedLeaves += existingLeave.applyLeaveDay;
+                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "14", "14");
                 }
 
                 if (appliedLeaveUpdateStatus.statusCode == "APC")
                 {
+                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "15", "15");
                     employeeLeave.balanceLeaves += existingLeave.applyLeaveDay;
                     employeeLeave.consumedLeaves -= existingLeave.applyLeaveDay;
+                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "16", "16");
                 }
 
                 if (appliedLeaveUpdateStatus.statusCode == "APR" || appliedLeaveUpdateStatus.statusCode == "APC")
                 {
+                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "17", "17");
                     /*Update leave */
                     var UpdateemployeeLeave = await _employeeLeaveRepository.UpdateEmployeeLeaveAsync(employeeLeave);
                     /*End Update Leave*/
+                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "18", "18");
                 }
 
                 existingLeave.LeaveStatusId = leaveStatus.LeaveStatusId;
@@ -402,7 +408,9 @@ namespace leaveApplication2.Services
                 AppliedLeave applyLeaveUpdate = null;
                 try
                 {
+                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "19", "19");
                     applyLeaveUpdate = await _leaveRepository.UpdateAppliedLeaveAsync(existingLeave);
+                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "20", "20");
                 }
                 catch (Exception ex)
                 {
