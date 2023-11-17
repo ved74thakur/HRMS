@@ -322,27 +322,27 @@ namespace leaveApplication2.Services
         {
             try
             {
-                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "appliedLeaveUpdateStatus.appliedLeaveTypeId  " + appliedLeaveUpdateStatus.appliedLeaveTypeId, "1");
+               // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "appliedLeaveUpdateStatus.appliedLeaveTypeId  " + appliedLeaveUpdateStatus.appliedLeaveTypeId, "1");
                 var existingLeave = await _leaveRepository.GetAppliedLeaveByIdAsync(appliedLeaveUpdateStatus.appliedLeaveTypeId);
-                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", existingLeave.applyLeaveDay + " " + existingLeave.applyLeaveDay, "2");
+              //  await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", existingLeave.applyLeaveDay + " " + existingLeave.applyLeaveDay, "2");
                 if (existingLeave == null)
                 {
-                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "3", "3");
+                    //await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "3", "3");
                     throw new ArgumentNullException(nameof(existingLeave), "Leave not found");
                 }
-                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "4", "4");
+               // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "4", "4");
                 var leaveStatus = await _leaveStatusService.GetLeaveStatusByCodeAsync(appliedLeaveUpdateStatus.statusCode);
-                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "5", "5");
+               // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "5", "5");
                 if (leaveStatus == null)
                 {
-                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "6", "6");
+                   // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "6", "6");
                     throw new ArgumentNullException(nameof(leaveStatus), "Leave status not found. " + appliedLeaveUpdateStatus.statusCode);
                 }
 
 
                 if (existingLeave.LeaveStatus.LeaveStatusCode == appliedLeaveUpdateStatus.statusCode)
                 {
-                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "7", "7");
+                   // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "7", "7");
 
                     // throw new ArgumentNullException(nameof(existingLeave), "Leave already " + leaveStatus.LeaveStatusName);
                     //throw new ArgumentNullException("Leave already " + leaveStatus.LeaveStatusName);
@@ -350,12 +350,24 @@ namespace leaveApplication2.Services
                     throw new CustomLeaveException("The leave is already "+ leaveStatus.LeaveStatusName,900);
                 }
 
-                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "8", "8");
+                // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "8", "8");
+                //Expression<Func<EmployeeLeave, bool>> filter = x =>
+                //  x.employeeId == existingLeave.employeeId &&
+                //  x.leaveTypeId == existingLeave.leaveTypeId &&
+                //  x.leaveAllocationId == appliedLeaveUpdateStatus.leaveAllocationId;
+
+
                 Expression<Func<EmployeeLeave, bool>> filter = x =>
-                  x.employeeId == existingLeave.employeeId &&
-                  x.leaveTypeId == existingLeave.leaveTypeId &&
-                  x.leaveAllocationId == appliedLeaveUpdateStatus.leaveAllocationId;
-                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "9", "9");
+                  x.employeeId == 38 &&
+                  x.leaveTypeId == 2 &&
+                  x.leaveAllocationId == 11;
+
+
+
+
+
+
+                // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "9", "9");
                 EmployeeLeave employeeLeave = null;
                 try
                 {

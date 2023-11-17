@@ -1,6 +1,7 @@
 ﻿using leaveApplication2.Data;
 using leaveApplication2.Models;
 using leaveApplication2.Models.leaveApplication2.Models;
+using leaveApplication2.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
@@ -10,9 +11,12 @@ namespace leaveApplication2.Repostories
     public class EmployeeLeaveRepository : IEmployeeLeaveRepository
     {
         private readonly ApplicationDbContext _context;
-        public EmployeeLeaveRepository(ApplicationDbContext context)
+        private readonly IEmailService  _emailService;
+        public EmployeeLeaveRepository(ApplicationDbContext context, IEmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
+
         }
         public async Task<IReadOnlyCollection<EmployeeLeave>> GetAllEmployeesLeaveAsync()
         {
@@ -105,7 +109,15 @@ namespace leaveApplication2.Repostories
         }
         public async Task<EmployeeLeave> GetEmployeeLeaveAsync(Expression<Func<EmployeeLeave, bool>> filter)
         {
-            return await _context.EmployeeLeaves.Include(e=>e.Employee).Include(e=>e.LeaveType).Include(e=>e.LeaveAllocation).FirstOrDefaultAsync(filter);
+            try
+            {
+                return await _context.EmployeeLeaves.Include(e => e.Employee).Include(e => e.LeaveType).Include(e => e.LeaveAllocation).FirstOrDefaultAsync(filter);
+            }
+            catch (Exception ex)
+            {
+                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.Message, "GetEmployeeLeaveAsync");
+                throw;
+            }
         }
     }
 }
