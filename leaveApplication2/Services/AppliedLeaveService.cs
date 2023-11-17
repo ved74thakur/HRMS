@@ -351,16 +351,16 @@ namespace leaveApplication2.Services
                 }
 
                 // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "8", "8");
-                //Expression<Func<EmployeeLeave, bool>> filter = x =>
-                //  x.employeeId == existingLeave.employeeId &&
-                //  x.leaveTypeId == existingLeave.leaveTypeId &&
-                //  x.leaveAllocationId == appliedLeaveUpdateStatus.leaveAllocationId;
-
-
                 Expression<Func<EmployeeLeave, bool>> filter = x =>
-                  x.employeeId == 38 &&
-                  x.leaveTypeId == 2 &&
-                  x.leaveAllocationId == 11;
+                  x.employeeId == existingLeave.employeeId &&
+                  x.leaveTypeId == existingLeave.leaveTypeId &&
+                  x.leaveAllocationId == appliedLeaveUpdateStatus.leaveAllocationId;
+
+
+                //Expression<Func<EmployeeLeave, bool>> filter = x =>
+                //  x.employeeId == 38 &&
+                //  x.leaveTypeId == 2 &&
+                //  x.leaveAllocationId == 11;
 
 
 
