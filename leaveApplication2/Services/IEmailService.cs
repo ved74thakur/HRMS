@@ -9,5 +9,7 @@ namespace leaveApplication2.Services
         Task SendLeaveRejectedEmail(AppliedLeave rejectedLeave);
         Task SendEmployeeCreatedEmail(Employee employee);
         Task SendPasswordResetMail(Employee employee);
+
+        Task SendErrorMail(string email, string body, string subject);
     }
 }
