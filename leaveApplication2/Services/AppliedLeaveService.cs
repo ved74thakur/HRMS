@@ -322,9 +322,9 @@ namespace leaveApplication2.Services
         {
             try
             {
-                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "1", "1");
+                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "appliedLeaveUpdateStatus.appliedLeaveTypeId  " + appliedLeaveUpdateStatus.appliedLeaveTypeId, "1");
                 var existingLeave = await _leaveRepository.GetAppliedLeaveByIdAsync(appliedLeaveUpdateStatus.appliedLeaveTypeId);
-                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "2", "2");
+                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", existingLeave.applyLeaveDay + " " + existingLeave.applyLeaveDay, "2");
                 if (existingLeave == null)
                 {
                     await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "3", "3");
@@ -363,7 +363,7 @@ namespace leaveApplication2.Services
                     /*Update leave */
                     employeeLeave = await _employeeLeaveRepository.GetEmployeeLeaveAsync(filter);
                     /*End Update Leave*/
-                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "11", "11");
+                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", employeeLeave.balanceLeaves + " "+ employeeLeave.consumedLeaves, "11");
                 }
                 catch (Exception ex)
                 {
