@@ -20,8 +20,10 @@ namespace leaveApplication2.Models
         public int leaveTypeId { get; set; }
         public virtual LeaveType? LeaveType { get; set; }
 
-        
-
+        //code updated
+        /// <summary>
+        /// /
+        /// </summary>
 
         [Required(ErrorMessage = "Start Date is required")]
         [DataType(DataType.DateTime)]

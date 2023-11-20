@@ -75,6 +75,7 @@ namespace leaveApplication2.Repostories
 
             var singleLeave = await _context.AppliedLeaves
                 .Include(e => e.LeaveStatus)
+                .Include(e => e.Employee)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(e => e.appliedLeaveTypeId == id);
 

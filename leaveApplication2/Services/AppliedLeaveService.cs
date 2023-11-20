@@ -350,6 +350,12 @@ namespace leaveApplication2.Services
                     throw new CustomLeaveException("The leave is already "+ leaveStatus.LeaveStatusName,900);
                 }
 
+
+
+
+                bool allowNotToTrack = true; // Variable indicating whether tracking is allowed
+
+
                 // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "8", "8");
                 Expression<Func<EmployeeLeave, bool>> filter = x =>
                   x.employeeId == existingLeave.employeeId &&
@@ -371,11 +377,11 @@ namespace leaveApplication2.Services
                 EmployeeLeave employeeLeave = null;
                 try
                 {
-                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "10", "10");
+                   // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "10", "10");
                     /*Update leave */
                     employeeLeave = await _employeeLeaveRepository.GetEmployeeLeaveAsync(filter);
                     /*End Update Leave*/
-                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", employeeLeave.balanceLeaves + " "+ employeeLeave.consumedLeaves, "11");
+                    //await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", employeeLeave.balanceLeaves + " "+ employeeLeave.consumedLeaves, "11");
                 }
                 catch (Exception ex)
                 {
@@ -387,42 +393,44 @@ namespace leaveApplication2.Services
 
 
 
-                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "12", "12");
+               // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "12", "12");
                 if (appliedLeaveUpdateStatus.statusCode == "APR")
                 {
-                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "13", "13");
+                   // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "13", "13");
                     employeeLeave.balanceLeaves -= existingLeave.applyLeaveDay;
                     employeeLeave.consumedLeaves += existingLeave.applyLeaveDay;
-                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "14", "14");
+                  //  await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "14", "14");
                 }
 
                 if (appliedLeaveUpdateStatus.statusCode == "APC")
                 {
-                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "15", "15");
+                   /// await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "15", "15");
                     employeeLeave.balanceLeaves += existingLeave.applyLeaveDay;
                     employeeLeave.consumedLeaves -= existingLeave.applyLeaveDay;
-                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "16", "16");
+                   // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "16", "16");
                 }
 
                 if (appliedLeaveUpdateStatus.statusCode == "APR" || appliedLeaveUpdateStatus.statusCode == "APC")
                 {
-                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "17", "17");
+                    //await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "17", "17");
                     /*Update leave */
                     var UpdateemployeeLeave = await _employeeLeaveRepository.UpdateEmployeeLeaveAsync(employeeLeave);
                     /*End Update Leave*/
-                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "18", "18");
+                   // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "18", "18");
                 }
 
                 existingLeave.LeaveStatusId = leaveStatus.LeaveStatusId;
                 existingLeave.LeaveStatus = leaveStatus;
 
 
-                AppliedLeave applyLeaveUpdate = null;
+              //  AppliedLeave applyLeaveUpdate = null;
                 try
                 {
                     await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "19", "19");
-                    applyLeaveUpdate = await _leaveRepository.UpdateAppliedLeaveAsync(existingLeave);
+                  var  applyLeaveUpdate = await _leaveRepository.UpdateAppliedLeaveAsync(existingLeave);
                     await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "20", "20");
+
+                    return applyLeaveUpdate;
                 }
                 catch (Exception ex)
                 {
@@ -430,7 +438,7 @@ namespace leaveApplication2.Services
                     throw;
                 }
 
-                return applyLeaveUpdate;
+              //  return applyLeaveUpdate;
             }
             catch (Exception ex)
             {

@@ -11,11 +11,11 @@ namespace leaveApplication2.Repostories
     public class EmployeeLeaveRepository : IEmployeeLeaveRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly IEmailService  _emailService;
-        public EmployeeLeaveRepository(ApplicationDbContext context, IEmailService emailService)
+       // private readonly IEmailService  _emailService;
+        public EmployeeLeaveRepository(ApplicationDbContext context)
         {
             _context = context;
-            _emailService = emailService;
+           // _emailService = emailService;
 
         }
         public async Task<IReadOnlyCollection<EmployeeLeave>> GetAllEmployeesLeaveAsync()
@@ -115,7 +115,7 @@ namespace leaveApplication2.Repostories
             }
             catch (Exception ex)
             {
-                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.Message, "GetEmployeeLeaveAsync");
+               // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.Message, "GetEmployeeLeaveAsync");
                 throw;
             }
         }
