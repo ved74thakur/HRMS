@@ -73,7 +73,7 @@ internal class Program
         builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
         builder.Services.AddScoped<ILeaveTypeService, LeaveTypeService>();
         builder.Services.AddAuthorization();
-
+        
        
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

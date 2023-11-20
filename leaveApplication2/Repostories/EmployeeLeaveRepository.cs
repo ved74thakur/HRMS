@@ -68,7 +68,6 @@ namespace leaveApplication2.Repostories
 
         {
 
-
             _context.EmployeeLeaves.Update(employeeLeave);
             await _context.SaveChangesAsync();
             return employeeLeave;
@@ -111,7 +110,12 @@ namespace leaveApplication2.Repostories
         {
             try
             {
-                return await _context.EmployeeLeaves.Include(e => e.Employee).Include(e => e.LeaveType).Include(e => e.LeaveAllocation).FirstOrDefaultAsync(filter);
+                var employeeLeave = await _context.EmployeeLeaves.Include(e => e.Employee).Include(e => e.LeaveType).Include(e => e.LeaveAllocation).FirstOrDefaultAsync(filter);
+                if (employeeLeave != null)
+                {
+                    _context.Entry(employeeLeave).State = EntityState.Detached;
+                }
+                return employeeLeave;
             }
             catch (Exception ex)
             {

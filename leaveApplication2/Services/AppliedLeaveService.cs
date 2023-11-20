@@ -380,6 +380,7 @@ namespace leaveApplication2.Services
                    // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "10", "10");
                     /*Update leave */
                     employeeLeave = await _employeeLeaveRepository.GetEmployeeLeaveAsync(filter);
+                        
                     /*End Update Leave*/
                     //await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", employeeLeave.balanceLeaves + " "+ employeeLeave.consumedLeaves, "11");
                 }
@@ -426,15 +427,16 @@ namespace leaveApplication2.Services
               //  AppliedLeave applyLeaveUpdate = null;
                 try
                 {
-                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "19", "19");
+                    //await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "19", "19");
                   var  applyLeaveUpdate = await _leaveRepository.UpdateAppliedLeaveAsync(existingLeave);
-                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "20", "20");
+                    //here you have to updated 
+                    //await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "20", "20");
 
                     return applyLeaveUpdate;
                 }
                 catch (Exception ex)
                 {
-                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.Message, "UpdateAppliedLeaveAsync");
+                    //await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.Message, "UpdateAppliedLeaveAsync");
                     throw;
                 }
 

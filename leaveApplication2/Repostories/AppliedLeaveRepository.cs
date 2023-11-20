@@ -113,6 +113,11 @@ namespace leaveApplication2.Repostories
             try
             {
                 _context.AppliedLeaves.Update(leave);
+                //attach the employee entity if it's not already attaced
+                if(leave.Employee != null && _context.Entry(leave.Employee).State == EntityState.Detached)
+                {
+                    _context.Attach(leave.Employee);
+                }
                 await _context.SaveChangesAsync();
                 return leave;
             }
