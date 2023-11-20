@@ -144,7 +144,7 @@ namespace leaveApplication2.Controllers
             }
 
         }
-        //get active leave allocation id
+        //get active leave allocation id.
         [HttpGet("GetActiveLeaveAllocationAsync")]
         public async Task<CommonResponse<LeaveAllocation>> GetLeaveAllocationAsync()
         {
