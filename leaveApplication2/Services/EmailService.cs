@@ -1,8 +1,10 @@
 ﻿using Leave.EmailTemplate;
 using leaveApplication2.Dtos;
 using leaveApplication2.Models;
+using leaveApplication2.Models.leaveApplication2.Models;
 using leaveApplication2.Other;
 using Microsoft.Extensions.Configuration;
+using System.Linq.Expressions;
 
 namespace leaveApplication2.Services
 {
@@ -11,13 +13,17 @@ namespace leaveApplication2.Services
         private readonly IEmployeeService _employeeService;
         private readonly GenericEmail _genericEmail;
         private readonly IConfiguration _configuration;
+        private readonly IFinancialYearService _financialYearService;
+        private readonly ILeaveAllocationService _leaveAllocationService;
 
 
-        public EmailService(IEmployeeService employeeService, GenericEmail genericEmail, IConfiguration configuration)
+        public EmailService(IEmployeeService employeeService, GenericEmail genericEmail, IConfiguration configuration, IFinancialYearService financialYearService, ILeaveAllocationService leaveAllocationService)
         {
             _employeeService = employeeService;
             _genericEmail = genericEmail;
             _configuration = configuration;
+            _financialYearService = financialYearService;
+            _leaveAllocationService = leaveAllocationService;
         }
 
         public async Task SendLeaveApprovalEmail(AppliedLeave newAppliedLeave)
@@ -33,14 +39,21 @@ namespace leaveApplication2.Services
             var WebsiteURL = _configuration["BaseURL:WebsiteURL"];
 
             //add leaveAllocation Year dynamically
+            Expression<Func<FinancialYear, bool>> financialYearFilter = la => la.ActiveYear == true;
+            var activeFinancialYear = await _financialYearService.GetActiveFinancialYearsAsync(financialYearFilter);
+            var financialYearId = activeFinancialYear.First().financialYearId;
+
+            Expression<Func<LeaveAllocation, bool>> filter = la => la.financialYearId == financialYearId;
+            var leaveAllocation = await _leaveAllocationService.GetLeaveAllocationAsync(filter);
+           
 
 
 #if (DEBUG)
-            var approveEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "APR" + "|" + 4);
-            var rejectEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "REJ" + "|" + 4);
+            var approveEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "APR" + "|" + leaveAllocation.leaveAllocationId);
+            var rejectEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "REJ" + "|" + leaveAllocation.leaveAllocationId);
 #elif (RELEASE)
-            var approveEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "APR" + "|" + 11);
-            var rejectEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "REJ" + "|" + 11);
+            var approveEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "APR" + "|" + leaveAllocation.leaveAllocationId);
+            var rejectEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "REJ" + "|" + leaveAllocation.leaveAllocationId);
 #endif
 
 
