@@ -1,5 +1,6 @@
 ﻿using leaveApplication2.Models;
 using leaveApplication2.Models.leaveApplication2.Models;
+using System.Linq.Expressions;
 
 namespace leaveApplication2.Services
 {
@@ -12,5 +13,8 @@ namespace leaveApplication2.Services
         Task<LeaveAllocation> DeleteLeaveAllocationAsync(int leaveAlloctionId);
         Task<LeaveAllocation> UpdateLeaveAllocationAsync(int leaveAlloctionId);
         Task<IReadOnlyCollection<LeaveAllocation>> CreateLeaveAllocationForAllLeaveTypes(FinancialYear financialYear, Dictionary<int, int> leaveTypeCounts);
+
+        Task<LeaveAllocation> GetLeaveAllocationAsync(Expression<Func<LeaveAllocation, bool>> filter);
     }
+       
 }
