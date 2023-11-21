@@ -1,6 +1,7 @@
 ﻿using leaveApplication2.Models;
 using leaveApplication2.Models.leaveApplication2.Models;
 using leaveApplication2.Repostories;
+using System.Linq.Expressions;
 
 namespace leaveApplication2.Services
 {
@@ -21,10 +22,12 @@ namespace leaveApplication2.Services
             return await _leaveAllocationRepository.GetLeaveAllocationsAsync();
         }
 
-        Task<LeaveAllocation> ILeaveAllocationService.GetLeaveAllocationAsync(long id)
+       public async Task<LeaveAllocation> GetLeaveAllocationAsync(Expression<Func<LeaveAllocation, bool>> filter)
         {
-            throw new NotImplementedException();
+            return await _leaveAllocationRepository.GetLeaveAllocationAsync(filter);
         }
+
+
 
 
 
@@ -94,7 +97,12 @@ namespace leaveApplication2.Services
 
         }
 
+        public async Task<LeaveAllocation> GetLeaveAllocationAsync(long id)
+        {
+            var leaveAllocations = await _leaveAllocationRepository.GetLeaveAllocationAsync(id);
 
+            return leaveAllocations;
+        }
     }
 
 }
