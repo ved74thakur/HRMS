@@ -79,16 +79,20 @@ namespace leaveApplication2.Repostories
 
             return existingFinancialYear;
         }
-        public async Task<IEnumerable<FinancialYear>> GetActiveFinancialYearsAsync(Expression<Func<FinancialYear, bool>> filter)
+        public async Task<IReadOnlyCollection<FinancialYear>> GetFinancialYearsAsync(Expression<Func<FinancialYear, bool>> filter)
         {
             return await _context.FinancialYears.Where(filter).ToListAsync();
         }
 
+        //public async Task<IReadOnlyCollection<FinancialYear>> GetFinancialYearsAsync(Expression<Func<FinancialYear, bool>> filter)
+        //{
+        //    return await _context.FinancialYears.AsNoTracking().Where(filter).ToListAsync();
+        //}
 
-
-
-
-        //update financial year 
+        public async Task<FinancialYear> GetFinancialYearByIdAsync(Expression<Func<FinancialYear, bool>> filter)
+        {
+            return await _context.FinancialYears.AsNoTracking().Where(filter).FirstOrDefaultAsync(); 
+        }
 
     }
 }

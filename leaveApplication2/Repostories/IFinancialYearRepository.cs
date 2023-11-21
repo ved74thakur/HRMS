@@ -6,13 +6,16 @@ namespace leaveApplication2.Repostories
     public interface IFinancialYearRepository
     {
         Task<IReadOnlyCollection<FinancialYear>> GetFinancialYearsAsync();
+        Task<IReadOnlyCollection<FinancialYear>> GetFinancialYearsAsync(Expression<Func<FinancialYear, bool>> filter);
+
         Task<FinancialYear> CreateFinancialYearAsync(FinancialYear financialYear);
 
         Task<FinancialYear> GetFinancialYearByIdAsync(int id);
+        Task<FinancialYear> GetFinancialYearByIdAsync(Expression<Func<FinancialYear, bool>> filter);
         Task<FinancialYear> DeleteFinancialYearAsync(int financialYearId);
 
         Task<FinancialYear> UpdateFinancialYearAsync(int financialYearId);
 
-        Task<IEnumerable<FinancialYear>> GetActiveFinancialYearsAsync(Expression<Func<FinancialYear, bool>> filter);
+       
     }
 }
