@@ -362,8 +362,6 @@ namespace leaveApplication2.Services
 
 
 
-<<<<<<< HEAD
-             
 
                 Expression<Func<FinancialYear, bool>> filterActiveYear = x =>
                      x.ActiveYear == true;
