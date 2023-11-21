@@ -72,17 +72,25 @@ namespace leaveApplication2.Repostories
         public async Task<AppliedLeave> GetAppliedLeaveByIdAsync(long id)
         {
             //  var singleLeave = await _context.AppliedLeaves.Include(e=>e.LeaveStatus).AsNoTracking().FindAsync(id);
-
-            var singleLeave = await _context.AppliedLeaves
-                .Include(e => e.LeaveStatus)
-                .AsNoTracking()
-                .SingleOrDefaultAsync(e => e.appliedLeaveTypeId == id);
-
-            if (singleLeave == null)
+            try
             {
-                return null;
+
+                var singleLeave = await _context.AppliedLeaves
+                    .Include(e => e.LeaveStatus)
+                    .Include(e => e.Employee)
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync(e => e.appliedLeaveTypeId == id);
+
+
+                _context.Entry(singleLeave.Employee).State = EntityState.Detached;
+
+                return singleLeave;
             }
-            return singleLeave;
+            catch (Exception)
+            {
+
+                throw;
+            }
 
         }
         
@@ -111,12 +119,34 @@ namespace leaveApplication2.Repostories
         {
             try
             {
-                _context.AppliedLeaves.Update(leave);
+                // _context.Entry(leave.Employee).State = EntityState.Detached;
+                //// Attach the employee entity if it's not already attached
+                //if (leave.Employee != null && _context.Entry(leave.Employee).State == EntityState.Detached)
+                //{
+                //    _context.Entry(leave.Employee).State = EntityState.Detached;
+
+                //}
+
+                //if (leave != null && _context.Entry(leave).State == EntityState.Detached)
+                //{
+                //    _context.Entry(leave).State = EntityState.Detached;
+
+                //}
+                _context.Entry(leave.Employee).State = EntityState.Detached;
+                _context.Update(leave); // Use Update directly without detaching
+
                 await _context.SaveChangesAsync();
+
+                if (leave.Employee != null && _context.Entry(leave.Employee).State == EntityState.Detached)
+                {
+                    _context.Entry(leave.Employee).State = EntityState.Detached;
+                 
+                }
                 return leave;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
+<<<<<<< HEAD
                 /*Test*/
                 // Handle the exception here, you can log it or take appropriate action
                 // For example, you can rethrow the exception, return a default value, or handle it gracefully
@@ -124,6 +154,10 @@ namespace leaveApplication2.Repostories
                 // Example: _logger.LogError(ex, "An error occurred while updating the applied leave.");
 
                 throw; // Rethrow the exception to propagate it up the call stack
+=======
+                // Handle the exception here
+                throw;
+>>>>>>> d35878c28407bdff19e4a5bb4d5eb08559d39df9
             }
         }
 

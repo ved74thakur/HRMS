@@ -14,17 +14,30 @@ namespace leaveApplication2.Services
         private readonly IEmployeeRepository  _employeeRepository;
         private readonly GenericEmail _genericEmail;
         private readonly IConfiguration _configuration;
+<<<<<<< HEAD
         private readonly IFinancialYearRepository _financialYearRepository;
         private readonly ILeaveAllocationRepository _leaveAllocationRepository;
 
 
         public EmailService(IEmployeeRepository employeeRepository, GenericEmail genericEmail, IConfiguration configuration, IFinancialYearRepository financialYearRepository, ILeaveAllocationRepository leaveAllocationRepository)
+=======
+        private readonly IFinancialYearService _financialYearService;
+        private readonly ILeaveAllocationService _leaveAllocationService;
+
+
+        public EmailService(IEmployeeService employeeService, GenericEmail genericEmail, IConfiguration configuration, IFinancialYearService financialYearService, ILeaveAllocationService leaveAllocationService)
+>>>>>>> d35878c28407bdff19e4a5bb4d5eb08559d39df9
         {
             _employeeRepository = employeeRepository;
             _genericEmail = genericEmail;
             _configuration = configuration;
+<<<<<<< HEAD
             _financialYearRepository = financialYearRepository;
             _leaveAllocationRepository = leaveAllocationRepository;
+=======
+            _financialYearService = financialYearService;
+            _leaveAllocationService = leaveAllocationService;
+>>>>>>> d35878c28407bdff19e4a5bb4d5eb08559d39df9
         }
 
         public async Task SendLeaveApprovalEmail(AppliedLeave newAppliedLeave)
@@ -39,7 +52,12 @@ namespace leaveApplication2.Services
 
             var WebsiteURL = _configuration["BaseURL:WebsiteURL"];
 
+            //add leaveAllocation Year dynamically
+            // Expression<Func<FinancialYear, bool>> financialYearFilter = la => la.ActiveYear == true;
+            // var activeFinancialYear = await _financialYearService.GetActiveFinancialYearsAsync(financialYearFilter);
+            // var financialYearId = activeFinancialYear.First().financialYearId;
 
+<<<<<<< HEAD
             Expression<Func<FinancialYear, bool>> filterActiveYear = x =>
                  x.ActiveYear == true;
             var activeFinalYear = await _financialYearRepository.GetFinancialYearByIdAsync(filterActiveYear);
@@ -50,6 +68,21 @@ namespace leaveApplication2.Services
             var allocationFinalYear = await _leaveAllocationRepository.GetLeaveAllocationAsync(filterAllocationYear);
 
 
+=======
+            //  //Expression<Func<LeaveAllocation, bool>> filter = la => la.financialYearId == financialYearId;
+            //var leaveAllocation = await _leaveAllocationService.GetLeaveAllocationAsync(filter);
+
+            var approveEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "APR" + "|" +11);
+            var rejectEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "REJ" + "|" + 11);
+
+//#if (DEBUG)
+//            //  var approveEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "APR" + "|" + leaveAllocation.leaveAllocationId);
+//            //var rejectEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "REJ" + "|" + leaveAllocation.leaveAllocationId);
+//#elif (RELEASE)
+//            var approveEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "APR" + "|" + leaveAllocation.leaveAllocationId);
+//            var rejectEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "REJ" + "|" + leaveAllocation.leaveAllocationId);
+//#endif
+>>>>>>> d35878c28407bdff19e4a5bb4d5eb08559d39df9
 
             var approveEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "APR" + "|" + allocationFinalYear.leaveAllocationId);
             var rejectEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "REJ" + "|" +  allocationFinalYear.leaveAllocationId);

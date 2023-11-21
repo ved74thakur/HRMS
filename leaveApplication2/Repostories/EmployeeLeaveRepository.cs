@@ -11,11 +11,11 @@ namespace leaveApplication2.Repostories
     public class EmployeeLeaveRepository : IEmployeeLeaveRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly IEmailService  _emailService;
-        public EmployeeLeaveRepository(ApplicationDbContext context, IEmailService emailService)
+       // private readonly IEmailService  _emailService;
+        public EmployeeLeaveRepository(ApplicationDbContext context)
         {
             _context = context;
-            _emailService = emailService;
+           // _emailService = emailService;
 
         }
         public async Task<IReadOnlyCollection<EmployeeLeave>> GetAllEmployeesLeaveAsync()
@@ -65,14 +65,33 @@ namespace leaveApplication2.Repostories
 
         }
         public async Task<EmployeeLeave> UpdateEmployeeLeaveAsync(EmployeeLeave employeeLeave)
-
         {
 
+            try
+            {
+                if (employeeLeave != null && _context.Entry(employeeLeave).State == EntityState.Detached)
+                {
+                    _context.Entry(employeeLeave).State = EntityState.Detached;
+                    //   _context.Attach(employeeLeave);
+                }
 
-            _context.EmployeeLeaves.Update(employeeLeave);
-            await _context.SaveChangesAsync();
-            return employeeLeave;
+                _context.EmployeeLeaves.Update(employeeLeave);
 
+                await _context.SaveChangesAsync();
+
+
+                _context.Entry(employeeLeave.Employee).State = EntityState.Detached;
+
+
+
+                return employeeLeave;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public async Task<EmployeeLeave> SetEmployeeLeaveToFalseAsync(long id)
@@ -111,11 +130,15 @@ namespace leaveApplication2.Repostories
         {
             try
             {
-                return await _context.EmployeeLeaves.Include(e => e.Employee).Include(e => e.LeaveType).Include(e => e.LeaveAllocation).FirstOrDefaultAsync(filter);
+                var employeeLeave  =  await _context.EmployeeLeaves.AsNoTracking().Include(e => e.Employee).Include(e => e.LeaveType).Include(e => e.LeaveAllocation).FirstOrDefaultAsync(filter);
+
+
+                _context.Entry(employeeLeave.Employee).State = EntityState.Detached;
+                return employeeLeave;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.Message, "GetEmployeeLeaveAsync");
+               // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.Message, "GetEmployeeLeaveAsync");
                 throw;
             }
         }
