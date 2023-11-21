@@ -67,23 +67,31 @@ namespace leaveApplication2.Repostories
         public async Task<EmployeeLeave> UpdateEmployeeLeaveAsync(EmployeeLeave employeeLeave)
         {
 
-            if (employeeLeave != null && _context.Entry(employeeLeave).State == EntityState.Detached)
+            try
             {
+                if (employeeLeave != null && _context.Entry(employeeLeave).State == EntityState.Detached)
+                {
+                    _context.Entry(employeeLeave).State = EntityState.Detached;
+                    //   _context.Attach(employeeLeave);
+                }
+
+                _context.EmployeeLeaves.Update(employeeLeave);
+
+                await _context.SaveChangesAsync();
+
+
                 _context.Entry(employeeLeave.Employee).State = EntityState.Detached;
-             //   _context.Attach(employeeLeave);
+
+
+
+                return employeeLeave;
+
             }
+            catch (Exception)
+            {
 
-            _context.EmployeeLeaves.Update(employeeLeave);
-           
-            await _context.SaveChangesAsync();
-
-           
-          _context.Entry(employeeLeave.Employee).State = EntityState.Detached;
-              
-            
-
-            return employeeLeave;
-
+                throw;
+            }
         }
 
         public async Task<EmployeeLeave> SetEmployeeLeaveToFalseAsync(long id)
@@ -128,7 +136,7 @@ namespace leaveApplication2.Repostories
                 _context.Entry(employeeLeave.Employee).State = EntityState.Detached;
                 return employeeLeave;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.Message, "GetEmployeeLeaveAsync");
                 throw;

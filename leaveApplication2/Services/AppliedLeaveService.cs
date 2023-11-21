@@ -358,39 +358,11 @@ namespace leaveApplication2.Services
                   x.employeeId == existingLeave.employeeId &&
                   x.leaveTypeId == existingLeave.leaveTypeId &&
                   x.leaveAllocationId == appliedLeaveUpdateStatus.leaveAllocationId;
-
-
-                //Expression<Func<EmployeeLeave, bool>> filter = x =>
-                //  x.employeeId == 38 &&
-                //  x.leaveTypeId == 2 &&
-                //  x.leaveAllocationId == 11;
-
-
-
-
-
-
-                // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "9", "9");
-                EmployeeLeave employeeLeave = null;
-                try
-                {
-                   // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "10", "10");
-                    /*Update leave */
-                    employeeLeave = await _employeeLeaveRepository.GetEmployeeLeaveAsync(filter);
-                    /*End Update Leave*/
-                    //await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", employeeLeave.balanceLeaves + " "+ employeeLeave.consumedLeaves, "11");
-                }
-                catch (Exception ex)
-                {
-                  await   _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.Message, "GetEmployeeLeaveAsync");
-                    throw;
-                }
-
-
-
-
-
-               // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "12", "12");
+                 
+                  var  employeeLeave = await _employeeLeaveRepository.GetEmployeeLeaveAsync(filter);
+                        
+              
+               
                 if (appliedLeaveUpdateStatus.statusCode == "APR")
                 {
                    // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "13", "13");
@@ -422,9 +394,9 @@ namespace leaveApplication2.Services
 
                 try
                 {
-                  //  await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "19", "19");
+                    
                   var  applyLeaveUpdate = await _leaveRepository.UpdateAppliedLeaveAsync(existingLeave);
-                 //   await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "20", "20");
+                    
 
                     return applyLeaveUpdate;
                 }
@@ -434,11 +406,12 @@ namespace leaveApplication2.Services
                     throw;
                 }
 
-              
+
             }
             catch (Exception ex)
             {
-                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.Message, "AppliedLeaveUpdateStatusAsync");
+                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.Message, " Test- AppliedLeaveUpdateStatusAsync");
+                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.InnerException.ToString(), "Test- AppliedLeaveUpdateStatusAsync");
                 throw;
             }
         }

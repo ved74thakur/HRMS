@@ -72,17 +72,25 @@ namespace leaveApplication2.Repostories
         public async Task<AppliedLeave> GetAppliedLeaveByIdAsync(long id)
         {
             //  var singleLeave = await _context.AppliedLeaves.Include(e=>e.LeaveStatus).AsNoTracking().FindAsync(id);
+            try
+            {
 
-            var singleLeave = await _context.AppliedLeaves
-                .Include(e => e.LeaveStatus)
-                .Include(e => e.Employee)
-                .AsNoTracking()
-                .SingleOrDefaultAsync(e => e.appliedLeaveTypeId == id);
+                var singleLeave = await _context.AppliedLeaves
+                    .Include(e => e.LeaveStatus)
+                    .Include(e => e.Employee)
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync(e => e.appliedLeaveTypeId == id);
 
 
-            _context.Entry(singleLeave.Employee).State = EntityState.Detached;
-           
-            return singleLeave;
+                _context.Entry(singleLeave.Employee).State = EntityState.Detached;
+
+                return singleLeave;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
 
         }
         
@@ -124,7 +132,6 @@ namespace leaveApplication2.Repostories
                 //    _context.Entry(leave).State = EntityState.Detached;
 
                 //}
-                //comment
                 _context.Entry(leave.Employee).State = EntityState.Detached;
                 _context.Update(leave); // Use Update directly without detaching
 
@@ -137,7 +144,7 @@ namespace leaveApplication2.Repostories
                 }
                 return leave;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Handle the exception here
                 throw;
