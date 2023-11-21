@@ -357,7 +357,7 @@ namespace leaveApplication2.Services
                 Expression<Func<EmployeeLeave, bool>> filter = x =>
                   x.employeeId == existingLeave.employeeId &&
                   x.leaveTypeId == existingLeave.leaveTypeId &&
-                  x.leaveAllocationId == appliedLeaveUpdateStatus.leaveAllocationId;
+                  x.leaveAllocationId == 11;
                  
                   var  employeeLeave = await _employeeLeaveRepository.GetEmployeeLeaveAsync(filter);
                         
@@ -390,25 +390,17 @@ namespace leaveApplication2.Services
                 existingLeave.LeaveStatus = leaveStatus;
 
 
-                try
-                {
-                    
-                  var  applyLeaveUpdate = await _leaveRepository.UpdateAppliedLeaveAsync(existingLeave);
-                    
+                var applyLeaveUpdate = await _leaveRepository.UpdateAppliedLeaveAsync(existingLeave);
 
-                    return applyLeaveUpdate;
-                }
-                catch (Exception ex)
-                {
-                  
-                    throw;
-                }
 
-              
+                return applyLeaveUpdate;
+
+
             }
             catch (Exception ex)
             {
-                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.Message, "AppliedLeaveUpdateStatusAsync");
+                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.Message, " Test- AppliedLeaveUpdateStatusAsync");
+                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.InnerException.ToString(), "Test- AppliedLeaveUpdateStatusAsync");
                 throw;
             }
         }
