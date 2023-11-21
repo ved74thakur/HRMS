@@ -102,7 +102,7 @@ namespace leaveApplication2.Repostories
             singleLeave.balanceLeave = leave.balanceLeave;
             singleLeave.IsHalfDay = leave.IsHalfDay;
 
-
+            _context.AppliedLeaves.Update(singleLeave);
             await _context.SaveChangesAsync();
             return singleLeave;
 
