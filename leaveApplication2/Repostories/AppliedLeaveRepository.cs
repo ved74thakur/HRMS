@@ -146,7 +146,7 @@ namespace leaveApplication2.Repostories
             }
             catch (Exception)
             {
-<<<<<<< HEAD
+
                 /*Test*/
                 // Handle the exception here, you can log it or take appropriate action
                 // For example, you can rethrow the exception, return a default value, or handle it gracefully
@@ -154,10 +154,10 @@ namespace leaveApplication2.Repostories
                 // Example: _logger.LogError(ex, "An error occurred while updating the applied leave.");
 
                 throw; // Rethrow the exception to propagate it up the call stack
-=======
+
                 // Handle the exception here
                 throw;
->>>>>>> d35878c28407bdff19e4a5bb4d5eb08559d39df9
+
             }
         }
 

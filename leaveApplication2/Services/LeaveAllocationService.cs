@@ -22,15 +22,15 @@ namespace leaveApplication2.Services
             return await _leaveAllocationRepository.GetLeaveAllocationsAsync();
         }
 
-       public async Task<LeaveAllocation> GetLeaveAllocationAsync(Expression<Func<LeaveAllocation, bool>> filter)
-        {
-<<<<<<< HEAD
-            return await _leaveAllocationRepository.GetLeaveAllocationAsync(filter);
-=======
+       //public async Task<LeaveAllocation> GetLeaveAllocationAsync(Expression<Func<LeaveAllocation, bool>> filter)
+       // {
 
-            throw new NotImplementedException();
->>>>>>> d35878c28407bdff19e4a5bb4d5eb08559d39df9
-        }
+       //     return await _leaveAllocationRepository.GetLeaveAllocationAsync(filter);
+
+
+       //     throw new NotImplementedException();
+
+       // }
 
         public async Task<LeaveAllocation> GetLeaveAllocationAsync(Expression<Func<LeaveAllocation, bool>> filter) 
         {
