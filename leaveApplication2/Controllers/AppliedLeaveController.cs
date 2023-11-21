@@ -502,8 +502,8 @@ namespace leaveApplication2.Controllers
             try
             {
                 
-
                 var updatedLeave = await _leaveService.AppliedLeaveUpdateStatusAsync(appliedLeaveUpdateStatus);
+                
                 if (updatedLeave == null)
                 {
                     // Leave not found
@@ -512,13 +512,33 @@ namespace leaveApplication2.Controllers
 
                 // Successful deletion
                 _logger.LogInformation($"End DeleteAppliedLeave");
-                await _emailService.SendLeaveApprovedEmail(updatedLeave);
-                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Approved");
-                // add approved email
+                //leave cancel status
+
+                switch (updatedLeave.LeaveStatus.LeaveStatusCode)
+                {
+                    //for rejecting
+                    case "REJ":
+                        await _emailService.SendLeaveRejectedEmail(updatedLeave);
+                        return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Rejected");
+                        break;
+                    case "APR":
+                        await _emailService.SendLeaveApprovedEmail(updatedLeave);
+                        return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Approved");
+                        break;
+                    case "CAR":
+                        await _emailService.SendCancelRequestEmail(updatedLeave);
+                        return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Cancel Request sent");
+                        break;
+                    default:
+                        break;
+
+                }
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave status updated successfully");
+
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while deleting the applied leave");
+                _logger.LogError(ex, "An error occurred while updating leave Status");
                 return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
 
@@ -542,10 +562,31 @@ namespace leaveApplication2.Controllers
 
 
                 var updatedLeave = await _leaveService.AppliedLeaveUpdateStatusAsync(appliedLeaveUpdateStatus);
+                
+          
                 if (updatedLeave == null)
                 {
                     // Leave not found
                     return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Leave not found.");
+                }
+                switch (updatedLeave.LeaveStatus.LeaveStatusCode)
+                {
+                    //for rejecting
+                    case "REJ":
+                        await _emailService.SendLeaveRejectedEmail(updatedLeave);
+                        return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Rejected");
+                        break;
+                    case "APR":
+                        await _emailService.SendLeaveApprovedEmail(updatedLeave);
+                        return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Approved");
+                        break;
+                    case "CAR":
+                        await _emailService.SendCancelRequestEmail(updatedLeave);
+                        return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Cancel Request sent");
+                        break;  
+                    default:
+                        break;
+
                 }
 
                 // Successful deletion
