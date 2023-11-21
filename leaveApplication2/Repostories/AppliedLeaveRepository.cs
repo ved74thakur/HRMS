@@ -124,7 +124,7 @@ namespace leaveApplication2.Repostories
                 //    _context.Entry(leave).State = EntityState.Detached;
 
                 //}
-
+                //comment
                 _context.Update(leave); // Use Update directly without detaching
 
                 await _context.SaveChangesAsync();
