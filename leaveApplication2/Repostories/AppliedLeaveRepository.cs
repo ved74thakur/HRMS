@@ -114,6 +114,7 @@ namespace leaveApplication2.Repostories
             {
                 _context.AppliedLeaves.Update(leave);
                 await _context.SaveChangesAsync();
+                _context.Entry(leave.Employee).State = EntityState.Detached;
                 return leave;
             }
             catch (Exception ex)
