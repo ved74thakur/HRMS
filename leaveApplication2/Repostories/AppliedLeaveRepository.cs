@@ -111,7 +111,7 @@ namespace leaveApplication2.Repostories
         {
             try
             {
-               // _context.Entry(leave.Employee).State = EntityState.Detached;
+                // _context.Entry(leave.Employee).State = EntityState.Detached;
                 //// Attach the employee entity if it's not already attached
                 //if (leave.Employee != null && _context.Entry(leave.Employee).State == EntityState.Detached)
                 //{
@@ -125,6 +125,7 @@ namespace leaveApplication2.Repostories
 
                 //}
                 //comment
+                _context.Entry(leave.Employee).State = EntityState.Detached;
                 _context.Update(leave); // Use Update directly without detaching
 
                 await _context.SaveChangesAsync();

@@ -422,9 +422,9 @@ namespace leaveApplication2.Services
 
                 try
                 {
-                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "19", "19");
+                  //  await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "19", "19");
                   var  applyLeaveUpdate = await _leaveRepository.UpdateAppliedLeaveAsync(existingLeave);
-                    await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "20", "20");
+                 //   await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", "20", "20");
 
                     return applyLeaveUpdate;
                 }

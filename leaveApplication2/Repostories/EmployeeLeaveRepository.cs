@@ -69,7 +69,7 @@ namespace leaveApplication2.Repostories
 
             if (employeeLeave != null && _context.Entry(employeeLeave).State == EntityState.Detached)
             {
-                _context.Entry(employeeLeave).State = EntityState.Detached;
+                _context.Entry(employeeLeave.Employee).State = EntityState.Detached;
              //   _context.Attach(employeeLeave);
             }
 
@@ -122,7 +122,11 @@ namespace leaveApplication2.Repostories
         {
             try
             {
-                return await _context.EmployeeLeaves.Include(e => e.Employee).Include(e => e.LeaveType).Include(e => e.LeaveAllocation).FirstOrDefaultAsync(filter);
+                var employeeLeave  =  await _context.EmployeeLeaves.AsNoTracking().Include(e => e.Employee).Include(e => e.LeaveType).Include(e => e.LeaveAllocation).FirstOrDefaultAsync(filter);
+
+
+                _context.Entry(employeeLeave.Employee).State = EntityState.Detached;
+                return employeeLeave;
             }
             catch (Exception ex)
             {
