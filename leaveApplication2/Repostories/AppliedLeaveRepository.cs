@@ -79,10 +79,9 @@ namespace leaveApplication2.Repostories
                 .AsNoTracking()
                 .SingleOrDefaultAsync(e => e.appliedLeaveTypeId == id);
 
-            if (singleLeave == null)
-            {
-                return null;
-            }
+
+            _context.Entry(singleLeave.Employee).State = EntityState.Detached;
+           
             return singleLeave;
 
         }
@@ -112,23 +111,35 @@ namespace leaveApplication2.Repostories
         {
             try
             {
-                _context.AppliedLeaves.Update(leave);
-                //attach the employee entity if it's not already attaced
-                if(leave.Employee != null && _context.Entry(leave.Employee).State == EntityState.Detached)
-                {
-                    _context.Attach(leave.Employee);
-                }
+               // _context.Entry(leave.Employee).State = EntityState.Detached;
+                //// Attach the employee entity if it's not already attached
+                //if (leave.Employee != null && _context.Entry(leave.Employee).State == EntityState.Detached)
+                //{
+                //    _context.Entry(leave.Employee).State = EntityState.Detached;
+
+                //}
+
+                //if (leave != null && _context.Entry(leave).State == EntityState.Detached)
+                //{
+                //    _context.Entry(leave).State = EntityState.Detached;
+
+                //}
+
+                _context.Update(leave); // Use Update directly without detaching
+
                 await _context.SaveChangesAsync();
+
+                if (leave.Employee != null && _context.Entry(leave.Employee).State == EntityState.Detached)
+                {
+                    _context.Entry(leave.Employee).State = EntityState.Detached;
+                 
+                }
                 return leave;
             }
             catch (Exception ex)
             {
-                // Handle the exception here, you can log it or take appropriate action
-                // For example, you can rethrow the exception, return a default value, or handle it gracefully
-                // Logging the exception is a good practice to help with debugging
-                // Example: _logger.LogError(ex, "An error occurred while updating the applied leave.");
-
-                throw; // Rethrow the exception to propagate it up the call stack
+                // Handle the exception here
+                throw;
             }
         }
 

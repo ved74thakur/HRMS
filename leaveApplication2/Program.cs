@@ -7,7 +7,9 @@ using leaveApplication2.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Text;
 
 internal class Program
@@ -21,8 +23,18 @@ internal class Program
 
         //Add services to the container
         builder.Services.AddControllersWithViews();
+        //builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        //    options.UseNpgsql(connectionString);
+        //    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        //    );
+
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(connectionString));
+        {
+            options.UseNpgsql(connectionString);
+            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        });
+
+
         //builder.Services.Configure<SmtpSettings>(smtpSettings);
         builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         builder.Services.AddScoped<IEmployeeService, EmployeeService>();

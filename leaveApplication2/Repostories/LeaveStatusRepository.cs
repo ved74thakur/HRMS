@@ -18,7 +18,7 @@ namespace leaveApplication2.Repostories
         {
             try
             {
-                var leaveStatus = await _context.LeaveStatuses.Where(filter).FirstOrDefaultAsync();
+                var leaveStatus = await _context.LeaveStatuses.AsNoTracking().Where(filter).FirstOrDefaultAsync();
 
                 return leaveStatus;
             }
