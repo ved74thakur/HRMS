@@ -65,13 +65,23 @@ namespace leaveApplication2.Repostories
 
         }
         public async Task<EmployeeLeave> UpdateEmployeeLeaveAsync(EmployeeLeave employeeLeave)
-
         {
 
+            if (employeeLeave != null && _context.Entry(employeeLeave).State == EntityState.Detached)
+            {
+                _context.Entry(employeeLeave).State = EntityState.Detached;
+             //   _context.Attach(employeeLeave);
+            }
 
             _context.EmployeeLeaves.Update(employeeLeave);
+           
             await _context.SaveChangesAsync();
-            _context.Entry(employeeLeave.Employee).State = EntityState.Detached;
+
+           
+          _context.Entry(employeeLeave.Employee).State = EntityState.Detached;
+              
+            
+
             return employeeLeave;
 
         }
@@ -112,7 +122,7 @@ namespace leaveApplication2.Repostories
         {
             try
             {
-                return await _context.EmployeeLeaves.AsNoTracking().Include(e => e.Employee).Include(e => e.LeaveType).Include(e => e.LeaveAllocation).FirstOrDefaultAsync(filter);
+                return await _context.EmployeeLeaves.Include(e => e.Employee).Include(e => e.LeaveType).Include(e => e.LeaveAllocation).FirstOrDefaultAsync(filter);
             }
             catch (Exception ex)
             {
