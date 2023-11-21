@@ -46,8 +46,8 @@ namespace leaveApplication2.Services
             //  //Expression<Func<LeaveAllocation, bool>> filter = la => la.financialYearId == financialYearId;
             //var leaveAllocation = await _leaveAllocationService.GetLeaveAllocationAsync(filter);
 
-            var approveEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "APR" + "|" +11);
-            var rejectEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "REJ" + "|" + 11);
+            var approveEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "APR" + "|" +14);
+            var rejectEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "REJ" + "|" + 14);
 
 //#if (DEBUG)
 //            //  var approveEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "APR" + "|" + leaveAllocation.leaveAllocationId);
@@ -83,21 +83,79 @@ namespace leaveApplication2.Services
             await _genericEmail.SendEmailAsync(reportingEmployee.emailAddress, "Leave Approval" + System.DateTime.Now, body);
         }
 
-        public async Task SendLeaveApprovedEmail(AppliedLeave approvedLeave)
+        public async Task SendLeaveApprovedEmail(AppliedLeave newAppliedLeave)
         {
-            var employee = await _employeeService.GetEmployeeByIdAsync(approvedLeave.employeeId);
-            var body = $"<p>Your leave request has been approved for the period: {approvedLeave.StartDate} to {approvedLeave.EndDate}.</p>";
+            var employee = await _employeeService.GetEmployeeByIdAsync(newAppliedLeave.employeeId);
+            
+            var body = "";
 
-            await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Approved", body);
+            body += $"<p>Employee: {employee.firstName} {employee.lastName}</p>";
+            body += $"<p>Leave Type :{newAppliedLeave.LeaveReason}</p>";
+            body += $"<p>Applied from :{newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}</p>";
+            body = $"<p>Your leave request has been approved for the period: {newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}.</p>";
+
+
+            await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Approved" + System.DateTime.Now, body);
+
         }
 
-        public async Task SendLeaveRejectedEmail(AppliedLeave rejectedLeave)
+        public async Task SendLeaveRejectedEmail(AppliedLeave newAppliedLeave)
         {
-            var employee = await _employeeService.GetEmployeeByIdAsync(rejectedLeave.employeeId);
-            var body = $"<p>Your leave request for the period: {rejectedLeave.StartDate} to {rejectedLeave.EndDate} has been rejected.</p>";
+            var employee = await _employeeService.GetEmployeeByIdAsync(newAppliedLeave.employeeId);
+          
+            var body = "";
 
-            await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Rejected", body);
+            body += $"<p>Employee: {employee.firstName} {employee.lastName}</p>";
+            body += $"<p>Leave Type :{newAppliedLeave.LeaveReason}</p>";
+            body += $"<p>Applied from :{newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}</p>";
+            body = $"<p>Your leave request has been rejected for the period: {newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}.</p>";
+
+
+            await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Rejected" + System.DateTime.Now, body);
+           
         }
+        //two more button for approving or cancel request
+        public async Task SendCancelRequestEmail(AppliedLeave newAppliedLeave)
+        {
+            var employee = await _employeeService.GetEmployeeByIdAsync(newAppliedLeave.employeeId);
+            var reportingPersonId = employee.ReportingPersonId ?? 0;
+            var reportingEmployee = await _employeeService.GetEmployeeByIdAsync(reportingPersonId);
+            var WebsiteURL = _configuration["BaseURL:WebsiteURL"];
+            var approveCancelEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "APC" + "|" + 14);
+            var rejectRejectEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "REC" + "|" + 14);
+            var body = "";
+
+            body += $"<p>Employee: {employee.firstName} {employee.lastName} has requested for Leave Cancel Request </p>";
+            body += $"<p>Leave Type :{newAppliedLeave.LeaveReason}</p>";
+            body += $"<p>Applied from :{newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}</p>";
+            await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Cancel" + System.DateTime.Now, body);
+
+            body += "<p>Please click one of the following buttons to approve or reject leave cancel request:</p>";
+            body += $"<a href='{WebsiteURL}/appliedleavestatus/{approveCancelEncryption}' style='display: inline-block; background-color: green; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Approve</a>";
+            body += $"<a href='{WebsiteURL}/appliedleavestatus/{rejectRejectEncryption}' style='display: inline-block; background-color: red; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reject</a>";
+
+
+
+            await _genericEmail.SendEmailAsync(reportingEmployee.emailAddress, "Leave Cancel Request" + System.DateTime.Now, body);
+        }
+
+
+        public async Task SendDeleteEmail(AppliedLeave newAppliedLeave)
+        {
+            var employee = await _employeeService.GetEmployeeByIdAsync(newAppliedLeave.employeeId);
+            var body = "";
+
+            body += $"<p>Employee: {employee.firstName} {employee.lastName}</p>";
+            body += $"<p>Leave Type :{newAppliedLeave.LeaveReason}</p>";
+            body += $"<p>Applied from :{newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}</p>";
+            body = $"<p>Your leave request has been deleted for the period: {newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}.</p>";
+
+
+            await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Deleted" + System.DateTime.Now, body);
+
+        }
+
+      
         public async Task SendEmployeeCreatedEmail(Employee employee)
         {
             
@@ -127,5 +185,7 @@ namespace leaveApplication2.Services
             subject = "Error " + " | " + subject + " | "+ System.DateTime.Now;
             await _genericEmail.SendEmailAsync(email, subject, body);
         }
+
+   
     }
 }

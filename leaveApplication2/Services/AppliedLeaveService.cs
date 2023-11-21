@@ -357,7 +357,7 @@ namespace leaveApplication2.Services
                 Expression<Func<EmployeeLeave, bool>> filter = x =>
                   x.employeeId == existingLeave.employeeId &&
                   x.leaveTypeId == existingLeave.leaveTypeId &&
-                  x.leaveAllocationId == 11;
+                  x.leaveAllocationId == 14;
                  
                   var  employeeLeave = await _employeeLeaveRepository.GetEmployeeLeaveAsync(filter);
                         
