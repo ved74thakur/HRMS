@@ -413,7 +413,7 @@ namespace leaveApplication2.Services
             }
             catch (Exception ex)
             {
-                await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.Message, "AppliedLeaveUpdateStatusAsync");
+                //await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.Message, "AppliedLeaveUpdateStatusAsync");
                 throw;
             }
         }
