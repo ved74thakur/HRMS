@@ -162,7 +162,7 @@ namespace leaveApplication2.Services
             body += $"<p>Please reset your password to successfully login into system.</p>";
             body += $"<a href='{WebsiteURL}/updatepassword/{employee.employeeId}' style='display: inline-block; background-color: blue: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reset Password</a>";
             //body += $"<a href='http://192.168.1.5:85/updatepassword/{employee.employeeId}' style='display: inline-block; background-color: blue; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reset Password</a>";
-            body += $"<p>Please click on above link to reset password</p>";
+            body += $"<p>Please click on above button to reset password</p>";
 
             await _genericEmail.SendEmailAsync(employee.emailAddress, subject, body);
         }
