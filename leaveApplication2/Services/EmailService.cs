@@ -49,24 +49,9 @@ namespace leaveApplication2.Services
 
             var allocationFinalYear = await _leaveAllocationRepository.GetLeaveAllocationAsync(filterAllocationYear);
 
-            //add leaveAllocation Year dynamically
-            // Expression<Func<FinancialYear, bool>> financialYearFilter = la => la.ActiveYear == true;
-            // var activeFinancialYear = await _financialYearService.GetActiveFinancialYearsAsync(financialYearFilter);
-            // var financialYearId = activeFinancialYear.First().financialYearId;
-
-            //  //Expression<Func<LeaveAllocation, bool>> filter = la => la.financialYearId == financialYearId;
-            //var leaveAllocation = await _leaveAllocationService.GetLeaveAllocationAsync(filter);
-
+         
             var approveEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "APR" + "|" + allocationFinalYear.leaveAllocationId);
             var rejectEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "REJ" + "|" + allocationFinalYear.leaveAllocationId);
-
-//#if (DEBUG)
-//            //  var approveEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "APR" + "|" + leaveAllocation.leaveAllocationId);
-//            //var rejectEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "REJ" + "|" + leaveAllocation.leaveAllocationId);
-//#elif (RELEASE)
-//            var approveEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "APR" + "|" + leaveAllocation.leaveAllocationId);
-//            var rejectEncryption = EncryptionHelper.Encrypt(newAppliedLeave.appliedLeaveTypeId + "|" + "REJ" + "|" + leaveAllocation.leaveAllocationId);
-//#endif
 
 
             var body = "";
@@ -117,7 +102,7 @@ namespace leaveApplication2.Services
             await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Rejected" + System.DateTime.Now, body);
            
         }
-        //two more button for approving or cancel request
+    
         public async Task SendCancelRequestEmail(AppliedLeave newAppliedLeave)
         {
             var employee = await _employeeService.GetEmployeeByIdAsync(newAppliedLeave.employeeId);

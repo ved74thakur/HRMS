@@ -17,14 +17,9 @@ namespace leaveApplication2.Repostories
         public async Task<IReadOnlyCollection<AppliedLeave>> GetAppliedLeavesAsync()
         {
             return await _context.AppliedLeaves.ToListAsync();
-            //return await _context.AppliedLeaves.Include(e => e.LeaveStatus).AsNoTracking().ToListAsync();
-            
-            //return await _context.EmployeeLeaves.Include(e => e.LeaveType).AsNoTracking().ToListAsync();
+ 
         }
-        //public async Task<IReadOnlyCollection<AppliedLeave>> GetAppliedLeavesAsync(Expression<Func<AppliedLeave, bool>> filter)
-        //{
-        //    return await _context.AppliedLeaves.Where(filter).ToListAsync();
-        //}
+      
         public async Task<IReadOnlyCollection<AppliedLeave>> GetAppliedLeavesAsync(Expression<Func<AppliedLeave, bool>> filter)
         {
             try
@@ -38,11 +33,9 @@ namespace leaveApplication2.Repostories
             }
             catch (Exception ex)
             {
-                // Handle or log the exception here
-                // You can rethrow the exception or return an empty collection, depending on your requirements
-                // For logging, you can use a logging library or simply write to the console
+           
                 Console.WriteLine($"An error occurred: {ex.Message}");
-                // You may want to rethrow the exception to let the caller know about it
+             
                 throw;
             }
         }
@@ -59,11 +52,7 @@ namespace leaveApplication2.Repostories
             }
             catch (Exception ex)
             {
-                // Handle the exception here or log it for debugging
-                // You can also throw a custom exception if needed
-                // Example: throw new CustomException("Failed to create applied leave.", ex);
-
-                // You can also rethrow the exception if you want to propagate it up the call stack
+             
                 throw;
             }
 
@@ -119,19 +108,7 @@ namespace leaveApplication2.Repostories
         {
             try
             {
-                // _context.Entry(leave.Employee).State = EntityState.Detached;
-                //// Attach the employee entity if it's not already attached
-                //if (leave.Employee != null && _context.Entry(leave.Employee).State == EntityState.Detached)
-                //{
-                //    _context.Entry(leave.Employee).State = EntityState.Detached;
-
-                //}
-
-                //if (leave != null && _context.Entry(leave).State == EntityState.Detached)
-                //{
-                //    _context.Entry(leave).State = EntityState.Detached;
-
-                //}
+        
                 _context.Entry(leave.Employee).State = EntityState.Detached;
                 _context.Update(leave); // Use Update directly without detaching
 
@@ -222,15 +199,7 @@ namespace leaveApplication2.Repostories
             }
         }
 
-    //    public async Task<IReadOnlyCollection<AppliedLeave>> GetUnApprovedAppliedLeavesAsync(AppliedLeave appliedLeave)
-    //    {
-    //        // Replace the condition with your specific criteria
-    //        var unapprovedLeaves = await _context.AppliedLeaves
-    //.Where(leave => leave.employeeId == appliedLeave.employeeId && leave.IsApproved == appliedLeave.IsApproved && leave.leaveTypeId == appliedLeave.leaveTypeId && leave.IsHalfDay == appliedLeave.IsHalfDay && leave.IsRejected == appliedLeave.IsRejected)
-    //.ToListAsync();
-
-    //        return unapprovedLeaves;
-    //    }
+   
         public async Task<IReadOnlyCollection<AppliedLeave>> GetUnApprovedAppliedLeavesAsync(AppliedLeave appliedLeave)
         {
             // Replace the condition with your specific criteria

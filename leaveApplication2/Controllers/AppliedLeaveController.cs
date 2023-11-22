@@ -597,7 +597,7 @@ namespace leaveApplication2.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while deleting the applied leave");
+                _logger.LogError(ex, "An error occurred while updating the applied leave");
                 return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
 
