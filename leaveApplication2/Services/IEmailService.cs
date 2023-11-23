@@ -4,7 +4,7 @@ namespace leaveApplication2.Services
 {
     public interface IEmailService
     {
-        Task SendLeaveApprovalEmail(AppliedLeave newAppliedLeave);
+        Task SendLeaveApprovalEmail(AppliedLeave newAppliedLeave, string mode = "Add");
         Task SendLeaveApprovedEmail(AppliedLeave newAppliedLeave);
         Task SendLeaveRejectedEmail(AppliedLeave newAppliedLeave);
         Task SendEmployeeCreatedEmail(Employee employee);
