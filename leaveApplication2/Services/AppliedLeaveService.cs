@@ -330,7 +330,11 @@ namespace leaveApplication2.Services
             {
              
                 var existingLeave = await _leaveRepository.GetAppliedLeaveByIdAsync(appliedLeaveUpdateStatus.appliedLeaveTypeId);
-            
+                
+
+
+
+
                 if (existingLeave == null)
                 {
                   
@@ -352,9 +356,20 @@ namespace leaveApplication2.Services
                     throw new CustomLeaveException("The leave is already "+ leaveStatus.LeaveStatusName,900);
                 }
 
+                if ((existingLeave.LeaveStatus.LeaveStatusCode == "APR" && appliedLeaveUpdateStatus.statusCode == "REJ") ||
+                    (existingLeave.LeaveStatus.LeaveStatusCode == "REJ" && appliedLeaveUpdateStatus.statusCode == "APR"))
+                {
+                    throw new CustomLeaveException("Leave is already " + existingLeave.LeaveStatus.LeaveStatusName);
+                }
+
+                if ((existingLeave.LeaveStatus.LeaveStatusCode == "APC" && appliedLeaveUpdateStatus.statusCode == "REC") ||
+                  (existingLeave.LeaveStatus.LeaveStatusCode == "REC" && appliedLeaveUpdateStatus.statusCode == "APC"))
+                {
+                    throw new CustomLeaveException("Leave is already " + existingLeave.LeaveStatus.LeaveStatusName);
+                }
 
 
-            
+
                 Expression<Func<FinancialYear, bool>> filterActiveYear = x =>
                      x.ActiveYear == true;
                 var activeFinalYear = await _financialYearRepository.GetFinancialYearByIdAsync(filterActiveYear);

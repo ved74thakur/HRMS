@@ -19,6 +19,8 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
         var connectionString = builder.Configuration.GetConnectionString("postgreSQLConnection");
         var secretKey = builder.Configuration.GetSection("Jwt")["Secret"];
+       
+
         //var smtpSettings = builder.Configuration.GetSection("SmtpSettings");
 
         //Add services to the container

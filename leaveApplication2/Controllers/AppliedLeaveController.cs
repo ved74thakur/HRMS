@@ -21,9 +21,10 @@ namespace leaveApplication2.Controllers
         private readonly IEmployeeService _employeeService;
         private readonly GenericEmail _genericEmail;
         private readonly ILogger<EmployeeController> _logger;
+        private readonly ILeaveStatusService _leaveStatusService;
 
         //private readonly IEmployeeLeaveService _employeeLeaveService;
-        public AppliedLeaveController(GenericEmail genericEmail,IAppliedLeaveService leaveService, ILogger<EmployeeController> logger, IEmployeeService employeeService, IEmailService emailService)
+        public AppliedLeaveController(GenericEmail genericEmail,IAppliedLeaveService leaveService, ILogger<EmployeeController> logger, IEmployeeService employeeService, IEmailService emailService, ILeaveStatusService leaveStatusService)
         {
 
             
@@ -33,6 +34,7 @@ namespace leaveApplication2.Controllers
             _employeeService = employeeService;
             _emailService = emailService;
             //_employeeLeaveService = employeeLeaveService;
+            _leaveStatusService = leaveStatusService;
 
         }
         //getAllAppliedLeave
@@ -562,9 +564,69 @@ namespace leaveApplication2.Controllers
                   );
 
 
-                var updatedLeave = await _leaveService.AppliedLeaveUpdateStatusAsync(appliedLeaveUpdateStatus);
-                
+                var leavStatus = await _leaveStatusService.GetLeaveStatusByCodeAsync(appliedLeaveUpdateStatus.statusCode);
+
+               // var updatedLeave = await _leaveService.AppliedLeaveUpdateStatusAsync(appliedLeaveUpdateStatus);
+                //var updatedLeaveStatusCode = updatedLeave.LeaveStatus.LeaveStatusCode;
           
+                //if (updatedLeave == null)
+                //{
+                //    // Leave not found
+                //    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "Leave not found.");
+                //}
+                //switch (updatedLeave.LeaveStatus.LeaveStatusCode)
+                //{
+                //    //for rejecting
+                //    case "REJ":
+                //        await _emailService.SendLeaveRejectedEmail(updatedLeave);
+                //        return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Rejected");
+                //        break;
+                //    case "APR":
+                //        await _emailService.SendLeaveApprovedEmail(updatedLeave);
+                //        return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Approved");
+                //        break;
+                //    case "CAR":
+                //        await _emailService.SendCancelRequestEmail(updatedLeave);
+                //        return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Cancel Request sent");
+                //        break;  
+                //    default:
+                //        break;
+
+                //}
+
+         
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, leavStatus.LeaveStatusName);
+                // add approved email
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating the applied leave");
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
+
+        [HttpGet("AppliedLeaveUpdateStatusByEmailConfirmAsync/{code}")]
+        public async Task<ActionResult<CommonResponse<AppliedLeave>>> AppliedLeaveUpdateStatusByEmailConfirmAsync(string code)
+        {
+
+            try
+            {
+                // var approveEncryption = EncryptionHelper.Encrypt(createdLeave.appliedLeaveTypeId + "|" + "APR" + "|" + 4);
+
+                var DecryptCode = EncryptionHelper.Decrypt(code).Split('|');
+
+
+                var appliedLeaveUpdateStatus = new AppliedLeaveUpdateStatus(
+                        appliedLeaveTypeId: Convert.ToInt32(DecryptCode[0]),
+                        statusCode: Convert.ToString(DecryptCode[1]),
+                        leaveAllocationId: Convert.ToInt32(DecryptCode[2])
+                  );
+
+
+                var updatedLeave = await _leaveService.AppliedLeaveUpdateStatusAsync(appliedLeaveUpdateStatus);
+
+
                 if (updatedLeave == null)
                 {
                     // Leave not found
@@ -584,7 +646,7 @@ namespace leaveApplication2.Controllers
                     case "CAR":
                         await _emailService.SendCancelRequestEmail(updatedLeave);
                         return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Cancel Request sent");
-                        break;  
+                        break;
                     default:
                         break;
 
