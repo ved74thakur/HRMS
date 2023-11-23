@@ -164,6 +164,7 @@ namespace leaveApplication2.Controllers
 
 
                 //await 
+
                 await _emailService.SendLeaveApprovalEmail(newAppliedLeaveCreated);
 
                 return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Applied Successfully", newAppliedLeaveCreated);
