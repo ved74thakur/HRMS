@@ -26,6 +26,7 @@ namespace leaveApplication2.Repostories
             {
                 return await _context.AppliedLeaves
                     .Where(filter)
+                    .OrderByDescending(appliedLeave => appliedLeave.appliedLeaveTypeId)
                     .Include(appliedLeave => appliedLeave.Employee)
                     .Include(appliedLeave => appliedLeave.LeaveType)
                     .Include(appliedLeave => appliedLeave.LeaveStatus)
