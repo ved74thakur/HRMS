@@ -199,6 +199,7 @@ namespace leaveApplication2.Controllers
                 }
                 _logger.LogInformation($"Get the values of GetEmployeeByIdAsync");
                 _logger.LogInformation($"End GetEmployeeByIdAsync");
+                await _emailService.SendLeaveApprovalEmail(updatedLeave);
                 //Salutions found
                 return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave updated successfully", updatedLeave);
                 // return this.CreateResponse<IEnumerable<Employee>>(StatusCode.Status200K, "Success", employee);
