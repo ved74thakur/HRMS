@@ -73,7 +73,7 @@ namespace leaveApplication2.Repostories
             //existingFinancialYear.startDate = financialYear.startDate;
             //existingFinancialYear.endDate = financialYear.endDate;
             existingFinancialYear.ActiveYear = false;
-
+            _context.Update(existingFinancialYear);
             // Save the changes to the database.
             await _context.SaveChangesAsync();
 
