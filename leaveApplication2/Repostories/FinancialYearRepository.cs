@@ -4,6 +4,7 @@ using leaveApplication2.Models.leaveApplication2.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Linq.Expressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace leaveApplication2.Repostories
 {
@@ -73,7 +74,8 @@ namespace leaveApplication2.Repostories
             //existingFinancialYear.startDate = financialYear.startDate;
             //existingFinancialYear.endDate = financialYear.endDate;
             existingFinancialYear.ActiveYear = false;
-
+            _context.Update(existingFinancialYear);
+           
             // Save the changes to the database.
             await _context.SaveChangesAsync();
 
