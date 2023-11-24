@@ -104,6 +104,7 @@ namespace leaveApplication2.Repostories
             }
 
             employee.isActive = false;
+            _context.Update(employee);
             await _context.SaveChangesAsync();
             return employee;
         }
