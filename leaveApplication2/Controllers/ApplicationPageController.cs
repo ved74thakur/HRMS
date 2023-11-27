@@ -8,7 +8,7 @@ namespace leaveApplication2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    
+    [Authorize]
     public class ApplicationPageController : ControllerBase
     {
         private readonly IApplicationPageServices _pageService;

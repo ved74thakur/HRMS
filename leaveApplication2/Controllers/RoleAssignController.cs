@@ -9,7 +9,7 @@ namespace leaveApplication2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   
+    [Authorize]
     public class RoleAssignController : ControllerBase
     {
         private readonly IRoleAssignService _roleAssignService;
