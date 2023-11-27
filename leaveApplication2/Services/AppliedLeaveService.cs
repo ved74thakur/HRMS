@@ -3,6 +3,7 @@ using leaveApplication2.Models;
 using leaveApplication2.Models.leaveApplication2.Models;
 using leaveApplication2.Other;
 using leaveApplication2.Repostories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
@@ -39,7 +40,7 @@ namespace leaveApplication2.Services
             return await _leaveRepository.GetAppliedLeavesAsync();
 
         }
-       
+        [Authorize]
         public async Task<AppliedLeave> CreateAppliedLeave(AppliedLeave leave)
         {
 
@@ -122,8 +123,8 @@ namespace leaveApplication2.Services
             
             //updateLeaveStatus
             return singleLeave;
-        }   
-
+        }
+        [Authorize]
         public async Task<AppliedLeave> UpdateAppliedLeaveAsync(long id, AppliedLeave leave)
         {
 
@@ -323,7 +324,7 @@ namespace leaveApplication2.Services
 
             return appliedLeaveDTOs;
         }
-
+        [Authorize]
         public async Task<AppliedLeave> AppliedLeaveUpdateStatusAsync(AppliedLeaveUpdateStatus appliedLeaveUpdateStatus)
         {
             try

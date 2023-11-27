@@ -18,7 +18,7 @@ namespace leaveApplication2.Services
                 var Genders = await _GenderRepository.GetGendersAsync();
                 return Genders;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Handle the exception, e.g., log the error or throw a custom exception
                 // You can also return an empty list or null if appropriate for your use case

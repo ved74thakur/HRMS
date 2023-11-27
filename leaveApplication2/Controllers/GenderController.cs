@@ -1,5 +1,6 @@
 ﻿using leaveApplication2.Models;
 using leaveApplication2.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace leaveApplication2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class GenderController : ControllerBase
     {
         private readonly IGenderService _genderService;

@@ -20,7 +20,8 @@ namespace leaveApplication2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
+    //added authorization
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
