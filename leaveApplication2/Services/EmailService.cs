@@ -61,14 +61,14 @@ namespace leaveApplication2.Services
             body += $"<p>Applied from :{newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}</p>";
             
 
-            await _genericEmail.SendEmailAsync(employee.emailAddress, subject, body);
+            await _genericEmail.SendEmailAsync(employee.emailAddress, subject + "" + System.DateTime.Now, body);
 
             body += "<p>Please click one of the following buttons to approve or reject leave:</p>";
             body += $"<a href='{WebsiteURL}/appliedleavestatus/{approveEncryption}' style='display: inline-block; background-color: green; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Approve</a>";
             body += $"<a href='{WebsiteURL}/appliedleavestatus/{rejectEncryption}' style='display: inline-block; background-color: red; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reject</a>";
 
 
-            await _genericEmail.SendEmailAsync(reportingEmployee.emailAddress, subject , body);
+            await _genericEmail.SendEmailAsync(reportingEmployee.emailAddress, subject + "" + System.DateTime.Now, body);
         }
 
         public async Task SendLeaveApprovedEmail(AppliedLeave newAppliedLeave)
@@ -83,7 +83,7 @@ namespace leaveApplication2.Services
             body = $"<p>Your leave request has been approved for the period: {newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}.</p>";
 
 
-            await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Approved" + System.DateTime.Now, body);
+            await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Approved" + "" + System.DateTime.Now, body);
 
         }
 
@@ -99,7 +99,7 @@ namespace leaveApplication2.Services
             body = $"<p>Your leave request has been rejected for the period: {newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}.</p>";
 
 
-            await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Rejected" + System.DateTime.Now, body);
+            await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Rejected" + "" + System.DateTime.Now, body);
            
         }
     
@@ -124,7 +124,7 @@ namespace leaveApplication2.Services
             body += $"<p>Employee: {employee.firstName} {employee.lastName} has requested for Leave Cancel Request </p>";
             body += $"<p>Leave Type :{newAppliedLeave.LeaveReason}</p>";
             body += $"<p>Applied from :{newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}</p>";
-            await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Cancel" + System.DateTime.Now, body);
+            await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Cancel" + "" + System.DateTime.Now, body);
 
             body += "<p>Please click one of the following buttons to approve or reject leave cancel request:</p>";
             body += $"<a href='{WebsiteURL}/appliedleavestatus/{approveCancelEncryption}' style='display: inline-block; background-color: green; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Approve</a>";
@@ -132,7 +132,7 @@ namespace leaveApplication2.Services
 
 
 
-            await _genericEmail.SendEmailAsync(reportingEmployee.emailAddress, "Leave Cancel Request" + System.DateTime.Now, body);
+            await _genericEmail.SendEmailAsync(reportingEmployee.emailAddress, "Leave Cancel Request" + "" + System.DateTime.Now, body);
         }
 
 
@@ -147,7 +147,7 @@ namespace leaveApplication2.Services
             body = $"<p>Your leave request has been deleted for the period: {newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}.</p>";
 
 
-            await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Deleted" + System.DateTime.Now, body);
+            await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Deleted" + "" + System.DateTime.Now, body);
 
         }
 
@@ -164,7 +164,7 @@ namespace leaveApplication2.Services
             //body += $"<a href='http://192.168.1.5:85/updatepassword/{employee.employeeId}' style='display: inline-block; background-color: blue; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reset Password</a>";
             body += $"<p>Please click on above button to reset password</p>";
 
-            await _genericEmail.SendEmailAsync(employee.emailAddress, subject, body);
+            await _genericEmail.SendEmailAsync(employee.emailAddress, subject + "" + System.DateTime.Now, body);
         }
 
         public async Task SendPasswordResetMail(Employee employee)
@@ -177,13 +177,13 @@ namespace leaveApplication2.Services
             //body += $"<a href='http://192.168.1.5:85/updatepassword/{employee.employeeId}' style='display: inline-block; background-color: blue; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reset Password</a>";
             body += $"<p>Please click on above button to reset password</p>";
 
-            await _genericEmail.SendEmailAsync(employee.emailAddress, subject, body);
+            await _genericEmail.SendEmailAsync(employee.emailAddress, subject + "" + System.DateTime.Now, body);
         }
 
         public async Task SendErrorMail(string email,string body, string  subject)
         {
             subject = "Error " + " | " + subject + " | "+ System.DateTime.Now;
-            await _genericEmail.SendEmailAsync(email, subject, body);
+            await _genericEmail.SendEmailAsync(email, subject + System.DateTime.Now, body);
         }
 
    
