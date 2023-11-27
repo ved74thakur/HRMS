@@ -4,6 +4,7 @@ using leaveApplication2.Dtos;
 using leaveApplication2.Models;
 using leaveApplication2.Other;
 using leaveApplication2.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Query.ExpressionTranslators.Internal;
@@ -38,6 +39,7 @@ namespace leaveApplication2.Controllers
 
         }
         //getAllAppliedLeave
+        [Authorize]
         [HttpGet("GetAppliedLeavesAsync")]
         public async Task<CommonResponse<IEnumerable<AppliedLeave>>> GetAppliedLeavesAsync()
         {
@@ -68,6 +70,7 @@ namespace leaveApplication2.Controllers
 
         }
         //getAllAppliedLeaveByEmployeeId
+        [Authorize]
         [HttpGet("GetAppliedLeavesByEmpIdAsync/{employeeId}")]
         public async Task<CommonResponse<IEnumerable<AppliedLeaveDTO>>> GetAppliedLeavesAsync(long employeeId)
         {
@@ -102,6 +105,7 @@ namespace leaveApplication2.Controllers
         }
 
         //getAppliedLeavesOfAllEmployeesMappedUnderReportingId
+        [Authorize]
         [HttpGet("GetAppliedLeavesByReportingPersonIdAsync/{employeeId}")]
         public async Task<CommonResponse<IEnumerable<AppliedLeaveDTO>>>GetAppliedLeavesByReportingPersonIdAsync(long employeeId)
         {
@@ -230,7 +234,7 @@ namespace leaveApplication2.Controllers
         //            //no salutions found
 
         //            return this.CreateResponse<ActionResult<AppliedLeave>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
-                    
+
         //        }
         //        _logger.LogInformation($"Get the values of GetEmployeeByIdAsync");
         //        _logger.LogInformation($"End GetEmployeeByIdAsync");
@@ -246,7 +250,7 @@ namespace leaveApplication2.Controllers
         //    }
         //}
         //getSingleLeave
-
+        [Authorize]
         [HttpGet("GetAppliedLeaveByIdAsync/{id}")]
         public async Task<CommonResponse<AppliedLeave>> GetAppliedLeaveByIdAsync(long id)
         {
@@ -277,7 +281,7 @@ namespace leaveApplication2.Controllers
         }
 
         //delete leave
-
+        [Authorize]
         [HttpDelete("DeleteAppliedLeaveByIdAsync/{id}")]
         public async Task<CommonResponse<AppliedLeave>> DeleteAppliedLeaveByIdAsync([FromRoute] long id)
         {
@@ -547,6 +551,7 @@ namespace leaveApplication2.Controllers
             }
 
         }
+        [Authorize]
         [HttpGet("AppliedLeaveUpdateStatusByEmailAsync/{code}")]
         public async Task<ActionResult<CommonResponse<AppliedLeave>>> AppliedLeaveUpdateStatusByEmailAsync(string code)
        {
