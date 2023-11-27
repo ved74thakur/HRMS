@@ -14,11 +14,13 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http.HttpResults;
 using leaveApplication2.Dtos;
 using System.Linq.Expressions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace leaveApplication2.Controllers     
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
