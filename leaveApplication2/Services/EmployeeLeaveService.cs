@@ -67,7 +67,7 @@ namespace leaveApplication2.Services
                  x.LeaveStatusId == leaveStatus.LeaveStatusId && x.employeeId == employeeId;
 
             var previousAppliedLeaves = await _leaveRepository.GetAppliedLeavesAsync(filter);
-
+           
 
            List<EmployeeLeave> currentLeave  =  await _employeeLeaveRepository.GetEmployeeLeaveByEmployeeId(employeeId);
           
