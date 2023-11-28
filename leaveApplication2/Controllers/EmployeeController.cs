@@ -20,7 +20,7 @@ namespace leaveApplication2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   
     //added authorization
     public class EmployeeController : ControllerBase
     {
@@ -46,6 +46,7 @@ namespace leaveApplication2.Controllers
         }
         //Employees 
         //Getting all employees
+        [Authorize]
         [HttpGet("GetEmployeesAsync")]
         public async Task<CommonResponse<IEnumerable<Employee>>> GetEmployeesAsync()
         {
@@ -77,7 +78,7 @@ namespace leaveApplication2.Controllers
         }
 
         //getting employee by id
-        
+        [Authorize]
         [HttpGet("GetEmployeeByIdAsync/{employeeId}")]
         public async Task<CommonResponse<Employee>> GetEmployeeByIdAsync(long employeeId)
         {
@@ -107,9 +108,10 @@ namespace leaveApplication2.Controllers
             }
 
         }
-       
+
 
         //create employee
+        [Authorize]
         [HttpPost("CreateEmployeeAsync")]
         public async Task<CommonResponse<ActionResult<Employee>>> CreateEmployeeAsync([FromBody] Employee employee)
         {
@@ -174,6 +176,7 @@ namespace leaveApplication2.Controllers
                 return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, errorMessage);
             }
         }
+        [Authorize]
         [HttpDelete("DeleteEmployeeAsync/{id}")]
         public async Task<CommonResponse<Employee>> DeleteEmployeeRegistrationAsync([FromRoute] long id)
         {
@@ -226,7 +229,7 @@ namespace leaveApplication2.Controllers
                 return this.CreateResponse<object>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
+        
         [HttpPost("UpdateEmployeePassword")]
         public async Task<CommonResponse<ActionResult<Employee>>> UpdateEmployeePasswordAsync([FromBody] EmployeeLoginDto employee)
         {
@@ -253,7 +256,7 @@ namespace leaveApplication2.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpGet("GetEmployeesByReportingIdAsync/{employeeId}")]
         public async Task<CommonResponse<IEnumerable<Employee>>> GetEmployeesByReportingPersonIdAsync(long employeeId)
         {
