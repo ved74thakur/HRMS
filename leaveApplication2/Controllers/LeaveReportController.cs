@@ -21,7 +21,7 @@ namespace leaveApplication2.Controllers
         }
 
         
-        [HttpGet("GetLeavesReportAsync")]
+        [HttpPost("GetLeavesReportAsync")]
         public async Task<CommonResponse<IEnumerable<AppliedLeaveDTO>>> GetLeavesReportAsync([FromBody]LeaveReport leaveReport)
         {
             _logger.LogInformation($"Start GetLeavesReportAsync");
