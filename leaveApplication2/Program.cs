@@ -66,7 +66,8 @@ internal class Program
         builder.Services.AddScoped<IPolicyDocumentRepository, PolicyDocumentRepository>();
         builder.Services.AddScoped<IPolicyDocumentService, PolicyDocumentService>();
         builder.Services.AddScoped<ILeaveReportService, LeaveReportService>();
-
+        builder.Services.AddScoped<IAppliedLeaveCommentService,  AppliedLeaveCommentService>();
+        builder.Services.AddScoped<IAppliedLeaveCommentRepository, AppliedLeaveCommentRepository>();
 
         builder.Services.AddScoped<ILeaveStatusService, LeaveStatusService>();
         builder.Services.AddScoped<ILeaveStatusRepository, LeaveStatusRepository>();

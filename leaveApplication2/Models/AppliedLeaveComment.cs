@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace leaveApplication2.Models
 {
-    [Table("ApplicationPage")]
+    [Table("AppliedLeaveComments")]
     public class AppliedLeaveComment
     {
         [Key]
