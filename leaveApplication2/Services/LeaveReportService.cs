@@ -19,7 +19,7 @@ namespace leaveApplication2.Services
 
         public async Task<IEnumerable<AppliedLeave>> GetLeavesReportAsync([FromBody] LeaveReport leaveReport)
         {
-            if (leaveReport.startDate >= leaveReport.endDate)
+            if (leaveReport.startDate > leaveReport.endDate)
             {
                 throw new InvalidOperationException("Start date cannot be greater than end date.");
             }
