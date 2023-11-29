@@ -23,21 +23,25 @@ namespace leaveApplication2.Services
             {
                 throw new InvalidOperationException("Start date cannot be greater than end date.");
             }
-
-
-
             Expression<Func<AppliedLeave, bool>> filter;
-            filter = la => la.StartDate >= leaveReport.startDate
-            && la.EndDate <= leaveReport.endDate;
-            
-            if (leaveReport.employeeId != 0)
-            {
-                filter = la => la.employeeId == leaveReport.employeeId;
-            }
-            if (leaveReport.LeaveStatusId != 0)
-            {
-                filter = la => la.LeaveStatusId == leaveReport.LeaveStatusId;
-            }
+            filter = la =>
+    (leaveReport.employeeId == 0 || la.employeeId == leaveReport.employeeId) &&
+    (leaveReport.LeaveStatusId == 0 || la.LeaveStatusId == leaveReport.LeaveStatusId) &&
+    la.StartDate >= leaveReport.startDate &&
+    la.EndDate <= leaveReport.endDate;
+
+            //Expression<Func<AppliedLeave, bool>> filter;
+            //filter = la => la.StartDate >= leaveReport.startDate
+            //&& la.EndDate <= leaveReport.endDate;
+
+            //if (leaveReport.employeeId != 0)
+            //{
+            //    filter = la => la.employeeId == leaveReport.employeeId;
+            //}
+            //else if (leaveReport.LeaveStatusId != 0)
+            //{
+            //    filter = la => la.LeaveStatusId == leaveReport.LeaveStatusId;
+            //}
 
             var leavesReport = await _leaveRepository.GetAppliedLeavesAsync(filter);
             var orderedLeavesReport = leavesReport.OrderByDescending(la => la.StartDate).ThenBy(la => la.Employee.firstName, StringComparer.OrdinalIgnoreCase);
