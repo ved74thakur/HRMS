@@ -10,6 +10,7 @@ namespace leaveApplication2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LeaveReportController : ControllerBase
     {
         private readonly IAppliedLeaveService _leaveService;
