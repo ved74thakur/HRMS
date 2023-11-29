@@ -29,11 +29,7 @@ namespace leaveApplication2.Services
             Expression<Func<AppliedLeave, bool>> filter;
             filter = la => la.StartDate >= leaveReport.startDate
             && la.EndDate <= leaveReport.endDate;
-            //if (leaveReport.employeeId != 0 || leaveReport.LeaveStatusId != 0)
-            //{
-            //    filter = la => la.employeeId == leaveReport.employeeId
-            //&& la.LeaveStatusId == leaveReport.LeaveStatusId;
-            //}
+            
             if (leaveReport.employeeId != 0)
             {
                 filter = la => la.employeeId == leaveReport.employeeId;
