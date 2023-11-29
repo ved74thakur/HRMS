@@ -290,6 +290,39 @@ namespace leaveApplication2.Controllers
 
         }
 
+        [HttpGet("GetEmployeesWithReportingId")]
+        public async Task<CommonResponse<IEnumerable<Employee>>> GetEmployeesWithReportingId()
+        {
+            _logger.LogInformation($"Start GetEmployeesByReportingPersonIdAsync");
+            try
+            {
+                Expression<Func<Employee, bool>> filter = emp => emp.ReportingPersonId != null;
+                var employees = await _employeeService.GetEmployeesAsync(filter);
+
+
+                if (employees == null)
+                {
+                    _logger.LogInformation($"Start GetEmployeesAsync null");
+                    //no salutions found
+                    return this.CreateResponse<IEnumerable<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No Employee found.");
+
+                    //this.CreateResponse<Employee> (,)
+                }
+                _logger.LogInformation($"Get the values of GetEmployeesAsync");
+                _logger.LogInformation($"End GetEmployeesAsync");
+                //Salutions found
+
+                return this.CreateResponse<IEnumerable<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", employees);
+            }
+            catch (Exception ex)
+            {
+                //error occured
+                _logger.LogError(ex, "An error occured while retrieving all salutions");
+                return this.CreateResponse<IEnumerable<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
+
         //including that employee itself
         //[HttpGet("GetEmployeesByReportingPersonIdAsync/{employeeId}")]
         //public async Task<CommonResponse<IEnumerable<Employee>>> GetEmployeesByReportingPersonIdAsync(long employeeId)

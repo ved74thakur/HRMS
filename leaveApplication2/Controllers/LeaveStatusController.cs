@@ -19,8 +19,7 @@ namespace leaveApplication2.Controllers
             _logger = logger;
         }
 
-        //Employees 
-        //Getting all employees
+        
         [HttpGet("GetLeaveStatusesAsync")]
         public async Task<CommonResponse<IEnumerable<LeaveStatus>>> GetLeaveStatusesAsync()
         {
