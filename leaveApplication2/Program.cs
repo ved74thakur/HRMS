@@ -65,7 +65,7 @@ internal class Program
         builder.Services.AddScoped<IFinancialYearSetupService, FinancialYearSetupService>();
         builder.Services.AddScoped<IPolicyDocumentRepository, PolicyDocumentRepository>();
         builder.Services.AddScoped<IPolicyDocumentService, PolicyDocumentService>();
-        
+        builder.Services.AddScoped<ILeaveReportService, LeaveReportService>();
 
 
         builder.Services.AddScoped<ILeaveStatusService, LeaveStatusService>();
