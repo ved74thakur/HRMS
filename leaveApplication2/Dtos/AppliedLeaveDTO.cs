@@ -22,6 +22,7 @@
 
         public string LeaveStatusCode { get; set; } = string.Empty;
 
+        public List<AppliedLeaveCommentDTO> Comments { get; set; }
 
     }
 }
