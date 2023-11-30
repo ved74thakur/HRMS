@@ -689,7 +689,7 @@ namespace leaveApplication2.Controllers
                     appliedLeaveTypeId = appliedLeaveTypeId,
                     LeaveStatusId = LeaveStatusId,
                     createdEmpId = createdEmpId,
-                    //date = appliedLeaveUpdateStatus.date,
+                    date = appliedLeaveUpdateStatus.date,
                     comment = appliedLeaveUpdateStatus.commentByUser
 
                     // Set other properties as needed
