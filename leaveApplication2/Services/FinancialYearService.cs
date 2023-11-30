@@ -51,9 +51,12 @@ namespace leaveApplication2.Services
         public async Task<IEnumerable<FinancialYear>> GetActiveFinancialYearsAsync(Expression<Func<FinancialYear, bool>> filter)
         {
             
-            return await _financialYearRepository.GetActiveFinancialYearsAsync(filter);
+            return await _financialYearRepository.GetFinancialYearsAsync(filter);
         }
 
-
+        public async Task<FinancialYear> GetFinancialYearByIdAsync(Expression<Func<FinancialYear, bool>> filter)
+        {
+            return await _financialYearRepository.GetFinancialYearByIdAsync(filter);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using leaveApplication2.Dtos;
 using leaveApplication2.Models;
 using leaveApplication2.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,7 @@ namespace leaveApplication2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class FinancialYearSetupController : ControllerBase
     {
         private readonly ILogger<LeaveAllocationController> _logger;
@@ -27,6 +29,7 @@ namespace leaveApplication2.Controllers
             _logger.LogInformation($"Start CreateLeaveAllocationForAllLeaveTypes");
             try
             {
+
                 var leaveAllocations = await _leaveAllocationService.CreateLeaveAllocationForAllLeaveTypes(request.FinancialYear, request.LeaveTypeCounts);
                 await _financialYearSetupService.CreateUpdatedEmployeeLeaveAsync();
 

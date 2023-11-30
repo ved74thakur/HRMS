@@ -1,10 +1,9 @@
-﻿
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace leaveapplication2.models
+namespace leaveApplication2.Models
 {
-    [Table("leavestatuses")]
+    [Table("LeaveStatuses")]
     public class LeaveStatus
     {
         [Key]
@@ -14,7 +13,7 @@ namespace leaveapplication2.models
         [Required]
         public string LeaveStatusName { get; set; } = string.Empty;
 
-        public string LeaveStatusNameCode { get; set; } = string.Empty;
+        public string LeaveStatusCode { get; set; } = string.Empty;
         public bool IsActive { get; set; } = false;
     }
 }

@@ -4,11 +4,13 @@ using leaveApplication2.Repostories;
 using leaveApplication2.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace leaveApplication2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class EmployeeLeaveController : ControllerBase
     {
         private readonly IEmployeeLeaveService _employeeLeaveService;

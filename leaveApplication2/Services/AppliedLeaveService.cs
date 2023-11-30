@@ -1,6 +1,9 @@
 ﻿using leaveApplication2.Dtos;
 using leaveApplication2.Models;
+using leaveApplication2.Models.leaveApplication2.Models;
+using leaveApplication2.Other;
 using leaveApplication2.Repostories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
@@ -12,14 +15,24 @@ namespace leaveApplication2.Services
     public class AppliedLeaveService : IAppliedLeaveService
     {
         private readonly IAppliedLeaveRepository _leaveRepository;
-        //private readonly ILeaveStatusRepository _leaveStatusRepository;
+        private readonly ILeaveStatusRepository _leaveStatusRepository;
         private readonly IEmployeeLeaveRepository _employeeLeaveRepository;
 
-        public AppliedLeaveService(IAppliedLeaveRepository leaveRepository,  IEmployeeLeaveRepository employeeLeaveRepository)
+        private readonly ILeaveStatusService  _leaveStatusService;
+        private readonly IEmailService _emailService;
+
+        private readonly IFinancialYearRepository _financialYearRepository;
+        private readonly ILeaveAllocationRepository _leaveAllocationRepository;
+
+        public AppliedLeaveService(IAppliedLeaveRepository leaveRepository,  IEmployeeLeaveRepository employeeLeaveRepository, ILeaveStatusService leaveStatusService, IEmailService emailService, IFinancialYearRepository financialYearRepository, ILeaveAllocationRepository leaveAllocationRepository)
         {
             _leaveRepository = leaveRepository;
            
             _employeeLeaveRepository = employeeLeaveRepository;
+            _leaveStatusService = leaveStatusService;
+            _emailService = emailService;
+            _financialYearRepository = financialYearRepository;
+            _leaveAllocationRepository = leaveAllocationRepository;
         }
 
         public async Task<IEnumerable<AppliedLeave>> GetAppliedLeavesAsync()
@@ -27,14 +40,34 @@ namespace leaveApplication2.Services
             return await _leaveRepository.GetAppliedLeavesAsync();
 
         }
-       
+        [Authorize]
         public async Task<AppliedLeave> CreateAppliedLeave(AppliedLeave leave)
         {
-            //var singleLeave = await _leaveRepository.GetAppliedLeaveByIdAsync(id);
-            //leave.leaveStatusId = singleLeave.asdsda;
 
-            var createdLeave = await _leaveRepository.CreateAppliedLeave(leave);
-            return createdLeave;
+            try
+            {
+                var leaveStatus = await _leaveStatusService.GetLeaveStatusByCodeAsync("APP");
+
+
+
+
+                if (leaveStatus == null)
+                {
+                    throw new ArgumentNullException(nameof(leaveStatus), "Leave status not found. (APP)");
+                }
+                leave.LeaveStatusId = leaveStatus.LeaveStatusId;
+
+                var createdLeave = await _leaveRepository.CreateAppliedLeave(leave);
+
+               
+
+                return createdLeave;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
 
@@ -90,8 +123,8 @@ namespace leaveApplication2.Services
             
             //updateLeaveStatus
             return singleLeave;
-        }   
-
+        }
+        [Authorize]
         public async Task<AppliedLeave> UpdateAppliedLeaveAsync(long id, AppliedLeave leave)
         {
 
@@ -285,10 +318,120 @@ namespace leaveApplication2.Services
                 ApplyLeaveDay = appliedLeave.applyLeaveDay,
                 isApproved = appliedLeave.IsApproved,
                 isRejected = appliedLeave.IsRejected,
+                LeaveStatusCode = appliedLeave.LeaveStatus?.LeaveStatusCode ?? string.Empty,
+                LeaveStatusName = appliedLeave.LeaveStatus?.LeaveStatusName ?? string.Empty,
             }).ToList();
 
             return appliedLeaveDTOs;
         }
+        [Authorize]
+        public async Task<AppliedLeave> AppliedLeaveUpdateStatusAsync(AppliedLeaveUpdateStatus appliedLeaveUpdateStatus)
+        {
+            try
+            {
+             
+                var existingLeave = await _leaveRepository.GetAppliedLeaveByIdAsync(appliedLeaveUpdateStatus.appliedLeaveTypeId);
+                
 
+
+
+
+                if (existingLeave == null)
+                {
+                  
+                    throw new ArgumentNullException(nameof(existingLeave), "Leave not found");
+                }
+              
+                var leaveStatus = await _leaveStatusService.GetLeaveStatusByCodeAsync(appliedLeaveUpdateStatus.statusCode);
+             
+                if (leaveStatus == null)
+                {
+                  
+                    throw new ArgumentNullException(nameof(leaveStatus), "Leave status not found. " + appliedLeaveUpdateStatus.statusCode);
+                }
+
+
+                if (existingLeave.LeaveStatus.LeaveStatusCode == appliedLeaveUpdateStatus.statusCode)
+                {
+
+                    throw new CustomLeaveException("The leave is already "+ leaveStatus.LeaveStatusName,900);
+                }
+
+                if ((existingLeave.LeaveStatus.LeaveStatusCode == "APR" && appliedLeaveUpdateStatus.statusCode == "REJ") ||
+                    (existingLeave.LeaveStatus.LeaveStatusCode == "REJ" && appliedLeaveUpdateStatus.statusCode == "APR"))
+                {
+                    throw new CustomLeaveException("Leave is already " + existingLeave.LeaveStatus.LeaveStatusName);
+                }
+
+                if ((existingLeave.LeaveStatus.LeaveStatusCode == "APC" && appliedLeaveUpdateStatus.statusCode == "REC") ||
+                  (existingLeave.LeaveStatus.LeaveStatusCode == "REC" && appliedLeaveUpdateStatus.statusCode == "APC"))
+                {
+                    throw new CustomLeaveException("Leave is already " + existingLeave.LeaveStatus.LeaveStatusName);
+                }
+
+
+
+                Expression<Func<FinancialYear, bool>> filterActiveYear = x =>
+                     x.ActiveYear == true;
+                var activeFinalYear = await _financialYearRepository.GetFinancialYearByIdAsync(filterActiveYear);
+
+                Expression<Func<LeaveAllocation, bool>> filterAllocationYear = x =>
+                     x.financialYearId == activeFinalYear.financialYearId;
+
+                var allocationFinalYear = await _leaveAllocationRepository.GetLeaveAllocationAsync(filterAllocationYear);
+
+                Expression<Func<EmployeeLeave, bool>> filter = x =>
+                  x.employeeId == existingLeave.employeeId &&
+                  x.leaveTypeId == existingLeave.leaveTypeId &&
+                  x.leaveAllocationId == allocationFinalYear.leaveAllocationId;
+
+
+                //Expression<Func<EmployeeLeave, bool>> filter = x =>
+                //  x.employeeId == 38 &&
+                //  x.leaveTypeId == 2 &&
+                //  x.leaveAllocationId == 11;
+
+
+              var  employeeLeave = await _employeeLeaveRepository.GetEmployeeLeaveAsync(filter);
+
+                if (appliedLeaveUpdateStatus.statusCode == "APR")
+                {
+                   
+                    employeeLeave.balanceLeaves -= existingLeave.applyLeaveDay;
+                    employeeLeave.consumedLeaves += existingLeave.applyLeaveDay;
+                 
+                }
+
+                if (appliedLeaveUpdateStatus.statusCode == "APC")
+                {
+                   
+                    employeeLeave.balanceLeaves += existingLeave.applyLeaveDay;
+                    employeeLeave.consumedLeaves -= existingLeave.applyLeaveDay;
+                   
+                }
+
+                if (appliedLeaveUpdateStatus.statusCode == "APR" || appliedLeaveUpdateStatus.statusCode == "APC")
+                {
+                  
+                    /*Update leave */
+                    var UpdateemployeeLeave = await _employeeLeaveRepository.UpdateEmployeeLeaveAsync(employeeLeave);
+                    /*End Update Leave*/
+                   
+                }
+
+                existingLeave.LeaveStatusId = leaveStatus.LeaveStatusId;
+                existingLeave.LeaveStatus = leaveStatus;
+
+
+               var applyLeaveUpdate = await _leaveRepository.UpdateAppliedLeaveAsync(existingLeave);
+
+                return applyLeaveUpdate;
+            }
+            catch (Exception ex)
+            {
+                //await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.Message, "AppliedLeaveUpdateStatusAsync");
+                throw;
+            }
+        }
     }
 }

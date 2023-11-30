@@ -6,7 +6,10 @@ using leaveApplication2.Repostories;
 using leaveApplication2.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Text;
 
 internal class Program
@@ -16,12 +19,24 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
         var connectionString = builder.Configuration.GetConnectionString("postgreSQLConnection");
         var secretKey = builder.Configuration.GetSection("Jwt")["Secret"];
+       
+
         //var smtpSettings = builder.Configuration.GetSection("SmtpSettings");
 
         //Add services to the container
         builder.Services.AddControllersWithViews();
+        //builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        //    options.UseNpgsql(connectionString);
+        //    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        //    );
+
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(connectionString));
+        {
+            options.UseNpgsql(connectionString);
+            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        });
+
+
         //builder.Services.Configure<SmtpSettings>(smtpSettings);
         builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         builder.Services.AddScoped<IEmployeeService, EmployeeService>();
@@ -48,7 +63,16 @@ internal class Program
         builder.Services.AddScoped<IFinancialYearService, FinancialYearService>();
         builder.Services.AddScoped<IFinancialYearRepository, FinancialYearRepository>();
         builder.Services.AddScoped<IFinancialYearSetupService, FinancialYearSetupService>();
-        
+        builder.Services.AddScoped<IPolicyDocumentRepository, PolicyDocumentRepository>();
+        builder.Services.AddScoped<IPolicyDocumentService, PolicyDocumentService>();
+        builder.Services.AddScoped<ILeaveReportService, LeaveReportService>();
+
+
+        builder.Services.AddScoped<ILeaveStatusService, LeaveStatusService>();
+        builder.Services.AddScoped<ILeaveStatusRepository, LeaveStatusRepository>();
+
+
+
 
         builder.Services.AddScoped<IAuthService, AuthService>();
 
@@ -62,10 +86,9 @@ internal class Program
         //ILeaveTypeRepository
         builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
         builder.Services.AddScoped<ILeaveTypeService, LeaveTypeService>();
-
-      
         builder.Services.AddAuthorization();
-
+        
+       
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {

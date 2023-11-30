@@ -2,22 +2,27 @@
 using leaveApplication2.Models;
 using leaveApplication2.Models.leaveApplication2.Models;
 using leaveApplication2.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 
 namespace leaveApplication2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LeaveAllocationController : ControllerBase
     {
         private readonly ILogger<LeaveAllocationController> _logger;
         private readonly ILeaveAllocationService _leaveAllocationService;
-        public LeaveAllocationController(ILeaveAllocationService leaveAllocationService, ILogger<LeaveAllocationController> logger)
+        private readonly IFinancialYearService _financialYearService;
+        
+        public LeaveAllocationController(ILeaveAllocationService leaveAllocationService, ILogger<LeaveAllocationController> logger, IFinancialYearService financialYearService)
         {
             _leaveAllocationService = leaveAllocationService;
             _logger = logger;
-
+            _financialYearService = financialYearService;
         }
         [HttpGet("GetLeaveAllocationsAsync")]
         public async Task<CommonResponse<IEnumerable<LeaveAllocation>>> GetLeaveAllocationsAsync()
@@ -141,6 +146,44 @@ namespace leaveApplication2.Controllers
             }
 
         }
+        //get active leave allocation id.
+        [HttpGet("GetActiveLeaveAllocationAsync")]
+        public async Task<CommonResponse<LeaveAllocation>> GetLeaveAllocationAsync()
+        {
+            _logger.LogInformation($"Start GetLeaveAllocationAsync");
+            try
+            {
+                Expression<Func<FinancialYear, bool>> financialYearFilter = la => la.ActiveYear == true;
+                var activeFinancialYear = await _financialYearService.GetActiveFinancialYearsAsync(financialYearFilter);
+                var financialYearId = activeFinancialYear.First().financialYearId;
+
+                Expression<Func<LeaveAllocation, bool>> filter = la => la.financialYearId == financialYearId;
+                var leaveAllocation = await _leaveAllocationService.GetLeaveAllocationAsync(filter);
+                //IReadOnlyCollection<LeaveAllocation> leaveAllocation = await _leaveAllocationService.GetLeaveAllocationAsync(filter);
+           
+                if (leaveAllocation == null)
+                {
+                    _logger.LogInformation($"Start GetLeaveAllocationAsync null");
+                    //no salutions found
+                    return this.CreateResponse<LeaveAllocation>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+
+                    //this.CreateResponse<Employee> (,)
+                }
+                _logger.LogInformation($"Get the values of GetLeaveAllocationAsync");
+                _logger.LogInformation($"End GetLeaveAllocationAsync");
+                //Salutions found
+
+                return this.CreateResponse<LeaveAllocation>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", leaveAllocation);
+            }
+            catch (Exception ex)
+            {
+                //error occured
+                _logger.LogError(ex, "An error occured while retrieving all salutions");
+                return this.CreateResponse<LeaveAllocation>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
+
 
         //leaveAllocationCreation
         //[HttpPost("CreateLeaveAllocationForAllLeaveTypes")]

@@ -1,16 +1,22 @@
 ﻿using leaveApplication2.Data;
 using leaveApplication2.Models;
 using leaveApplication2.Models.leaveApplication2.Models;
+using leaveApplication2.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace leaveApplication2.Repostories
 {
     public class EmployeeLeaveRepository : IEmployeeLeaveRepository
     {
         private readonly ApplicationDbContext _context;
+       // private readonly IEmailService  _emailService;
         public EmployeeLeaveRepository(ApplicationDbContext context)
         {
             _context = context;
+           // _emailService = emailService;
+
         }
         public async Task<IReadOnlyCollection<EmployeeLeave>> GetAllEmployeesLeaveAsync()
         {
@@ -58,6 +64,35 @@ namespace leaveApplication2.Repostories
             return employeeLeave;
 
         }
+        public async Task<EmployeeLeave> UpdateEmployeeLeaveAsync(EmployeeLeave employeeLeave)
+        {
+
+            try
+            {
+                if (employeeLeave != null && _context.Entry(employeeLeave).State == EntityState.Detached)
+                {
+                    _context.Entry(employeeLeave).State = EntityState.Detached;
+                    //   _context.Attach(employeeLeave);
+                }
+
+                _context.EmployeeLeaves.Update(employeeLeave);
+
+                await _context.SaveChangesAsync();
+
+
+                _context.Entry(employeeLeave.Employee).State = EntityState.Detached;
+
+
+
+                return employeeLeave;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         public async Task<EmployeeLeave> SetEmployeeLeaveToFalseAsync(long id)
         {
@@ -69,6 +104,7 @@ namespace leaveApplication2.Repostories
             }
 
             employee.isActive = false;
+            _context.Update(employee);
             await _context.SaveChangesAsync();
             return employee;
         }
@@ -91,6 +127,21 @@ namespace leaveApplication2.Repostories
 
             return employeeLeave;
         }
+        public async Task<EmployeeLeave> GetEmployeeLeaveAsync(Expression<Func<EmployeeLeave, bool>> filter)
+        {
+            try
+            {
+                var employeeLeave  =  await _context.EmployeeLeaves.AsNoTracking().Include(e => e.Employee).Include(e => e.LeaveType).Include(e => e.LeaveAllocation).FirstOrDefaultAsync(filter);
 
+
+                _context.Entry(employeeLeave.Employee).State = EntityState.Detached;
+                return employeeLeave;
+            }
+            catch (Exception)
+            {
+               // await _emailService.SendErrorMail("ved.thakur@wonderbiz.in", ex.Message, "GetEmployeeLeaveAsync");
+                throw;
+            }
+        }
     }
 }

@@ -14,11 +14,14 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http.HttpResults;
 using leaveApplication2.Dtos;
 using System.Linq.Expressions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace leaveApplication2.Controllers     
 {
     [Route("api/[controller]")]
     [ApiController]
+   
+    //added authorization
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
@@ -43,6 +46,7 @@ namespace leaveApplication2.Controllers
         }
         //Employees 
         //Getting all employees
+        [Authorize]
         [HttpGet("GetEmployeesAsync")]
         public async Task<CommonResponse<IEnumerable<Employee>>> GetEmployeesAsync()
         {
@@ -74,7 +78,7 @@ namespace leaveApplication2.Controllers
         }
 
         //getting employee by id
-        
+        [Authorize]
         [HttpGet("GetEmployeeByIdAsync/{employeeId}")]
         public async Task<CommonResponse<Employee>> GetEmployeeByIdAsync(long employeeId)
         {
@@ -104,9 +108,10 @@ namespace leaveApplication2.Controllers
             }
 
         }
-       
+
 
         //create employee
+        [Authorize]
         [HttpPost("CreateEmployeeAsync")]
         public async Task<CommonResponse<ActionResult<Employee>>> CreateEmployeeAsync([FromBody] Employee employee)
         {
@@ -171,6 +176,7 @@ namespace leaveApplication2.Controllers
                 return this.CreateResponse<ActionResult<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, errorMessage);
             }
         }
+        [Authorize]
         [HttpDelete("DeleteEmployeeAsync/{id}")]
         public async Task<CommonResponse<Employee>> DeleteEmployeeRegistrationAsync([FromRoute] long id)
         {
@@ -223,7 +229,7 @@ namespace leaveApplication2.Controllers
                 return this.CreateResponse<object>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
+        
         [HttpPost("UpdateEmployeePassword")]
         public async Task<CommonResponse<ActionResult<Employee>>> UpdateEmployeePasswordAsync([FromBody] EmployeeLoginDto employee)
         {
@@ -250,7 +256,7 @@ namespace leaveApplication2.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpGet("GetEmployeesByReportingIdAsync/{employeeId}")]
         public async Task<CommonResponse<IEnumerable<Employee>>> GetEmployeesByReportingPersonIdAsync(long employeeId)
         {
@@ -261,6 +267,39 @@ namespace leaveApplication2.Controllers
                 var employees = await _employeeService.GetEmployeesAsync(filter);
 
             
+                if (employees == null)
+                {
+                    _logger.LogInformation($"Start GetEmployeesAsync null");
+                    //no salutions found
+                    return this.CreateResponse<IEnumerable<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No Employee found.");
+
+                    //this.CreateResponse<Employee> (,)
+                }
+                _logger.LogInformation($"Get the values of GetEmployeesAsync");
+                _logger.LogInformation($"End GetEmployeesAsync");
+                //Salutions found
+
+                return this.CreateResponse<IEnumerable<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", employees);
+            }
+            catch (Exception ex)
+            {
+                //error occured
+                _logger.LogError(ex, "An error occured while retrieving all salutions");
+                return this.CreateResponse<IEnumerable<Employee>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
+
+        [HttpGet("GetEmployeesWithReportingId")]
+        public async Task<CommonResponse<IEnumerable<Employee>>> GetEmployeesWithReportingId()
+        {
+            _logger.LogInformation($"Start GetEmployeesByReportingPersonIdAsync");
+            try
+            {
+                Expression<Func<Employee, bool>> filter = emp => emp.ReportingPersonId != null;
+                var employees = await _employeeService.GetEmployeesAsync(filter);
+
+
                 if (employees == null)
                 {
                     _logger.LogInformation($"Start GetEmployeesAsync null");
