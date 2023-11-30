@@ -631,8 +631,8 @@ namespace leaveApplication2.Controllers
             }
 
         }
-
-        [HttpGet("AppliedLeaveUpdateStatusByEmailConfirmAsync/{code}")]
+        //GET
+        [HttpPost("AppliedLeaveUpdateStatusByEmailConfirmAsync/{code}")]
         public async Task<ActionResult<CommonResponse<AppliedLeave>>> AppliedLeaveUpdateStatusByEmailConfirmAsync(string code, string commentByUser)
         {
 
