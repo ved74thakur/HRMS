@@ -32,6 +32,8 @@ namespace leaveApplication2.Data
         public DbSet<EmployeeReporting> EmployeeReporting { get; set; }
 
         public DbSet<PolicyDocument> PolicyDocuments { get; set; }
+
+        public DbSet<AppliedLeaveComment> AppliedLeaveComments { get; set; }
         
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

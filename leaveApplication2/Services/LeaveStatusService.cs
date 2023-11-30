@@ -17,8 +17,10 @@ namespace leaveApplication2.Services
 
             try
             {
-                Expression<Func<LeaveStatus, bool>> filter = urm => urm.LeaveStatusCode == statusCode;
+                Expression<Func<LeaveStatus, bool>> filter = urm => urm.LeaveStatusCode.Trim() == statusCode.Trim();
                 var leaveStatus = await _leaveStatusRepository.GetLeaveStatusAsync(filter);
+
+                var leaveStatus2 = await _leaveStatusRepository.GetLeaveStatusesAsync();
 
                 return leaveStatus;
             }

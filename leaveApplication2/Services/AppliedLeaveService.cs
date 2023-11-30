@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection.Metadata.Ecma335;
+using System.Xml.Linq;
 
 namespace leaveApplication2.Services
 {
@@ -17,6 +18,7 @@ namespace leaveApplication2.Services
         private readonly IAppliedLeaveRepository _leaveRepository;
         private readonly ILeaveStatusRepository _leaveStatusRepository;
         private readonly IEmployeeLeaveRepository _employeeLeaveRepository;
+        private readonly IAppliedLeaveCommentRepository _appliedLeaveCommentRepository;
 
         private readonly ILeaveStatusService  _leaveStatusService;
         private readonly IEmailService _emailService;
@@ -24,10 +26,10 @@ namespace leaveApplication2.Services
         private readonly IFinancialYearRepository _financialYearRepository;
         private readonly ILeaveAllocationRepository _leaveAllocationRepository;
 
-        public AppliedLeaveService(IAppliedLeaveRepository leaveRepository,  IEmployeeLeaveRepository employeeLeaveRepository, ILeaveStatusService leaveStatusService, IEmailService emailService, IFinancialYearRepository financialYearRepository, ILeaveAllocationRepository leaveAllocationRepository)
+        public AppliedLeaveService(IAppliedLeaveRepository leaveRepository,  IEmployeeLeaveRepository employeeLeaveRepository, ILeaveStatusService leaveStatusService, IEmailService emailService, IFinancialYearRepository financialYearRepository, ILeaveAllocationRepository leaveAllocationRepository, IAppliedLeaveCommentRepository appliedLeaveCommentRepository)
         {
             _leaveRepository = leaveRepository;
-           
+            _appliedLeaveCommentRepository = appliedLeaveCommentRepository;
             _employeeLeaveRepository = employeeLeaveRepository;
             _leaveStatusService = leaveStatusService;
             _emailService = emailService;
@@ -298,29 +300,91 @@ namespace leaveApplication2.Services
         //    return await _leaveRepository.GetAppliedLeavesAsync(filter);
         //}
 
+        //public async Task<IEnumerable<AppliedLeaveDTO>> GetAppliedLeavesAsync(Expression<Func<AppliedLeave, bool>> filter)
+        //{
+        //    var appliedLeaves = await _leaveRepository.GetAppliedLeavesAsync(filter);
+        //    //you have to add by filtering comments
+        //    //foreach(var appliedLeave in appliedLeaves)
+        //    //{
+        //    //    Expression<Func<AppliedLeaveComment, bool>> condition;
+        //    //    condition = la => la.appliedLeaveTypeId == appliedLeave.appliedLeaveTypeId && la.LeaveStatusId == appliedLeave.LeaveStatusId;
+        //    //    var appliedLeavesComment = await _appliedLeaveCommentRepository.GetAppliedLeavesCommentAsync(condition);
+        //    //}
+
+
+        //    var appliedLeaveDTOs = appliedLeaves.Select(appliedLeave => new AppliedLeaveDTO
+        //    {
+        //        appliedLeaveTypeId = appliedLeave.appliedLeaveTypeId,
+        //        employeeId = appliedLeave.employeeId,
+        //        FirstName = appliedLeave.Employee?.firstName ?? string.Empty,
+        //        LastName = appliedLeave.Employee?.lastName ?? string.Empty,
+        //        StartDate = appliedLeave.StartDate,
+        //        EndDate = appliedLeave.EndDate,
+        //        LeaveTypeName = appliedLeave.LeaveType?.leaveTypeName ?? string.Empty,
+        //        BalanceLeave = appliedLeave.balanceLeave, // Convert double to int if necessary
+        //        AppliedLeave = appliedLeave.applyLeaveDay, // Convert double to int if necessary
+        //        RemaingLeave = appliedLeave.remaingLeave, // Convert double to int if necessary
+        //        LeaveReason = appliedLeave.LeaveReason ?? string.Empty,
+        //        ApplyLeaveDay = appliedLeave.applyLeaveDay,
+        //        isApproved = appliedLeave.IsApproved,
+        //        isRejected = appliedLeave.IsRejected,
+        //        LeaveStatusCode = appliedLeave.LeaveStatus?.LeaveStatusCode ?? string.Empty,
+        //        LeaveStatusName = appliedLeave.LeaveStatus?.LeaveStatusName ?? string.Empty,
+        //    }).ToList();
+
+        //    return appliedLeaveDTOs;
+        //}
+
         public async Task<IEnumerable<AppliedLeaveDTO>> GetAppliedLeavesAsync(Expression<Func<AppliedLeave, bool>> filter)
         {
             var appliedLeaves = await _leaveRepository.GetAppliedLeavesAsync(filter);
+          
 
-            var appliedLeaveDTOs = appliedLeaves.Select(appliedLeave => new AppliedLeaveDTO
+            var appliedLeaveDTOs = new List<AppliedLeaveDTO>();
+            foreach(var appliedLeave in appliedLeaves)
             {
-                appliedLeaveTypeId = appliedLeave.appliedLeaveTypeId,
-                employeeId = appliedLeave.employeeId,
-                FirstName = appliedLeave.Employee?.firstName ?? string.Empty,
-                LastName = appliedLeave.Employee?.lastName ?? string.Empty,
-                StartDate = appliedLeave.StartDate,
-                EndDate = appliedLeave.EndDate,
-                LeaveTypeName = appliedLeave.LeaveType?.leaveTypeName ?? string.Empty,
-                BalanceLeave = appliedLeave.balanceLeave, // Convert double to int if necessary
-                AppliedLeave = appliedLeave.applyLeaveDay, // Convert double to int if necessary
-                RemaingLeave = appliedLeave.remaingLeave, // Convert double to int if necessary
-                LeaveReason = appliedLeave.LeaveReason ?? string.Empty,
-                ApplyLeaveDay = appliedLeave.applyLeaveDay,
-                isApproved = appliedLeave.IsApproved,
-                isRejected = appliedLeave.IsRejected,
-                LeaveStatusCode = appliedLeave.LeaveStatus?.LeaveStatusCode ?? string.Empty,
-                LeaveStatusName = appliedLeave.LeaveStatus?.LeaveStatusName ?? string.Empty,
-            }).ToList();
+                var appliedLeaveDTO = new AppliedLeaveDTO
+                {
+                    appliedLeaveTypeId = appliedLeave.appliedLeaveTypeId,
+                    employeeId = appliedLeave.employeeId,
+                    FirstName = appliedLeave.Employee?.firstName ?? string.Empty,
+                    LastName = appliedLeave.Employee?.lastName ?? string.Empty,
+                    StartDate = appliedLeave.StartDate,
+                    EndDate = appliedLeave.EndDate,
+                    LeaveTypeName = appliedLeave.LeaveType?.leaveTypeName ?? string.Empty,
+                    BalanceLeave = appliedLeave.balanceLeave, // Convert double to int if necessary
+                    AppliedLeave = appliedLeave.applyLeaveDay, // Convert double to int if necessary
+                    RemaingLeave = appliedLeave.remaingLeave, // Convert double to int if necessary
+                    LeaveReason = appliedLeave.LeaveReason ?? string.Empty,
+                    ApplyLeaveDay = appliedLeave.applyLeaveDay,
+                    isApproved = appliedLeave.IsApproved,
+                    isRejected = appliedLeave.IsRejected,
+                    LeaveStatusCode = appliedLeave.LeaveStatus?.LeaveStatusCode ?? string.Empty,
+                    LeaveStatusName = appliedLeave.LeaveStatus?.LeaveStatusName ?? string.Empty,
+                    Comments = new List<AppliedLeaveCommentDTO>() 
+                };
+                //Retrieve comments for the current applied leave
+                //Expression < Func<AppliedLeaveComment, bool> > commentFilter =
+                //    la => la.appliedLeaveTypeId == appliedLeave.appliedLeaveTypeId &&
+                //          la.LeaveStatusId == appliedLeave.LeaveStatusId;
+                Expression<Func<AppliedLeaveComment, bool>> commentFilter =
+                    la => la.appliedLeaveTypeId == appliedLeave.appliedLeaveTypeId &&
+                          la.LeaveStatusId == appliedLeave.LeaveStatusId ;
+
+                var appliedLeavesComment = await _appliedLeaveCommentRepository.GetAppliedLeavesCommentAsync(commentFilter);
+                
+                // Map comments to AppliedLeaveCommentDTO and add to the Comments property
+                appliedLeaveDTO.Comments.AddRange(appliedLeavesComment.Select(comment => new AppliedLeaveCommentDTO
+                {
+                    CommentText = comment?.comment ?? string.Empty,
+                    CommentDate = comment?.date ?? DateTime.MinValue,
+                    // Add other properties as needed
+                }));
+
+                appliedLeaveDTOs.Add(appliedLeaveDTO);
+
+            }
+            
 
             return appliedLeaveDTOs;
         }

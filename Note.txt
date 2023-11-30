@@ -1,0 +1,20 @@
+Phase 1
+You will have to create table in sql
+See phone for structure
+Add comment operation 
+
+phase 2
+add service and append that code in 109 and 74
+
+System.NullReferenceException: 'Object reference not set to an instance of an object.'
+
+
+
+
+
+Use code of leaveStatusID
+
+
+scrap it
+You should add that in appliedLeaveStatusUpdate async
+in controller you should add that create comment, and update it as follows
