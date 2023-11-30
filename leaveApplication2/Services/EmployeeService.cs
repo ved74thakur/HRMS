@@ -65,9 +65,55 @@ namespace leaveApplication2.Services
             var singleEmployee =  await _employeeRepository.GetEmployeeByIdAsync(id);
             return singleEmployee;
         }
+        //EmployeeInfoDto
+
+        public async Task<EmployeeInfoDto> GetEmployeeDetailsByIdAsync(long id)
+        {
+            var employee = await _employeeRepository.GetEmployeeByIdAsync(id);
+            if (employee == null)
+            {
+                return null;
+            }
+
+            var EmployeeInfoDto = new EmployeeInfoDto
+            {
+                firstName = employee.firstName,
+                lastName = employee.lastName,
+                emailAddress = employee.emailAddress,
+                mobileNo = employee.mobileNo,
+                designationName = employee.Designation.designationName,
+                dateOfBirth = employee.dateOfBirth,
+                dateOfJoining = employee.dateOfJoining,
+                employeeId = employee.employeeId,
+            };
+            if (employee.ReportingPersonId.HasValue)
+            {
+                var reportingPerson = await _employeeRepository.GetEmployeeByIdAsync(employee.ReportingPersonId.Value);
+                if (reportingPerson != null)
+                {
+                    EmployeeInfoDto.reportingPersonFirstName = reportingPerson.firstName;
+                    EmployeeInfoDto.reportingPersonLastName = reportingPerson.lastName;
+                }
+            }
+
+            return EmployeeInfoDto;
+        }
 
 
 
+
+        //private async Task FetchReportingPersonNameAsync(Employee employee)
+        //{
+        //    if (employee.ReportingPersonId.HasValue)
+        //    {
+        //        var reportingPerson = await _employeeRepository.GetEmployeeByIdAsync(employee.ReportingPersonId.Value);
+        //        if (reportingPerson != null)
+        //        {
+        //            employee.reportingPersonFirstName = reportingPerson.firstName;
+        //            employee.re
+        //        }
+        //    }
+        //}
 
         public async Task<Employee> CreateEmployeeAsync(Employee employee)
         {

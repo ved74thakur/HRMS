@@ -16,20 +16,22 @@ namespace leaveApplication2.Models
         [MaxLength(255)]
         public string lastName { get; set; } = string.Empty;
 
-       
+
 
         [Required]
         [MaxLength(255)]
         public string employeeEmail { get; set; } = string.Empty;
 
-        public string password { get; set;} = string.Empty;
+        public string password { get; set; } = string.Empty;
 
- 
+
 
         [Required]
-        
+
         public bool IsActive { get; set; }
-       
+
     }
+   
 }
 
+    

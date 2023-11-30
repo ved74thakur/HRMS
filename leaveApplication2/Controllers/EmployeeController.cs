@@ -109,6 +109,37 @@ namespace leaveApplication2.Controllers
 
         }
 
+        [Authorize]
+        [HttpGet("GetEmployeeDetailsByIdAsync/{employeeId}")]
+        public async Task<CommonResponse<EmployeeInfoDto>> GetEmployeeDetailsByIdAsync(long employeeId)
+        {
+
+            _logger.LogInformation($"Start GetEmployeeByIdAsync");
+            try
+            {
+                var singleEmployee = await _employeeService.GetEmployeeDetailsByIdAsync(employeeId);
+                if (singleEmployee == null)
+                {
+                    _logger.LogInformation($"Start GetEmployeeByIdAsync null");
+                    //no salutions found
+                    return this.CreateResponse<EmployeeInfoDto>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+
+                }
+                _logger.LogInformation($"Get the values of GetEmployeeByIdAsync");
+                _logger.LogInformation($"End GetEmployeeByIdAsync");
+                //Salutions found
+                return this.CreateResponse<EmployeeInfoDto>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", singleEmployee);
+                // return this.CreateResponse<IEnumerable<Employee>>(StatusCode.Status200K, "Success", employee);
+            }
+            catch (Exception ex)
+            {
+                //error occured
+                _logger.LogError(ex, "An error occured while retrieving all salutions");
+                return this.CreateResponse<EmployeeInfoDto>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
+
 
         //create employee
         [Authorize]
