@@ -9,6 +9,8 @@ namespace leaveApplication2.Services
         Task<IEnumerable<Employee>> GetEmployeesAsync();
         
         Task<Employee> GetEmployeeByIdAsync(long id);
+        Task<EmployeeInfoDto> GetEmployeeDetailsByIdAsync(long id);
+
         Task<IEnumerable<Employee>> GetEmployeesAsync(Expression<Func<Employee, bool>> filter);
         Task<Employee> CreateEmployeeAsync(Employee employee);
         
