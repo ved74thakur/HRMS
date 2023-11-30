@@ -12,8 +12,8 @@ using leaveApplication2.Data;
 namespace leaveApplication2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231107085901_phase2")]
-    partial class phase2
+    [Migration("20231129062806_phase3")]
+    partial class phase3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,6 +84,9 @@ namespace leaveApplication2.Migrations
                     b.Property<bool>("IsApproved")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsCancelled")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsHalfDay")
                         .HasColumnType("boolean");
 
@@ -93,6 +96,9 @@ namespace leaveApplication2.Migrations
                     b.Property<string>("LeaveReason")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
+
+                    b.Property<int>("LeaveStatusId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("RejectedDate")
                         .HasColumnType("timestamp without time zone");
@@ -120,11 +126,48 @@ namespace leaveApplication2.Migrations
 
                     b.HasKey("appliedLeaveTypeId");
 
+                    b.HasIndex("LeaveStatusId");
+
                     b.HasIndex("employeeId");
 
                     b.HasIndex("leaveTypeId");
 
                     b.ToTable("AppliedLeaves");
+                });
+
+            modelBuilder.Entity("leaveApplication2.Models.AppliedLeaveComment", b =>
+                {
+                    b.Property<long>("appliedLeaveCommentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("appliedLeaveCommentId"));
+
+                    b.Property<int>("LeaveStatusId")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("appliedLeaveTypeId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("comment")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTime>("date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long>("employeeId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("appliedLeaveCommentId");
+
+                    b.HasIndex("LeaveStatusId");
+
+                    b.HasIndex("appliedLeaveTypeId");
+
+                    b.HasIndex("employeeId");
+
+                    b.ToTable("AppliedLeaveComments");
                 });
 
             modelBuilder.Entity("leaveApplication2.Models.Designation", b =>
@@ -271,6 +314,9 @@ namespace leaveApplication2.Migrations
                     b.Property<bool>("isActive")
                         .HasColumnType("boolean");
 
+                    b.Property<int>("leaveAllocationId")
+                        .HasColumnType("integer");
+
                     b.Property<double>("leaveCount")
                         .HasColumnType("double precision");
 
@@ -280,6 +326,8 @@ namespace leaveApplication2.Migrations
                     b.HasKey("employeeLeaveId");
 
                     b.HasIndex("employeeId");
+
+                    b.HasIndex("leaveAllocationId");
 
                     b.HasIndex("leaveTypeId");
 
@@ -378,6 +426,30 @@ namespace leaveApplication2.Migrations
                     b.ToTable("LeaveAllocations");
                 });
 
+            modelBuilder.Entity("leaveApplication2.Models.LeaveStatus", b =>
+                {
+                    b.Property<int>("LeaveStatusId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LeaveStatusId"));
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LeaveStatusCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LeaveStatusName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("LeaveStatusId");
+
+                    b.ToTable("LeaveStatuses");
+                });
+
             modelBuilder.Entity("leaveApplication2.Models.LeaveType", b =>
                 {
                     b.Property<int>("leaveTypeId")
@@ -401,6 +473,30 @@ namespace leaveApplication2.Migrations
                     b.HasKey("leaveTypeId");
 
                     b.ToTable("LeaveTypes");
+                });
+
+            modelBuilder.Entity("leaveApplication2.Models.PolicyDocument", b =>
+                {
+                    b.Property<int>("policyDocumentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("policyDocumentId"));
+
+                    b.Property<byte[]>("content")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<bool>("isActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("policyName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("policyDocumentId");
+
+                    b.ToTable("PolicyDocuments");
                 });
 
             modelBuilder.Entity("leaveApplication2.Models.RoleAssign", b =>
@@ -438,7 +534,15 @@ namespace leaveApplication2.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("employeeId"));
 
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("employeeCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("employeeName")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -446,6 +550,10 @@ namespace leaveApplication2.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
+
+                    b.Property<string>("lastName")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("employeeId");
 
@@ -494,11 +602,23 @@ namespace leaveApplication2.Migrations
 
                     b.HasKey("financialYearId");
 
+                    b.HasIndex("endDate")
+                        .IsUnique();
+
+                    b.HasIndex("startDate")
+                        .IsUnique();
+
                     b.ToTable("FinancialYears");
                 });
 
             modelBuilder.Entity("leaveApplication2.Models.AppliedLeave", b =>
                 {
+                    b.HasOne("leaveApplication2.Models.LeaveStatus", "LeaveStatus")
+                        .WithMany()
+                        .HasForeignKey("LeaveStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("leaveApplication2.Models.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("employeeId")
@@ -513,7 +633,36 @@ namespace leaveApplication2.Migrations
 
                     b.Navigation("Employee");
 
+                    b.Navigation("LeaveStatus");
+
                     b.Navigation("LeaveType");
+                });
+
+            modelBuilder.Entity("leaveApplication2.Models.AppliedLeaveComment", b =>
+                {
+                    b.HasOne("leaveApplication2.Models.LeaveStatus", "LeaveStatus")
+                        .WithMany()
+                        .HasForeignKey("LeaveStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("leaveApplication2.Models.AppliedLeave", "AppliedLeave")
+                        .WithMany()
+                        .HasForeignKey("appliedLeaveTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("leaveApplication2.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("employeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppliedLeave");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("LeaveStatus");
                 });
 
             modelBuilder.Entity("leaveApplication2.Models.Employee", b =>
@@ -551,6 +700,12 @@ namespace leaveApplication2.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("leaveApplication2.Models.LeaveAllocation", "LeaveAllocation")
+                        .WithMany()
+                        .HasForeignKey("leaveAllocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("leaveApplication2.Models.LeaveType", "LeaveType")
                         .WithMany()
                         .HasForeignKey("leaveTypeId")
@@ -558,6 +713,8 @@ namespace leaveApplication2.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
+
+                    b.Navigation("LeaveAllocation");
 
                     b.Navigation("LeaveType");
                 });
