@@ -633,7 +633,7 @@ namespace leaveApplication2.Controllers
         }
 
         [HttpGet("AppliedLeaveUpdateStatusByEmailConfirmAsync/{code}")]
-        public async Task<ActionResult<CommonResponse<AppliedLeave>>> AppliedLeaveUpdateStatusByEmailConfirmAsync(string code)
+        public async Task<ActionResult<CommonResponse<AppliedLeave>>> AppliedLeaveUpdateStatusByEmailConfirmAsync(string code, string commentByUser)
         {
 
             try
@@ -648,7 +648,7 @@ namespace leaveApplication2.Controllers
                         statusCode: Convert.ToString(DecryptCode[1]),
                         leaveAllocationId: Convert.ToInt32(DecryptCode[2]),
                             date: System.DateTime.Now,
-                        commentByUser: ""
+                        commentByUser: commentByUser
                   );
 
 
@@ -665,24 +665,36 @@ namespace leaveApplication2.Controllers
                     //for rejecting
                     case "REJ":
                         await _emailService.SendLeaveRejectedEmail(updatedLeave);
-                        return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Rejected");
+                        //return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Rejected");
                         break;
                     case "APR":
                         await _emailService.SendLeaveApprovedEmail(updatedLeave);
-                        return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Approved");
+                        //return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Approved");
                         break;
                     case "CAR":
                         await _emailService.SendCancelRequestEmail(updatedLeave);
-                        return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Cancel Request sent");
+                        //return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Cancel Request sent");
                         break;
                     default:
                         break;
 
                 }
+                var appliedLeaveTypeId = updatedLeave.appliedLeaveTypeId;
+                var LeaveStatusId = updatedLeave.LeaveStatusId;
+                var createdEmpId = updatedLeave.employeeId;
 
-                // Successful deletion
-                //_logger.LogInformation($"End DeleteAppliedLeave");
-                //await _emailService.SendLeaveApprovedEmail(updatedLeave);
+                var comment = new AppliedLeaveComment
+                {
+                    appliedLeaveTypeId = appliedLeaveTypeId,
+                    LeaveStatusId = LeaveStatusId,
+                    createdEmpId = createdEmpId,
+                    //date = appliedLeaveUpdateStatus.date,
+                    comment = appliedLeaveUpdateStatus.commentByUser
+
+                    // Set other properties as needed
+                };
+                await _appliedLeaveCommentService.CreateAppliedLeaveComment(comment);
+            
                 return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, updatedLeave.LeaveStatus.LeaveStatusName);
                 // add approved email
             }
