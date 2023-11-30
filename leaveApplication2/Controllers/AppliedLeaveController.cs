@@ -648,7 +648,7 @@ namespace leaveApplication2.Controllers
                         appliedLeaveTypeId: Convert.ToInt32(DecryptCode[0]),
                         statusCode: Convert.ToString(DecryptCode[1]),
                         leaveAllocationId: Convert.ToInt32(DecryptCode[2]),
-                            date: System.DateTime.Now,
+                            date: emailComment.commentDate,
                         commentByUser: commentByUser
                   );
 
