@@ -632,14 +632,15 @@ namespace leaveApplication2.Controllers
 
         }
         //GET
-        [HttpPost("AppliedLeaveUpdateStatusByEmailConfirmAsync/{code}")]
-        public async Task<ActionResult<CommonResponse<AppliedLeave>>> AppliedLeaveUpdateStatusByEmailConfirmAsync(string code, string? commentByUser)
+        [HttpPost("AppliedLeaveUpdateStatusByEmailConfirmAsync")]
+        public async Task<ActionResult<CommonResponse<AppliedLeave>>> AppliedLeaveUpdateStatusByEmailConfirmAsync(EmailCommentDto emailComment)
         {
 
             try
             {
                 // var approveEncryption = EncryptionHelper.Encrypt(createdLeave.appliedLeaveTypeId + "|" + "APR" + "|" + 4);
-
+                var code = emailComment.code;
+                var commentByUser = emailComment.commentByUser;
                 var DecryptCode = EncryptionHelper.Decrypt(code).Split('|');
 
 
