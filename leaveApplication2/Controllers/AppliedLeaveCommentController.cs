@@ -75,6 +75,36 @@ namespace leaveApplication2.Controllers
             }
         }
 
+        [HttpGet("GetAppliedLeavesCommentByIdAsync/{appliedLeaveTypeId}/{LeaveStatusId}")]
+        public async Task<CommonResponse<IEnumerable<AppliedLeaveComment>>> GetAppliedLeavesCommentAsync(long appliedLeaveTypeId, int LeaveStatusId)
+        {
+            _logger.LogInformation($"Start GetAppliedLeavesCommentAsync");
+            try
+            {
+                var comments = await _appliedLeaveCommentService.GetAppliedLeavesCommentAsync(appliedLeaveTypeId, LeaveStatusId);
+                if (comments == null)
+                {
+                    _logger.LogInformation($"Start GetAllEmployeesLeaves null");
+                    //no salutions found
+                    return this.CreateResponse<IEnumerable<AppliedLeaveComment>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No Employees Found.");
+
+                    //this.CreateResponse<Employee> (,)
+                }
+                _logger.LogInformation($"Get the values of GetAllEmployeeLeavesAsync");
+                _logger.LogInformation($"End GetAllEmployeeLeavesAsync");
+                //Salutions found
+
+                return this.CreateResponse<IEnumerable<AppliedLeaveComment>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", comments);
+            }
+            catch (Exception ex)
+            {
+                //error occured
+                _logger.LogError(ex, "An error occured while retrieving all salutions");
+                return this.CreateResponse<IEnumerable<AppliedLeaveComment>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
+
 
     }
 }

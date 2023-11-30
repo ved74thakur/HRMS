@@ -1,4 +1,5 @@
 ﻿using leaveApplication2.Models;
+using System.Linq.Expressions;
 
 namespace leaveApplication2.Repostories
 {
@@ -6,5 +7,6 @@ namespace leaveApplication2.Repostories
     {
         Task<IReadOnlyCollection<AppliedLeaveComment>> GetAppliedLeavesCommentAsync();
         Task<AppliedLeaveComment> CreateAppliedLeaveComment(AppliedLeaveComment comment);
+        Task<IEnumerable<AppliedLeaveComment>> GetAppliedLeavesCommentAsync(Expression<Func<AppliedLeaveComment, bool>> filter);
     }
 }

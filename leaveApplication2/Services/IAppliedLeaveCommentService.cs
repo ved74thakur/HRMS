@@ -6,5 +6,6 @@ namespace leaveApplication2.Services
     {
         Task<IReadOnlyCollection<AppliedLeaveComment>> GetAppliedLeavesCommentAsync();
         Task<AppliedLeaveComment> CreateAppliedLeaveComment(AppliedLeaveComment comment);
+        Task<IEnumerable<AppliedLeaveComment>> GetAppliedLeavesCommentAsync(long appliedLeaveTypeId, int LeaveStatusId);
     }
 }

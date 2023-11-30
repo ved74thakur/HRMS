@@ -27,7 +27,7 @@ namespace leaveApplication2.Models
         public DateTime date { get; set; }
 
         [ForeignKey("Employee")]
-        public long employeeId { get; set; }
+        public long createdEmpId { get; set; }
         public virtual Employee? Employee { get; set; }
 
 

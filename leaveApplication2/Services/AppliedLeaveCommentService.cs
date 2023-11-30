@@ -1,6 +1,7 @@
 ﻿using leaveApplication2.Models;
 using leaveApplication2.Repostories;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace leaveApplication2.Services
 {
@@ -32,5 +33,17 @@ namespace leaveApplication2.Services
             }
 
         }
+
+        public async Task<IEnumerable<AppliedLeaveComment>> GetAppliedLeavesCommentAsync(long appliedLeaveTypeId, int LeaveStatusId)
+        {
+            Expression<Func<AppliedLeaveComment, bool>> filter;
+            filter = la => la.appliedLeaveTypeId == appliedLeaveTypeId && la.LeaveStatusId == LeaveStatusId;
+            var appliedLeavesComment = await _appliedLeaveCommentRepository.GetAppliedLeavesCommentAsync(filter);
+
+            return appliedLeavesComment;
+
+        }
+       
+
     }
 }

@@ -23,9 +23,10 @@ namespace leaveApplication2.Controllers
         private readonly GenericEmail _genericEmail;
         private readonly ILogger<EmployeeController> _logger;
         private readonly ILeaveStatusService _leaveStatusService;
+        private readonly IAppliedLeaveCommentService _appliedLeaveCommentService;
 
         //private readonly IEmployeeLeaveService _employeeLeaveService;
-        public AppliedLeaveController(GenericEmail genericEmail,IAppliedLeaveService leaveService, ILogger<EmployeeController> logger, IEmployeeService employeeService, IEmailService emailService, ILeaveStatusService leaveStatusService)
+        public AppliedLeaveController(GenericEmail genericEmail,IAppliedLeaveService leaveService, ILogger<EmployeeController> logger, IEmployeeService employeeService, IEmailService emailService, ILeaveStatusService leaveStatusService, IAppliedLeaveCommentService appliedLeaveCommentService)
         {
 
             
@@ -34,6 +35,7 @@ namespace leaveApplication2.Controllers
             _genericEmail = genericEmail;
             _employeeService = employeeService;
             _emailService = emailService;
+            _appliedLeaveCommentService = appliedLeaveCommentService;
             //_employeeLeaveService = employeeLeaveService;
             _leaveStatusService = leaveStatusService;
 
@@ -81,6 +83,7 @@ namespace leaveApplication2.Controllers
 
                
                 var leaves = await _leaveService.GetAppliedLeavesAsync(filter);
+                
                 if (leaves == null)
                 {
                     _logger.LogInformation($"Start GetAllEmployeesLeaves null");
@@ -527,20 +530,35 @@ namespace leaveApplication2.Controllers
                     //for rejecting
                     case "REJ":
                         await _emailService.SendLeaveRejectedEmail(updatedLeave);
-                        return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Rejected");
+                        //return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Rejected");
                         break;
                     case "APR":
                         await _emailService.SendLeaveApprovedEmail(updatedLeave);
-                        return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Approved");
+                        //return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Approved");
                         break;
                     case "CAR":
                         await _emailService.SendCancelRequestEmail(updatedLeave);
-                        return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Cancel Request sent");
+                        //return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave Cancel Request sent");
                         break;
                     default:
                         break;
 
                 }
+                var appliedLeaveTypeId = updatedLeave.appliedLeaveTypeId;
+                var LeaveStatusId = updatedLeave.LeaveStatusId;
+                var createdEmpId = updatedLeave.employeeId;
+              
+                var comment = new AppliedLeaveComment
+                {
+                    appliedLeaveTypeId = appliedLeaveTypeId,
+                    LeaveStatusId = LeaveStatusId,
+                    createdEmpId = createdEmpId,
+                    date = appliedLeaveUpdateStatus.date,
+                    comment = appliedLeaveUpdateStatus.commentByUser
+                
+                    // Set other properties as needed
+                };
+                await _appliedLeaveCommentService.CreateAppliedLeaveComment(comment);
                 return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Leave status updated successfully");
 
             }
@@ -566,7 +584,9 @@ namespace leaveApplication2.Controllers
                 var appliedLeaveUpdateStatus = new AppliedLeaveUpdateStatus(
                         appliedLeaveTypeId: Convert.ToInt32( DecryptCode[0]),
                         statusCode:  Convert.ToString(DecryptCode[1]),
-                        leaveAllocationId: Convert.ToInt32(DecryptCode[2])
+                        leaveAllocationId: Convert.ToInt32(DecryptCode[2]),
+                        date: System.DateTime.Now,
+                        commentByUser:""
                   );
 
 
@@ -626,7 +646,9 @@ namespace leaveApplication2.Controllers
                 var appliedLeaveUpdateStatus = new AppliedLeaveUpdateStatus(
                         appliedLeaveTypeId: Convert.ToInt32(DecryptCode[0]),
                         statusCode: Convert.ToString(DecryptCode[1]),
-                        leaveAllocationId: Convert.ToInt32(DecryptCode[2])
+                        leaveAllocationId: Convert.ToInt32(DecryptCode[2]),
+                            date: System.DateTime.Now,
+                        commentByUser: ""
                   );
 
 

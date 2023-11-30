@@ -1,6 +1,8 @@
 ﻿using leaveApplication2.Data;
 using leaveApplication2.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace leaveApplication2.Repostories
 {
@@ -34,6 +36,14 @@ namespace leaveApplication2.Repostories
             }
 
         }
+
+        public async Task<IEnumerable<AppliedLeaveComment>> GetAppliedLeavesCommentAsync(Expression<Func<AppliedLeaveComment, bool>> filter)
+        {
+            return await _context.AppliedLeaveComments.Where(filter).ToListAsync();
+        }
+
+
+        
 
 
     }
