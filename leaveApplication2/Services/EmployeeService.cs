@@ -122,10 +122,16 @@ namespace leaveApplication2.Services
             Expression<Func<FinancialYear, bool>> financialYearFilter = la => la.ActiveYear == true;
             var activeFinancialYear = await _financialYearService.GetActiveFinancialYearsAsync(financialYearFilter);
             var financialYearId = activeFinancialYear.First().financialYearId;
+            var financialYearEndDate = activeFinancialYear.First().endDate;
+
 
             var createdEmployee = await _employeeRepository.CreateEmployeeAsync(employee);
             Expression<Func<LeaveAllocation, bool>> filter = la => la.financialYearId == financialYearId;
             IReadOnlyCollection<LeaveAllocation> leaveAllocations = await _leaveAllocationRepository.GetLeaveAllocationsAsync(filter);
+
+            int monthsLeft = CalculateMonthsLeft(createdEmployee.dateOfJoining, financialYearEndDate);
+            double leaveCountToAllocate = 1.75 * monthsLeft;
+
 
 
             // Assuming you have the filter and leaveAllocations as mentioned in your code
@@ -137,9 +143,11 @@ namespace leaveApplication2.Services
                 {
                     employeeId = createdEmployee.employeeId, // Set the appropriate employeeId
                     leaveTypeId = leaveAllocation.leaveTypeId,
-                    leaveCount = leaveAllocation.leaveCount,
+                    //leaveCount = leaveAllocation.leaveCount,
+                    leaveCount = leaveCountToAllocate,
                     consumedLeaves = 0, // Initialize consumedLeaves as required
-                    balanceLeaves = leaveAllocation.leaveCount, // Initialize balanceLeaves as the leaveCount from LeaveAllocation
+                    //balanceLeaves = leaveAllocation.leaveCount, // Initialize balanceLeaves as the leaveCount from LeaveAllocation
+                    balanceLeaves = leaveCountToAllocate,
                     isActive = true,// Set isActive as required
                     leaveAllocationId = leaveAllocation.leaveAllocationId
                   
@@ -151,6 +159,13 @@ namespace leaveApplication2.Services
                 // If needed, you can work with the createdLeave object or perform additional operations here.
             }
             return createdEmployee;
+        }
+
+        private int CalculateMonthsLeft(DateOnly startDate, DateOnly endDate)
+        {
+            int monthsLeft = 0;
+            monthsLeft = ((endDate.Year - startDate.Year) * 12) + endDate.Month - startDate.Month;
+            return monthsLeft;
         }
         public async Task<Employee> RegisterEmployeeAsync(Employee employee)
         {
