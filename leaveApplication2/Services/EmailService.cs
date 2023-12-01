@@ -135,6 +135,28 @@ namespace leaveApplication2.Services
             await _genericEmail.SendEmailAsync(reportingEmployee.emailAddress, "Leave Cancel Request" + "" + System.DateTime.Now, body);
         }
 
+        public async Task SendLeaveReminderEmail(AppliedLeave appliedLeave)
+        {
+            var employee = await _employeeService.GetEmployeeByIdAsync(appliedLeave.employeeId);
+            var reportingPersonId = employee.ReportingPersonId ?? 0;
+            var reportingEmployee = await _employeeService.GetEmployeeByIdAsync(reportingPersonId);
+            var WebsiteURL = _configuration["BaseURL:WebsiteURL"];
+            var body = "";
+            var subject = "Leave Reminder";
+
+            body += $"<p>Dear {reportingEmployee.firstName} {reportingEmployee.lastName},</p>";
+            body += $"<p>This is a reminder to review and approve/reject the leave request for {employee.firstName} {employee.lastName}.</p>";
+            body += $"<p><strong>Leave Details:</strong></p>";
+            body += $"<p>Employee: {employee.firstName} {employee.lastName}</p>";
+            body += $"<p>Leave Type: {appliedLeave.LeaveReason}</p>";
+            body += $"<p>Applied from: {appliedLeave.StartDate} to {appliedLeave.EndDate}</p>";
+            body += $"<p>Please take the necessary action through the <a href=\"{WebsiteURL}\">WonderBiz HRMS</a>.</p>";
+            body += $"<p>Thank you!</p>";
+           
+            await _genericEmail.SendEmailAsync(reportingEmployee.emailAddress,   subject + " "+ System.DateTime.Now, body);
+
+        }
+
 
         public async Task SendDeleteEmail(AppliedLeave newAppliedLeave)
         {
@@ -179,6 +201,8 @@ namespace leaveApplication2.Services
 
             await _genericEmail.SendEmailAsync(employee.emailAddress, subject + "" + System.DateTime.Now, body);
         }
+
+      
 
         public async Task SendErrorMail(string email,string body, string  subject)
         {

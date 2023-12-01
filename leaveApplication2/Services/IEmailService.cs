@@ -7,6 +7,7 @@ namespace leaveApplication2.Services
         Task SendLeaveApprovalEmail(AppliedLeave newAppliedLeave, string mode = "Add");
         Task SendLeaveApprovedEmail(AppliedLeave newAppliedLeave);
         Task SendLeaveRejectedEmail(AppliedLeave newAppliedLeave);
+        Task SendLeaveReminderEmail(AppliedLeave appliedLeave);
         Task SendEmployeeCreatedEmail(Employee employee);
         Task SendPasswordResetMail(Employee employee);
 

@@ -24,6 +24,7 @@ namespace leaveApplication2.Controllers
         private readonly ILogger<EmployeeController> _logger;
         private readonly ILeaveStatusService _leaveStatusService;
         private readonly IAppliedLeaveCommentService _appliedLeaveCommentService;
+       
 
         //private readonly IEmployeeLeaveService _employeeLeaveService;
         public AppliedLeaveController(GenericEmail genericEmail,IAppliedLeaveService leaveService, ILogger<EmployeeController> logger, IEmployeeService employeeService, IEmailService emailService, ILeaveStatusService leaveStatusService, IAppliedLeaveCommentService appliedLeaveCommentService)
@@ -706,6 +707,39 @@ namespace leaveApplication2.Controllers
             }
 
         }
+
+        //sendEmailReminderLeave
+        [Authorize]
+        [HttpPost("SendLeaveReminder/{id}")]
+        public async Task<CommonResponse<AppliedLeave>> SendLeaveReminderEmail(long id)
+        {
+            _logger.LogInformation($"Start SendLeaveReminderEmail");
+            try
+            {
+                var singleAppliedLeave = await _leaveService.GetAppliedLeaveByIdAsync(id);
+                if (singleAppliedLeave == null)
+                {
+                    _logger.LogInformation($"Start SendLeaveReminderEmail null");
+                    //no salutions found
+                    return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No salutions found.");
+
+                }
+                _logger.LogInformation($"Get the values of SendLeaveReminderEmail");
+                _logger.LogInformation($"End SendLeaveReminderEmail");
+                //Salutions found
+               await _emailService.SendLeaveReminderEmail(singleAppliedLeave);
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", singleAppliedLeave);
+                // return this.CreateResponse<IEnumerable<Employee>>(StatusCode.Status200K, "Success", employee);
+            }
+            catch (Exception ex)
+            {
+                //error occured
+                _logger.LogError(ex, "An error occured while retrieving all salutions");
+                return this.CreateResponse<AppliedLeave>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
+
 
     }
 }
