@@ -709,7 +709,7 @@ namespace leaveApplication2.Controllers
         }
 
         //sendEmailReminderLeave
-        [Authorize]
+      
         [HttpPost("SendLeaveReminder/{id}")]
         public async Task<CommonResponse<AppliedLeave>> SendLeaveReminderEmail(long id)
         {
