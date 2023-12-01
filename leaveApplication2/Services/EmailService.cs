@@ -150,7 +150,7 @@ namespace leaveApplication2.Services
             body += $"<p>Employee: {employee.firstName} {employee.lastName}</p>";
             body += $"<p>Leave Type: {appliedLeave.LeaveReason}</p>";
             body += $"<p>Applied from: {appliedLeave.StartDate} to {appliedLeave.EndDate}</p>";
-            body += $"<p>Please take the necessary action through the <a href=\"{WebsiteURL}\">WonderBiz HRMS</a>.</p>";
+            body += $"<p>Please take the necessary action through the <a href='{WebsiteURL}/login'>WonderBiz HRMS</a>.</p>";
             body += $"<p>Thank you!</p>";
            
             await _genericEmail.SendEmailAsync(reportingEmployee.emailAddress,   subject + " "+ System.DateTime.Now, body);
