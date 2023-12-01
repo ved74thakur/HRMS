@@ -107,6 +107,41 @@ namespace leaveApplication2.Controllers
             }
 
         }
+        //GETTINGAPPLIEDLeaves
+        [Authorize]
+        [HttpGet("GetPendingAppliedLeavesByEmpIdAsync/{employeeId}")]
+        public async Task<CommonResponse<IEnumerable<AppliedLeaveDTO>>> GetPendingAppliedLeavesAsync(long employeeId)
+        {
+            _logger.LogInformation($"Start GetAllEmployeesLeaves");
+            try
+            {
+                Expression<Func<AppliedLeave, bool>> filter = la => la.employeeId == employeeId && la.LeaveStatus.LeaveStatusCode == "APP";
+
+
+                var leaves = await _leaveService.GetAppliedLeavesAsync(filter);
+
+                if (leaves == null)
+                {
+                    _logger.LogInformation($"Start GetAllEmployeesLeaves null");
+                    //no salutions found
+                    return this.CreateResponse<IEnumerable<AppliedLeaveDTO>>(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound, "No Employee found.");
+
+                    //this.CreateResponse<Employee> (,)
+                }
+                _logger.LogInformation($"Get the values of GetAllEmployeeLeavesAsync");
+                _logger.LogInformation($"End GetAllEmployeeLeavesAsync");
+                //Salutions found
+
+                return this.CreateResponse<IEnumerable<AppliedLeaveDTO>>(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, "Success", leaves);
+            }
+            catch (Exception ex)
+            {
+                //error occured
+                _logger.LogError(ex, "An error occured while retrieving all salutions");
+                return this.CreateResponse<IEnumerable<AppliedLeaveDTO>>(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
 
         //getAppliedLeavesOfAllEmployeesMappedUnderReportingId
         [Authorize]
