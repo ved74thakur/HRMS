@@ -165,7 +165,7 @@ namespace leaveApplication2.Services
         {
             int monthsLeft = 0;
             monthsLeft = ((endDate.Year - startDate.Year) * 12) + endDate.Month - startDate.Month;
-            return monthsLeft;
+            return monthsLeft +1;
         }
         public async Task<Employee> RegisterEmployeeAsync(Employee employee)
         {
