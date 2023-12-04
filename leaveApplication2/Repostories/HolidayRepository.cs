@@ -29,6 +29,10 @@ namespace leaveApplication2.Repostories
 
         public async Task<Holiday> CreateHoliday(Holiday holiday)
         {
+            if (_context.Holidays.Any(h => h.HolidayDate == holiday.HolidayDate))
+            {
+                throw new ArgumentException("A holiday with same date already exists");
+            }
             _context.Holidays.Add(holiday);
             await _context.SaveChangesAsync();
             return holiday;
