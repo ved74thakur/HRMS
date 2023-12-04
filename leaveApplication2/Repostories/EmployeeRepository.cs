@@ -26,7 +26,7 @@ namespace leaveApplication2.Repostories
         public async Task<IReadOnlyCollection<Employee>> GetEmployeesAsync()
         {
             // return await _context.Employees.ToListAsync();
-            return await _context.Employees.Include(e => e.Designation).Include(e => e.Gender).AsNoTracking().ToListAsync();
+            return await _context.Employees.Include(e => e.Designation).Include(e => e.Gender).OrderBy(h => h.dateOfJoining).AsNoTracking().ToListAsync();
 
         }
 
