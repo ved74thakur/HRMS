@@ -80,7 +80,7 @@ namespace leaveApplication2.Repostories
 
                 return singleLeave;
             }
-            catch (Exception)
+            catch (InvalidOperationException)
             {
 
                 throw new ArgumentException("An error occurred while retrieving applied leave");
