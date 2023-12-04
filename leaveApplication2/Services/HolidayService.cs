@@ -44,12 +44,14 @@ namespace leaveApplication2.Services
 
         public async Task<Holiday> UpdateHoliday(Holiday holiday)
         {
-            var selectedHoliday = await _holidayRepository.GetHolidayByIdAsync(holiday.Id);
-            if (selectedHoliday == null)
+            var existingHoliday = await _holidayRepository.GetHolidayByIdAsync(holiday.Id);
+            if (existingHoliday == null)
             {
                 return null;
             }
-            var updatedHoliday = await _holidayRepository.UpdateHoliday(selectedHoliday);
+            existingHoliday.HolidayDate = holiday.HolidayDate;
+            existingHoliday.HolidayName = holiday.HolidayName;
+            var updatedHoliday = await _holidayRepository.UpdateHoliday(existingHoliday);
             return updatedHoliday;
         }
 
