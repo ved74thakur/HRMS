@@ -13,7 +13,7 @@ namespace leaveApplication2.Repostories
         }
         public async Task<IReadOnlyCollection<Holiday>> GetHolidaysAsync()
         {
-            return await _context.Holidays.ToListAsync();
+            return await _context.Holidays.OrderBy(h => h.HolidayDate).ToListAsync();
         }
 
         public async Task<Holiday> GetHolidayByIdAsync(int id)
