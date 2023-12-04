@@ -62,6 +62,7 @@ namespace leaveApplication2.Repostories
         public async Task<AppliedLeave> GetAppliedLeaveByIdAsync(long id)
         {
             //  var singleLeave = await _context.AppliedLeaves.Include(e=>e.LeaveStatus).AsNoTracking().FindAsync(id);
+            //comment
             try
             {
 
