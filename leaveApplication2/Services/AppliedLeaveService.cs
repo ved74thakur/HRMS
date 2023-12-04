@@ -395,11 +395,7 @@ namespace leaveApplication2.Services
             {
              
                 var existingLeave = await _leaveRepository.GetAppliedLeaveByIdAsync(appliedLeaveUpdateStatus.appliedLeaveTypeId);
-                
-
-
-
-
+   
                 if (existingLeave == null)
                 {
                   

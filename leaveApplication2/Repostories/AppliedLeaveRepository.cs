@@ -70,7 +70,10 @@ namespace leaveApplication2.Repostories
                     .Include(e => e.Employee)
                     .AsNoTracking()
                     .SingleOrDefaultAsync(e => e.appliedLeaveTypeId == id);
-
+                if(singleLeave == null)
+                {
+                    throw new ArgumentException("Leave not found");
+                }
 
                 _context.Entry(singleLeave.Employee).State = EntityState.Detached;
 
@@ -79,7 +82,7 @@ namespace leaveApplication2.Repostories
             catch (Exception)
             {
 
-                throw;
+                throw new ArgumentException("An error occurred while retrieving applied leave");
             }
 
         }
