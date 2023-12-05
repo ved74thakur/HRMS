@@ -144,7 +144,7 @@ namespace leaveApplication2.Controllers
 
         }
         //update holiday
-        [HttpPut("UpdateHoliday")]
+        [HttpPost("UpdateHoliday")]
         public async Task<CommonResponse<ActionResult<Holiday>>> UpdateHoliday(Holiday holiday)
         {
             _logger.LogInformation($"Start UpdateHoliday");
