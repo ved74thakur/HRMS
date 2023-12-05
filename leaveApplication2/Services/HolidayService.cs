@@ -19,7 +19,7 @@ namespace leaveApplication2.Services
         public async Task<IEnumerable<Holiday>> GetHolidaysAsync()
         {
             var allHolidays = await _holidayRepository.GetHolidaysAsync();
-            var today = DateTime.Today;
+            var today = DateOnly.FromDateTime(DateTime.Today);
             var filteredHolidays = allHolidays.Where(holiday => holiday.HolidayDate.CompareTo(today) >= 0);
 
             return filteredHolidays;
