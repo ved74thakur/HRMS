@@ -58,7 +58,7 @@ namespace leaveApplication2.Services
 
             body += $"<p>Employee: {employee.firstName} {employee.lastName} has requested for leave approval</p>";
             body += $"<p>Leave Type :{newAppliedLeave.LeaveReason}</p>";
-            body += $"<p>Applied from :{newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}</p>";
+            body += $"<p>Applied from :{newAppliedLeave.StartDate.ToString("dd/MM/yyyy")} to {newAppliedLeave.EndDate.ToString("dd/MM/yyyy")}</p>";
             
 
             await _genericEmail.SendEmailAsync(employee.emailAddress, subject + "" + System.DateTime.Now, body);
@@ -79,7 +79,7 @@ namespace leaveApplication2.Services
 
             body += $"<p>Employee: {employee.firstName} {employee.lastName}</p>";
             body += $"<p>Leave Type :{newAppliedLeave.LeaveReason}</p>";
-            body += $"<p>Applied from :{newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}</p>";
+            body += $"<p>Applied from :{newAppliedLeave.StartDate.ToString("dd/MM/yyyy")} to {newAppliedLeave.EndDate.ToString("dd/MM/yyyy")}</p>";
             body = $"<p>Your leave request has been approved for the period: {newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}.</p>";
 
 
@@ -95,7 +95,7 @@ namespace leaveApplication2.Services
 
             body += $"<p>Employee: {employee.firstName} {employee.lastName}</p>";
             body += $"<p>Leave Type :{newAppliedLeave.LeaveReason}</p>";
-            body += $"<p>Applied from :{newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}</p>";
+            body += $"<p>Applied from :{newAppliedLeave.StartDate.ToString("dd/MM/yyyy")} to {newAppliedLeave.EndDate.ToString("dd/MM/yyyy")}</p>";
             body = $"<p>Your leave request has been rejected for the period: {newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}.</p>";
 
 
@@ -123,7 +123,7 @@ namespace leaveApplication2.Services
 
             body += $"<p>Employee: {employee.firstName} {employee.lastName} has requested for Leave Cancel Request </p>";
             body += $"<p>Leave Type :{newAppliedLeave.LeaveReason}</p>";
-            body += $"<p>Applied from :{newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}</p>";
+            body += $"<p>Applied from :{newAppliedLeave.StartDate.ToString("dd/MM/yyyy")} to {newAppliedLeave.EndDate.ToString("dd/MM/yyyy")}</p>";
             await _genericEmail.SendEmailAsync(employee.emailAddress, "Leave Cancel" + "" + System.DateTime.Now, body);
 
             body += "<p>Please click one of the following buttons to approve or reject leave cancel request:</p>";
@@ -149,7 +149,7 @@ namespace leaveApplication2.Services
             body += $"<p><strong>Leave Details:</strong></p>";
             body += $"<p>Employee: {employee.firstName} {employee.lastName}</p>";
             body += $"<p>Leave Type: {appliedLeave.LeaveReason}</p>";
-            body += $"<p>Applied from: {appliedLeave.StartDate} to {appliedLeave.EndDate}</p>";
+            body += $"<p>Applied from: {appliedLeave.StartDate.ToString("dd/MM/yyyy")} to {appliedLeave.EndDate.ToString("dd/MM/yyyy")}</p>";
             body += $"<p>Please take the necessary action through the <a href='{WebsiteURL}/login'>WonderBiz HRMS</a>.</p>";
             body += $"<p>Thank you!</p>";
            
@@ -165,7 +165,7 @@ namespace leaveApplication2.Services
 
             body += $"<p>Employee: {employee.firstName} {employee.lastName}</p>";
             body += $"<p>Leave Type :{newAppliedLeave.LeaveReason}</p>";
-            body += $"<p>Applied from :{newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}</p>";
+            body += $"<p>Applied from :{newAppliedLeave.StartDate.ToString("dd/MM/yyyy")} to {newAppliedLeave.EndDate.ToString("dd/MM/yyyy")}</p>";
             body = $"<p>Your leave request has been deleted for the period: {newAppliedLeave.StartDate} to {newAppliedLeave.EndDate}.</p>";
 
 
