@@ -20,7 +20,7 @@ namespace leaveApplication2.Services
         {
             var allHolidays = await _holidayRepository.GetHolidaysAsync();
             var today = DateTime.Today;
-            var filteredHolidays = allHolidays.Where(holiday => holiday.HolidayDate >= today);
+            var filteredHolidays = allHolidays.Where(holiday => holiday.HolidayDate.CompareTo(today) >= 0);
 
             return filteredHolidays;
 

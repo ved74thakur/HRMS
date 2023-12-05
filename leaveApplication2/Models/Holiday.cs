@@ -17,7 +17,7 @@ namespace leaveApplication2.Models
         [Required(ErrorMessage = "Holiday Date is required")]
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
-        public DateTime HolidayDate { get; set; }
+        public DateOnly HolidayDate { get; set; }
 
 
         public bool IsActive { get; set; }
