@@ -1,4 +1,5 @@
-﻿using leaveApplication2.Models;
+﻿using leaveApplication2.Dtos;
+using leaveApplication2.Models;
 using leaveApplication2.Repostories;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -40,6 +41,14 @@ namespace leaveApplication2.Services
         {
             var singleEmployeeLeave = await _employeeLeaveRepository.GetEmployeeLeaveByIdAsync(id);
             return singleEmployeeLeave;
+        }
+
+        //create fn to get employeeLeave based on employeeId
+        public async Task<EmployeeLeave> GetEmpLeaveByEmpIdAsync(long id)
+        {
+            var employeeLeaves = await _employeeLeaveRepository.GetEmployeeLeaveByEmployeeId(id);
+            var employeeLeave = employeeLeaves.FirstOrDefault();
+            return employeeLeave;
         }
 
         public async Task<IReadOnlyCollection<EmployeeLeave>> GetEmployeeLeaveByEmployeeId(long employeeId)
@@ -89,11 +98,37 @@ namespace leaveApplication2.Services
 
             return currentLeave;
         }
-
-        public async Task<EmployeeLeave> UpdateEmployeeLeaveAsync(long id, EmployeeLeave employeeLeave)
+        //change this function to change adjustmentAdd or adjustmentDelete 
+        public async Task<EmployeeLeave> UpdateEmployeeLeaveAsync(EmployeeLeaveUpdate employeeLeaveUpdate)
         {
+            var empLeave = await _employeeLeaveRepository.GetEmployeeLeaveByIdAsync(employeeLeaveUpdate.employeeLeaveId);
+            if ( empLeave == null)
+            {
+                return null;
+            }
+            // Only one adjustment should be provided at a time
+            if ((employeeLeaveUpdate.adjustmentAdd.HasValue && employeeLeaveUpdate.adjustmentDel.HasValue) ||
+                (!employeeLeaveUpdate.adjustmentAdd.HasValue && !employeeLeaveUpdate.adjustmentDel.HasValue))
+            {
+                return null;
+            }
 
-            var updateEmployeeLeave = await _employeeLeaveRepository.UpdateEmployeeLeaveAsync(id, employeeLeave);
+            // Check which adjustment is provided and update balanceLeaves accordingly
+            if (employeeLeaveUpdate.adjustmentAdd.HasValue)
+            {
+                empLeave.adjustmentAdd = employeeLeaveUpdate.adjustmentAdd.Value;
+                empLeave.balanceLeaves += empLeave.adjustmentAdd;
+            }
+            else if (employeeLeaveUpdate.adjustmentDel.HasValue)
+            {
+                empLeave.adjustmentDel = employeeLeaveUpdate.adjustmentDel.Value;
+                empLeave.balanceLeaves -= empLeave.adjustmentDel;
+            }
+            else
+            {
+                return null;
+            }
+            var updateEmployeeLeave = await _employeeLeaveRepository.UpdateEmployeeLeaveAsync(empLeave);
             return updateEmployeeLeave;
 
         }

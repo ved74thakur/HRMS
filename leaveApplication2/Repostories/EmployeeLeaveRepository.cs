@@ -18,6 +18,8 @@ namespace leaveApplication2.Repostories
            // _emailService = emailService;
 
         }
+
+
         public async Task<IReadOnlyCollection<EmployeeLeave>> GetAllEmployeesLeaveAsync()
         {
             return await _context.EmployeeLeaves.ToListAsync();
@@ -46,7 +48,7 @@ namespace leaveApplication2.Repostories
         public async Task<List<EmployeeLeave>> GetEmployeeLeaveByEmployeeId(long employeeId)
         {
             var employeeLeaves = await _context.EmployeeLeaves
-        .Where(e => e.employeeId == employeeId && e.isActive)
+        .Where(e => e.employeeId == employeeId)
         .ToListAsync();
 
             return employeeLeaves;
@@ -80,7 +82,7 @@ namespace leaveApplication2.Repostories
                 await _context.SaveChangesAsync();
 
 
-                _context.Entry(employeeLeave.Employee).State = EntityState.Detached;
+                //_context.Entry(employeeLeave.Employee).State = EntityState.Detached;
 
 
 

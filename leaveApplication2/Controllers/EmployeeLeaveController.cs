@@ -5,6 +5,7 @@ using leaveApplication2.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using leaveApplication2.Dtos;
 
 namespace leaveApplication2.Controllers
 {
@@ -25,7 +26,7 @@ namespace leaveApplication2.Controllers
         }
         //EmployeeLeaves 
         //Getting all employeeLeaves
-        [HttpGet]
+        [HttpGet("GetAllEmployeesLeaves")]
         public async Task<CommonResponse<IEnumerable<EmployeeLeave>>> GetAllEmployeesLeaves()
         {
             _logger.LogInformation($"Start GetAllEmployeesLeaves");
@@ -153,7 +154,7 @@ namespace leaveApplication2.Controllers
         }
 
         [HttpPut("UpdateEmployeeLeaveAsync/{id}")]
-        public async Task<CommonResponse<ActionResult<EmployeeLeave>>> UpdateEmployeeLeaveAsync(long id, EmployeeLeave employeeLeave )
+        public async Task<CommonResponse<ActionResult<EmployeeLeave>>> UpdateEmployeeLeaveAsync( EmployeeLeaveUpdate employeeLeave)
         {
             _logger.LogInformation($"Start UpdateEmployeeLeaveAsync");
 
@@ -161,7 +162,8 @@ namespace leaveApplication2.Controllers
             //return Ok(result);
             try
             {
-                var updateEmployeeLeave = await _employeeLeaveService.UpdateEmployeeLeaveAsync(id, employeeLeave);
+   
+                var updateEmployeeLeave = await _employeeLeaveService.UpdateEmployeeLeaveAsync(employeeLeave);
                 if (updateEmployeeLeave == null)
                 {
                     _logger.LogInformation($"Start UpdateAppliedLeave null");

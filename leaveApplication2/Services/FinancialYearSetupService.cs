@@ -53,15 +53,22 @@ namespace leaveApplication2.Services
                 
                 foreach (var employee in employees)
                 {
+                    // retrieving the previous balance for employeeLeave
+                    var employeeLeave = await _employeeLeaveService.GetEmpLeaveByEmpIdAsync(employee.employeeId);
+                    var balanceOfPreviousEmployeeLeave = employeeLeave?.balanceLeaves?? 0   ;
+
                     var leave = new EmployeeLeave
                     {
                         employeeId = employee.employeeId, // Set the appropriate employeeId
                         leaveTypeId = leaveAllocation.leaveTypeId,
                         leaveCount = leaveAllocation.leaveCount,
                         consumedLeaves = 0, // Initialize consumedLeaves as required
-                        balanceLeaves = leaveAllocation.leaveCount, // Initialize balanceLeaves as the leaveCount from LeaveAllocation
+                        balanceLeaves = balanceOfPreviousEmployeeLeave > 7 ? 7 +  leaveAllocation.leaveCount : leaveAllocation.leaveCount + balanceOfPreviousEmployeeLeave, // Initialize balanceLeaves as the leaveCount from LeaveAllocation
                         isActive = true, // Set isActive as required
-                        leaveAllocationId = leaveAllocation.leaveAllocationId
+                        leaveAllocationId = leaveAllocation.leaveAllocationId,
+                        carryForward = balanceOfPreviousEmployeeLeave > 7 ? 7 : balanceOfPreviousEmployeeLeave,
+                        adjustmentAdd = 0,
+                        adjustmentDel = 0,
                     };
 
                     // Insert the created EmployeeLeave object into your repository

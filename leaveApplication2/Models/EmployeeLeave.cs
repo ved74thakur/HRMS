@@ -29,6 +29,12 @@ namespace leaveApplication2.Models
        
         public double balanceLeaves { get; set; }
 
+        public double carryForward {  get; set; }
+
+        public double adjustmentAdd { get; set; }
+        public double adjustmentDel {  get; set; }
+
+
         [ForeignKey("LeaveAllocation")]
         public int leaveAllocationId { get; set; }
 
