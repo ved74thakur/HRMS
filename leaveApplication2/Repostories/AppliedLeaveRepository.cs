@@ -73,7 +73,7 @@ namespace leaveApplication2.Repostories
                     .SingleOrDefaultAsync(e => e.appliedLeaveTypeId == id);
                 if(singleLeave == null)
                 {
-                    throw new ArgumentException("Leave not found");
+                    throw new ArgumentException("Leave might be deleted. Leave not found");
                 }
 
                 _context.Entry(singleLeave.Employee).State = EntityState.Detached;
