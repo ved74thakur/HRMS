@@ -101,7 +101,10 @@ namespace leaveApplication2.Services
         //change this function to change adjustmentAdd or adjustmentDelete 
         public async Task<EmployeeLeave> UpdateEmployeeLeaveAsync(EmployeeLeaveUpdate employeeLeaveUpdate)
         {
-            var empLeave = await _employeeLeaveRepository.GetEmployeeLeaveByIdAsync(employeeLeaveUpdate.employeeLeaveId);
+            //var empLeave = await _employeeLeaveRepository.GetEmployeeLeaveByEmployeeId(employeeLeaveUpdate.employeeId);
+            var empLeave = (await _employeeLeaveRepository.GetEmployeeLeaveByEmployeeId(employeeLeaveUpdate.employeeId)).FirstOrDefault();
+
+
             if ( empLeave == null)
             {
                 return null;

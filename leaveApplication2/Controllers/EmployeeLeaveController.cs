@@ -153,7 +153,7 @@ namespace leaveApplication2.Controllers
 
         }
 
-        [HttpPut("UpdateEmployeeLeaveAsync/{id}")]
+        [HttpPut("UpdateEmployeeLeaveAsync")]
         public async Task<CommonResponse<ActionResult<EmployeeLeave>>> UpdateEmployeeLeaveAsync( EmployeeLeaveUpdate employeeLeave)
         {
             _logger.LogInformation($"Start UpdateEmployeeLeaveAsync");
