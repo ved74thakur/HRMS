@@ -66,12 +66,14 @@ namespace leaveApplication2.Repostories
             try
             {
 
+     
                 var singleLeave = await _context.AppliedLeaves
                     .Include(e => e.LeaveStatus)
                     .Include(e => e.Employee)
                     .AsNoTracking()
                     .SingleOrDefaultAsync(e => e.appliedLeaveTypeId == id);
-                if(singleLeave == null)
+                _context.Entry(singleLeave.Employee).State = EntityState.Detached;
+                if (singleLeave == null)
                 {
                     throw new ArgumentException("Leave might be deleted. Leave not found");
                 }
