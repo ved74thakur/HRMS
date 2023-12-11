@@ -96,28 +96,94 @@ namespace leaveApplication2.Repostories
         //    }
         //}
 
+        //public async Task<EmployeeLeave> UpdateEmployeeLeaveAsync(EmployeeLeave employeeLeave)
+        //{
+        //    try
+        //    {
+        //        if (employeeLeave != null && _context.Entry(employeeLeave).State == EntityState.Detached)
+        //        {
+        //            // Attach the Employee entity if it is detached
+        //            _context.Attach(employeeLeave.Employee);
+        //        }
+
+        //        _context.EmployeeLeaves.Update(employeeLeave);
+        //        //
+        //        _context.Entry(employeeLeave.Employee).State = EntityState.Detached;
+        //        await _context.SaveChangesAsync();
+
+        //        return employeeLeave;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
         public async Task<EmployeeLeave> UpdateEmployeeLeaveAsync(EmployeeLeave employeeLeave)
         {
             try
             {
-                if (employeeLeave != null && _context.Entry(employeeLeave).State == EntityState.Detached)
+                if (employeeLeave != null)
                 {
-                    // Attach the Employee entity if it is detached
-                    _context.Attach(employeeLeave.Employee);
+                    if (employeeLeave.Employee != null && _context.Entry(employeeLeave).State == EntityState.Detached)
+                    {
+                        // Attach the Employee entity if it is detached
+                        _context.Attach(employeeLeave.Employee);
+                    }
+
+                    _context.EmployeeLeaves.Update(employeeLeave);
+
+                    if (employeeLeave.Employee != null)
+                    {
+                        _context.Entry(employeeLeave.Employee).State = EntityState.Detached;
+                    }
+
+                    await _context.SaveChangesAsync();
+
+                    return employeeLeave;
                 }
-
-                _context.EmployeeLeaves.Update(employeeLeave);
-                //
-                _context.Entry(employeeLeave.Employee).State = EntityState.Detached;
-                await _context.SaveChangesAsync();
-
-                return employeeLeave;
+                else
+                {
+                    // Handle the case where employeeLeave is null
+                    // You may want to throw an exception or return null, depending on your requirements
+                    return null;
+                }
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
+
+        //public async Task<EmployeeLeave> UpdateEmployeeLeaveAsync(EmployeeLeave employeeLeave)
+        //{
+
+        //    try
+        //    {
+        //        if (employeeLeave != null && _context.Entry(employeeLeave).State == EntityState.Detached)
+        //        {
+        //            _context.Entry(employeeLeave).State = EntityState.Detached;
+        //            //   _context.Attach(employeeLeave);
+        //        }
+
+        //        _context.EmployeeLeaves.Update(employeeLeave);
+
+        //        await _context.SaveChangesAsync();
+
+
+        //        //_context.Entry(employeeLeave.Employee).State = EntityState.Detached;
+
+
+
+        //        return employeeLeave;
+
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+        //}
 
         public async Task<EmployeeLeave> SetEmployeeLeaveToFalseAsync(long id)
         {
