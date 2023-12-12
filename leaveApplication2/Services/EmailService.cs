@@ -134,7 +134,7 @@ namespace leaveApplication2.Services
 
             await _genericEmail.SendEmailAsync(reportingEmployee.emailAddress, "Leave Cancel Request" + "" + System.DateTime.Now, body);
         }
-
+        //changes
         public async Task SendLeaveReminderEmail(AppliedLeave appliedLeave)
         {
             var employee = await _employeeService.GetEmployeeByIdAsync(appliedLeave.employeeId);
