@@ -133,13 +133,13 @@ namespace leaveApplication2.Repostories
                 }
 
                 _context.EmployeeLeaves.Update(employeeLeave);
-
+                await _context.SaveChangesAsync();
                 if (employeeLeave.Employee != null)
                 {
                     _context.Entry(employeeLeave.Employee).State = EntityState.Detached;
                 }
 
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
 
                 return employeeLeave;
             }
