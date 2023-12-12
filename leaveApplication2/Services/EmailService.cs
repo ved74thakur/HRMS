@@ -149,8 +149,9 @@ namespace leaveApplication2.Services
                  x.financialYearId == activeFinalYear.financialYearId;
 
             var allocationFinalYear = await _leaveAllocationRepository.GetLeaveAllocationAsync(filterAllocationYear);
-            var approveCancelEncryption = EncryptionHelper.Encrypt(appliedLeave.appliedLeaveTypeId + "|" + "APC" + "|" + allocationFinalYear.leaveAllocationId);
-            var rejectRejectEncryption = EncryptionHelper.Encrypt(appliedLeave.appliedLeaveTypeId + "|" + "REC" + "|" + allocationFinalYear.leaveAllocationId);
+            var approveEncryption = EncryptionHelper.Encrypt(appliedLeave.appliedLeaveTypeId + "|" + "APR" + "|" + allocationFinalYear.leaveAllocationId);
+            var rejectEncryption = EncryptionHelper.Encrypt(appliedLeave.appliedLeaveTypeId + "|" + "REJ" + "|" + allocationFinalYear.leaveAllocationId);
+
             var body = "";
             var subject = "Leave Reminder";
 
@@ -160,9 +161,9 @@ namespace leaveApplication2.Services
             body += $"<p>Employee: {employee.firstName} {employee.lastName}</p>";
             body += $"<p>Leave Type: {appliedLeave.LeaveReason}</p>";
             body += $"<p>Applied from: {appliedLeave.StartDate.ToString("dd/MM/yyyy")} to {appliedLeave.EndDate.ToString("dd/MM/yyyy")}</p>";
-           
-            body += $"<a href='{WebsiteURL}/appliedleavestatus/{approveCancelEncryption}' style='display: inline-block; background-color: green; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Approve</a>";
-            body += $"<a href='{WebsiteURL}/appliedleavestatus/{rejectRejectEncryption}' style='display: inline-block; background-color: red; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reject</a>";
+
+            body += $"<a href='{WebsiteURL}/appliedleavestatus/{approveEncryption}' style='display: inline-block; background-color: green; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Approve</a>";
+            body += $"<a href='{WebsiteURL}/appliedleavestatus/{rejectEncryption}' style='display: inline-block; background-color: red; color: white; padding: 5px 10px; text-align: center; text-decoration: none;'>Reject</a>";
             body += $"<p>Thank you!</p>";
 
 
